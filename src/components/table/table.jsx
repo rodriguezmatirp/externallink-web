@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
 import { getSitemaps, getScrapedData } from "../../utils/routes";
+import { CSVLink } from "react-csv";
+import { FaFileDownload } from "react-icons/fa";
 
 function Table(props) {
   const [table, setTable] = useState("");
@@ -28,17 +30,29 @@ function Table(props) {
     <div className="fluid-container" style={{ backgroundColor: "#E4E7ED" }}>
       <div className="container pt-5 pb-5">
         <div className="col-lg-12">
-          <div className="title">
+          <div className="title h5">
             <p>
-              Title: <span>{data ? data.title : null}</span>
+              <strong>Title:</strong> <span>{data ? data.title : null}</span>
             </p>
           </div>
-          <div className="sitemap">
+          <div className="sitemap h5">
             <p>
-              Sitemap: <span>{data ? data.link : null}</span>
+              <strong>Sitemap:</strong> <span>{data ? data.link : null}</span>
             </p>
           </div>
+          {table ? (
+            <CSVLink data={table}>
+              <FaFileDownload
+                style={{
+                  fontSize: 36,
+                  marginBottom: 8,
+                }}
+              />
+              Download
+            </CSVLink>
+          ) : null}
         </div>
+
         <div className="col-lg-12">
           <div className={`card p-2 ${styles.cardEdit}`}>
             <div className={`card ${styles.cardEdit2}`}>
@@ -62,7 +76,7 @@ function Table(props) {
                     return (
                       <div className="row p-3" key={i}>
                         <div className="col-lg-3">{tab.created_at}</div>
-                        <div className="col-lg-3">{tab.parent_link}</div>
+                        <div className="col-lg-3">{tab.articlelink}</div>
                         <div className="col-lg-3">
                           {tab.externalLinks.length > 0 ? (
                             tab.externalLinks.map((link, i) => {
