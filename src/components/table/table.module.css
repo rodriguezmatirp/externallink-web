@@ -1,0 +1,10 @@
+.cardEdit {
+  background-color: #17a2b8;
+  border: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.cardEdit2 {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 0;
+}
