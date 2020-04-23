@@ -225,6 +225,7 @@ function Table(props) {
       }
     };
     fetchData();
+    // eslint-disable-next-line
   }, []);
   console.log(table);
 
@@ -342,35 +343,35 @@ function Table(props) {
                 <tbody>
                   {table
                     ? table.map((tab, i) => {
-                        let date = tab.created_at.substring(
-                          0,
-                          tab.created_at.indexOf("T")
-                        );
-                        return (
-                          <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
-                            <td>{date}</td>
-                            <td>{tab.articlelink}</td>
-                            <td>
-                              <table className="table">
-                                <tbody>
-                                  {tab.externalLinks.length > 0 ? (
-                                    tab.externalLinks.map((extLink, j) => {
-                                      return (
-                                        <tr key={j}>
-                                          <td>{extLink.link}</td>
-                                          <td>{extLink.rel}</td>
-                                        </tr>
-                                      );
-                                    })
-                                  ) : (
+                      let date = tab.created_at.substring(
+                        0,
+                        tab.created_at.indexOf("T")
+                      );
+                      return (
+                        <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
+                          <td>{date}</td>
+                          <td>{tab.articlelink}</td>
+                          <td>
+                            <table className="table">
+                              <tbody>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
+                                      <tr key={j}>
+                                        <td>{extLink.link}</td>
+                                        <td>{extLink.rel}</td>
+                                      </tr>
+                                    );
+                                  })
+                                ) : (
                                     <td>No External Link</td>
                                   )}
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        );
-                      })
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      );
+                    })
                     : null}
                 </tbody>
               </table>
