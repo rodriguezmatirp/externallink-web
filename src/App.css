@@ -4,3 +4,8 @@ body {
   font-family: Sen !important;
   /* background-color: #e4e7ed; */
 }
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}

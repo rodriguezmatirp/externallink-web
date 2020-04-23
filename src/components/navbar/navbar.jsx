@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Form from "../addForm/form";
+import styles from "./navbar.module.css";
 
 function Navbar() {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -68,7 +69,7 @@ function Navbar() {
               <li className="nav-item ml-2">
                 <NavLink
                   type="button"
-                  className="btn btn-info"
+                  className={`btn ${styles.btnSecondaryBlue}`}
                   onClick={() => toggleModal(true)}
                   to="/home"
                 >
