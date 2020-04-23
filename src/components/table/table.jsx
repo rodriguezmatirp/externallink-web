@@ -27,7 +27,7 @@ function Table(props) {
   console.log(data);
   console.log(table);
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#E4E7ED" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
       <div className="container pt-5 pb-5">
         <div className="col-lg-12">
           <div className="title h5">
@@ -54,7 +54,7 @@ function Table(props) {
         </div>
 
         <div className="col-lg-12">
-          <div className={`card p-2 ${styles.cardEdit}`}>
+          <div className={`card p-1 ${styles.cardEdit}`}>
             <div className={`card ${styles.cardEdit2}`}>
               <div className="row px-3 pt-3">
                 <div className="col-lg-3 h5">
