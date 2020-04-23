@@ -29,7 +29,7 @@ export default function Form(props) {
     e.preventDefault();
     let body = { link, title, algo };
     try {
-      axios.post(addSitemap, body);
+      await axios.post(addSitemap, body);
       axios.post(scrapData, { url: link });
       props.toggleModal(false);
       rA();

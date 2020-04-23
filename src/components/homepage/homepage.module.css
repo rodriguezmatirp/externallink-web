@@ -52,8 +52,6 @@
   padding: 24px;
   border-radius: 4px;
   background-color: #fff;
-  -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 4px 10px 0 rgba(0, 0, 0, 0.07);
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 4px 10px 0 rgba(0, 0, 0, 0.07);
 }
@@ -63,4 +61,8 @@
   transform: translateY(-2px) !important;
   -webkit-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
+  -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 4px 10px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.05),
+    0 4px 10px 0 rgba(0, 0, 0, 0.07);
 }
