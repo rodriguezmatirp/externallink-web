@@ -28,7 +28,6 @@ export default function Form(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let body = { link, title, algo };
-    console.log(body);
     try {
       axios.post(addSitemap, body);
       axios.post(scrapData, { url: link });
@@ -39,7 +38,7 @@ export default function Form(props) {
       toast.success("Sitemap Added");
       history.push("/home");
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
