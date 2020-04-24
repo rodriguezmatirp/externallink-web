@@ -1,212 +1,15 @@
-// import React, { useEffect, useState } from "react";
-// import styles from "./table.module.css";
-// import axios from "axios";
-// import { getSitemaps, getScrapedData } from "../../utils/routes";
-// import { CSVLink } from "react-csv";
-// import { FaFileDownload } from "react-icons/fa";
-
-// function Table(props) {
-//   const [table, setTable] = useState("");
-//   const [data, setData] = useState("");
-//   const [skip, setSkip] = useState(0);
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       let id = props.match.params.url;
-//       let list = await axios.get(getSitemaps);
-//       if (id < list.data.result.length) {
-//         let url = list.data.result[id].link;
-//         let data = await axios.get(
-//           `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-//         );
-//         console.log(data);
-//         setTable(data.data.doc);
-//         setData(list.data.result[id]);
-//       }
-//     };
-//     fetchData();
-//   }, [skip]);
-
-//
-//   console.log(skip);
-//   console.log(table);
-
-//   return (
-//     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
-//       <div className="container pt-5 pb-5">
-//         <div className="col-lg-12">
-//           <div className="title h5">
-//             <p>
-//               <strong>Title:</strong> <span>{data ? data.title : null}</span>
-//             </p>
-//           </div>
-//           <div className="sitemap h5">
-//             <p>
-//               <strong>Sitemap:</strong> <span>{data ? data.link : null}</span>
-//             </p>
-//           </div>
-//           {table ? (
-//             <CSVLink data={table}>
-//               <FaFileDownload
-//                 style={{
-//                   fontSize: 36,
-//                   marginBottom: 8,
-//                 }}
-//               />
-//               Download
-//             </CSVLink>
-//           ) : null}
-//         </div>
-
-//         <div className="col-lg-12">
-//           <div>
-//             <div className={`card ${styles.cardEdit2}`}>
-//               <table
-//                 className="table table-striped"
-//                 // style={{
-//                 //   overflowX: "scroll",
-//                 //   width: "100%",
-//                 //   display: "block",
-//                 // }}
-//               >
-//                 <thead>
-//                   <tr>
-//                     <th scope="col">Date</th>
-//                     <th scope="col">Site</th>
-//                     <th scope="col">External Links</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   <tr>
-//                     <th scope="row">1</th>
-//                     <td>Mark</td>
-//                     <td rowSpan="2">Otto</td>
-//                   </tr>
-//                   <tr>
-//                     <th scope="row">2</th>
-//                     <td>Jacob</td>
-//                     <td>Thornton</td>
-//                   </tr>
-//                   <tr>
-//                     <th scope="row">3</th>
-//                     <td>Larry</td>
-//                     <td>the Bird</td>
-//                   </tr>
-//                   <tr>
-//                     <th scope="row">3</th>
-//                     <td>Larry</td>
-//                     <td>the Bird</td>
-//                   </tr>
-//                 </tbody>
-//               </table>
-//               {/* <div className="row px-3 pt-3">
-//                 <div className="col-lg-3 h5">
-//                   <strong>Date</strong>
-//                 </div>
-//                 <div className="col-lg-3 h5">
-//                   <strong>Parent Link</strong>
-//                 </div>
-//                 <div className="col-lg-3 h5">
-//                   <strong>External Link</strong>
-//                 </div>
-//                 <div className="col-lg-3 h5">
-//                   <strong>Rel</strong>
-//                 </div>
-//               </div>
-//               <hr /> */}
-//               {/* {table
-//                 ? table.map((tab, i) => {
-//                     return (
-//                       <div className="row p-3" key={i}>
-//                         <div className="col-lg-3">{tab.created_at}</div>
-//                         <div className="col-lg-3">{tab.articlelink}</div>
-//                         <div className="col-lg-3">
-//                           {tab.externalLinks.length > 0 ? (
-//                             tab.externalLinks.map((link, i) => {
-//                               return <p key={i}>{link.link}</p>;
-//                             })
-//                           ) : (
-//                             <p>No external Link</p>
-//                           )}
-//                         </div> */}
-//               {/* {tab.externalLinks.length > 0
-//                           ? tab.externalLinks.map((link) => {
-//                               if (link.rel === "dofollow")
-//                                 return (
-//                                   <div className="col-lg-3">
-//                                     <p className="badge badge-success">
-//                                       {link.rel}
-//                                     </p>
-//                                   </div>
-//                                 );
-//                               else
-//                                 return (
-//                                   <div className="col-lg-3">
-//                                     <p className="badge badge-warning">
-//                                       {link.rel}
-//                                     </p>
-//                                   </div>
-//                                 );
-//                             })
-//                           : null} */}
-//               {/* <div className="col-lg-3">
-//                           <p className="badge badge-success">Success</p>
-//                           <br />
-//                           <p className="badge badge-warning">Warning</p>
-//                         </div>
-//                       </div>
-//                     ); */}
-//               {/* }) */}
-//               {/*  : null} */}
-//             </div>
-//             <nav aria-label="Page navigation example">
-//               <ul className="pagination">
-//                 {skip > 0 ? (
-//                   <li className="btn btn-primary" onClick={() => counter("pre")}>
-//                     Previous
-//                   </li>
-//                 ) : null}
-
-//                 <li className="btn btn-primary" onClick={() => counter("next")}>
-//                   Next
-//                 </li>
-//               </ul>
-//             </nav>
-//           </div>
-//         </div>
-//         <div className={styles.RNNXgb}>
-//           <div className={styles.SDkEP}>
-//             <div className={styles.a4bIc}>
-//               <div className={`${styles.pR49Ae} ${styles.gsfi}`}>
-//                 <input
-//                   type="text"
-//                   className={`${styles.pR49Ae} ${styles.gsfi}`}
-//                 />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Table;
-
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
 import { getSitemaps, getScrapedData } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
-// import useInputState from "../../hooks/useInputState";
 
 function Table(props) {
   const [skip, setSkip] = useState(0);
   const [table, setTable] = useState("");
   const [data, setData] = useState("");
-  // const [csvTable, setcsvTable] = useState("");
-  // const [csvSkip, handlecsvSkipChange] = useInputState("");
-  // const [csvLimit, handlecsvLimitChange] = useInputState("");
+
   useEffect(() => {
     const fetchData = async () => {
       let id = props.match.params.url;
@@ -222,6 +25,7 @@ function Table(props) {
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip]);
 
   const counter = (val) => {
@@ -258,7 +62,6 @@ function Table(props) {
     }
   };
   CsvOperation(table);
-
   return (
     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
       <div className="container pt-5 pb-5">
@@ -284,43 +87,14 @@ function Table(props) {
               Download
             </CSVLink>
           ) : null}
-
-          {/* <form>
-            <div className="">
-              <div className="col-lg-12 mb-4">
-                <label style={{ color: "rgb(66, 63, 63)" }}>
-                  <strong>Title</strong>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={csvSkip}
-                  onChange={handlecsvSkipChange}
-                />
-              </div>
-              <div className="col-lg-12 mb-4">
-                <label style={{ color: "rgb(66, 63, 63)" }}>
-                  <strong>Sitemap</strong>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={csvLimit}
-                  onChange={handlecsvLimitChange}
-                />
-              </div>
-              <div className="col-lg-12 mb-2">
-                <button
-                  type="button"
-                  className={`btn btn-secondary btn-lg btn-block `}
-                  onClick={handleSubmit}
-                >
-                  <strong style={{ fontSize: "17px" }}>Add</strong>
-                </button>
-              </div>
-            </div>
-          </form> */}
         </div>
+        {/* <div className={styles.RNNXgb}>
+          <div className={styles.SDkEP}>
+            <div className={styles.a4bIc}>
+              <TextField id="standard-basic" fullWidth />
+            </div>
+          </div>
+        </div> */}
         <div className="col-lg-12">
           <div
             className={`card ${styles.cardEdit2}`}
@@ -393,3 +167,58 @@ function Table(props) {
 }
 
 export default Table;
+
+// -webkit-tap-highlight-color: rgba(0,0,0,0);
+// -webkit-font-smoothing: antialiased;
+// line-height: 1.7;
+// font-weight: 400;
+// font-family: "Poppins";
+// color: #616161;
+// font-size: 14px;
+// cursor: pointer;
+// box-sizing: border-box;
+// width: 70%;
+// max-width: 1200px;
+// position: relative;-webkit-tap-highlight-color: rgba(0,0,0,0);
+// -webkit-font-smoothing: antialiased;
+// line-height: 1.7;
+// font-weight: 400;
+// font-family: "Poppins";
+// color: #616161;
+// font-size: 14px;
+// cursor: pointer;
+// box-sizing: border-box;
+// width: 70%;
+// max-width: 1200px;
+// position: relative;
+
+// -webkit-tap-highlight-color: rgba(0,0,0,0);
+// -webkit-font-smoothing: antialiased;
+// line-height: 1.7;
+// font-weight: 400;
+// font-family: "Poppins";
+// color: #616161;
+// font-size: 14px;
+// cursor: pointer;
+// box-sizing: border-box;
+
+// -webkit-tap-highlight-color: rgba(0,0,0,0);
+// -webkit-font-smoothing: antialiased;
+// box-sizing: border-box;
+// font: inherit;
+// font-family: inherit;
+// border: 1px solid #e3e3e3;
+// line-height: 100px!important;
+// background-color: #fff;
+// border-radius: 1000px;
+// width: 100%;
+// display: table;
+// border-width: 0px;
+// z-index: 6000;
+// padding: 0px 100px;
+// font-size: 24px!important;
+// color: #9e9e9e;
+// font-weight: 300;
+// font-style: normal;
+// box-shadow: 1px 4px 8px 1px rgba(0,0,0,0.2);
+// margin: 10px 0;

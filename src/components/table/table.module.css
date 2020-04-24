@@ -94,7 +94,7 @@
   font-size: 16px;
 }
 
-input {
+/* input {
   -webkit-writing-mode: horizontal-tb !important;
   text-rendering: auto;
   color: -internal-light-dark-color(black, white);
@@ -116,4 +116,4 @@ input {
   border-style: inset;
   border-color: initial;
   border-image: initial;
-}
+} */

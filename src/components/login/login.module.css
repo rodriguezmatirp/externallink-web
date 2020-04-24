@@ -1,30 +1,8 @@
-.top {
-  background-image: url(../../assets/images/Group.svg);
-  /* background-attachment: fixed; */
-  background-position: right;
-  background-repeat: no-repeat;
-  background-size: 650px;
-  /* height: 690px; */
-}
-
-.grad {
-  height: 690px;
-  background: linear-gradient(
-    0deg,
-    rgba(39, 90, 122, 0.8) 16.55%,
-    rgba(196, 196, 196, 0.2) 99.9%
-  );
-}
-
 .head {
   background: rgb(242, 244, 245);
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   height: 60px;
-}
-
-.nav-link {
-  font-weight: 700;
 }
 
 .btnedt {
@@ -42,7 +20,7 @@
   border: 1px light;
   background: rgb(242, 244, 245);
 } */
-
+/* 
 input:focus,
 input[type]:focus,
 .uneditable-input:focus {
@@ -54,16 +32,28 @@ input[type]:focus,
 input:hover,
 input[type]:focus {
   border-color: rgb(66, 63, 63);
+} */
+
+.cardEdit {
+  border: 0;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16), 0px 2px 4px rgba(0, 0, 0, 0.23);
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-bottom: 16px;
 }
 
-.heading {
-  color: white;
-  font-weight: 700;
-  font-size: 35px;
-  margin-top: 140px;
+.prime_btn {
+  /* margin-right: 16px; */
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f1f1;
+  background: #4285f4;
+  padding: 8px 16px;
+  border: 0;
+  transition: 0.3s all ease;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16), 0px 2px 4px rgba(0, 0, 0, 0.23);
 }
 
-.tag {
-  color: white;
-  font-size: 35px;
+.prime_btn:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16), 0px 4px 8px rgba(0, 0, 0, 0.23);
 }

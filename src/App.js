@@ -7,6 +7,7 @@ import Homepage from "./components/homepage/homepage";
 import Index from "./components/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login from "./components/login/login";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/" component={Index} />
         <Route exact path="/home" component={Homepage} />
         <Route exact path="/table/:url" component={Table} />
+        <Route exact path="/login" component={Login} />
       </Switch>
     </>
   );

@@ -12,7 +12,13 @@ function Navbar() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg">
+      <nav
+        className="navbar navbar-expand-lg navbar-light"
+        style={{
+          boxShadow: "2px 0px 6px #707070",
+          background: "#fff!important",
+        }}
+      >
         <div className="container">
           <h5
             className="navbar-brand pt-2"
@@ -51,7 +57,7 @@ function Navbar() {
               <li className="nav-item">
                 <NavLink
                   className="nav-link"
-                  to="#"
+                  to="/login"
                   style={{ color: "rgb(133, 123, 123)" }}
                 >
                   Sign In
