@@ -9,6 +9,30 @@
   border: 0;
 }
 
+.pagination {
+  display: inline-block;
+}
+
+.pagination p {
+  color: black;
+  background-color: white;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  border: 1px solid #ddd;
+}
+
+.pagination p.active {
+  background-color: #4caf50;
+  color: white;
+  border: 1px solid #4caf50;
+}
+
+.pagination p:hover:not(.active) {
+  background-color: #ddd;
+}
+
 .RNNXgb {
   background: #fff;
   display: flex;

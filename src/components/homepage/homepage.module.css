@@ -66,3 +66,101 @@
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 4px 10px 0 rgba(0, 0, 0, 0.07);
 }
+
+.s006 form .inner-form {
+  width: 100%;
+  margin-bottom: 17px;
+}
+
+.s006 form .inner-form .input-field {
+  height: 70px;
+  width: 100%;
+  position: relative;
+}
+
+.s006 form .inner-form .input-field input {
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  background: #fff;
+  display: block;
+  width: 100%;
+  padding: 10px 32px 10px 70px;
+  font-size: 18px;
+  color: #666;
+  border-radius: 34px;
+}
+
+.s006 form .inner-form .input-field input.placeholder {
+  color: #ccc;
+  font-size: 18px;
+}
+
+.s006 form .inner-form .input-field input:-moz-placeholder {
+  color: #ccc;
+  font-size: 18px;
+}
+
+.s006 form .inner-form .input-field input::-webkit-input-placeholder {
+  color: #ccc;
+  font-size: 18px;
+}
+
+.s006 form .inner-form .input-field input:hover,
+.s006 form .inner-form .input-field input:focus {
+  box-shadow: none;
+  outline: 0;
+}
+
+.s006 form .inner-form .input-field .btn-search {
+  width: 70px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.s006 form .inner-form .input-field .btn-search svg {
+  fill: #ccc;
+  width: 30px;
+  height: 30px;
+  transition: all 0.2s ease-out, color 0.2s ease-out;
+}
+
+.s006 form .inner-form .input-field .btn-search:hover,
+.s006 form .inner-form .input-field .btn-search:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+.s006 form .inner-form .input-field .btn-search:hover svg,
+.s006 form .inner-form .input-field .btn-search:focus svg {
+  fill: #666;
+}
+
+@media screen and (max-width: 767px) {
+  .s006 form .inner-form .input-field {
+    margin-bottom: 20px;
+    height: 50px;
+  }
+  .s006 form .inner-form .input-field input {
+    padding-left: 55px;
+    font-size: 16px;
+  }
+  .s006 form .inner-form .input-field .btn-search svg {
+    width: 26px;
+    height: 26px;
+  }
+}

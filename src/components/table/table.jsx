@@ -26,11 +26,7 @@
 //     fetchData();
 //   }, [skip]);
 
-//   const counter = (val) => {
-//     if (val === "pre") {
-//       setSkip(skip - 20);
-//     } else if (val === "next") setSkip(skip + 20);
-//   };
+//
 //   console.log(skip);
 //   console.log(table);
 
@@ -205,6 +201,7 @@ import { FaFileDownload } from "react-icons/fa";
 // import useInputState from "../../hooks/useInputState";
 
 function Table(props) {
+  const [skip, setSkip] = useState(0);
   const [table, setTable] = useState("");
   const [data, setData] = useState("");
   // const [csvTable, setcsvTable] = useState("");
@@ -217,7 +214,7 @@ function Table(props) {
       if (id < list.data.result.length) {
         let url = list.data.result[id].link;
         let data = await axios.get(
-          `${getScrapedData}/?site=${url}&limit=20&skip=0`
+          `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
         );
         console.log(data);
         setTable(data.data.doc);
@@ -225,10 +222,13 @@ function Table(props) {
       }
     };
     fetchData();
-    // eslint-disable-next-line
-  }, []);
-  console.log(table);
+  }, [skip]);
 
+  const counter = (val) => {
+    if (val === "pre") {
+      setSkip(skip - 20);
+    } else if (val === "next") setSkip(skip + 20);
+  };
   // const handleSubmit = async () => {
   //   if(skip > and )
   // }
@@ -321,28 +321,26 @@ function Table(props) {
             </div>
           </form> */}
         </div>
-
         <div className="col-lg-12">
-          <div>
-            <div
-              className={`card ${styles.cardEdit2}`}
-              style={{
-                overflowY: "scroll",
-                height: "1500px",
-                display: "block",
-              }}
-            >
-              <table className="table ">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Site</th>
-                    <th scope="col">External Links</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {table
-                    ? table.map((tab, i) => {
+          <div
+            className={`card ${styles.cardEdit2}`}
+            style={{
+              overflowY: "scroll",
+              height: "1000px",
+              display: "block",
+            }}
+          >
+            <table className="table ">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Site</th>
+                  <th scope="col">External Links</th>
+                </tr>
+              </thead>
+              <tbody>
+                {table
+                  ? table.map((tab, i) => {
                       let date = tab.created_at.substring(
                         0,
                         tab.created_at.indexOf("T")
@@ -364,17 +362,28 @@ function Table(props) {
                                     );
                                   })
                                 ) : (
-                                    <td>No External Link</td>
-                                  )}
+                                  <tr>
+                                    <td>No External Links</td>
+                                  </tr>
+                                )}
                               </tbody>
                             </table>
                           </td>
                         </tr>
                       );
                     })
-                    : null}
-                </tbody>
-              </table>
+                  : null}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="col-lg-12 mt-5">
+          <div className="col-lg-6 text-center mx-auto">
+            <div className={styles.pagination}>
+              {skip > 0 ? <p onClick={() => counter("pre")}>❮</p> : null}
+              {table.length < 20 ? null : (
+                <p onClick={() => counter("next")}>❯</p>
+              )}
             </div>
           </div>
         </div>
