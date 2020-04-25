@@ -8,6 +8,7 @@ import Index from "./components/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./components/login/login";
+import Register from "./components/register/register";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/home" component={Homepage} />
         <Route exact path="/table/:url" component={Table} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
       </Switch>
     </>
   );

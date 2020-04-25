@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import styles from "./globalCSV.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useInputState from "../../hooks/useInputState";
 import axios from "axios";
 import { getGlobalData } from "./../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function GlobalCSV() {
   const [startDate, setStartDate] = useState("");
@@ -31,7 +31,8 @@ export default function GlobalCSV() {
       setTable(data.data.doc);
       setLoader(false);
     } catch (error) {
-      console.log(error);
+      setShow(false);
+      console.log(error.response);
     }
   };
 

@@ -20,15 +20,16 @@ function Navbar() {
         }}
       >
         <div className="container">
-          <h5
+          <NavLink
             className="navbar-brand pt-2"
             style={{
               fontWeight: 700,
               color: "rgba(12, 213, 8, 0.952)",
             }}
+            to="/"
           >
             Article Scraper
-          </h5>
+          </NavLink>
           <button
             className="navbar-toggler"
             type="button"
@@ -66,10 +67,10 @@ function Navbar() {
               <li className="nav-item">
                 <NavLink
                   className="nav-link"
-                  to="#"
+                  to="/register"
                   style={{ color: "rgb(133, 123, 123)" }}
                 >
-                  Sign Out
+                  Sign Up
                 </NavLink>
               </li>
               <li className="nav-item ml-2">
