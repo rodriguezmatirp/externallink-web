@@ -4,9 +4,11 @@ import axios from "axios";
 import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
 import GlobalCSV from "./../globalCSV/globalCSV";
+import useInputState from "../../hooks/useInputState";
 
 export default function Homepage() {
   const [list, setList] = useState("");
+  const [query, handleQuery] = useInputState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +22,20 @@ export default function Homepage() {
     fetchData();
   }, []);
 
-  console.log(list);
+  const savedata = (title, site) => {
+    localStorage.setItem("link", JSON.stringify({ title, site }));
+  };
+  const searchData = () => {
+    let filtered = list;
+    if (query) {
+      filtered = filtered.filter((data) => {
+        return data.title.toLowerCase().startsWith(query.toLowerCase());
+      });
+    }
+    return filtered;
+  };
+
+  const filteredData = searchData();
   return (
     <div
       className="fluid-container pb-5"
@@ -33,29 +48,19 @@ export default function Homepage() {
               type="search"
               className="form-control"
               placeholder="Search"
+              value={query}
+              onChange={handleQuery}
               aria-label="Search"
               aria-describedby="button-addon2"
             />
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-success"
-                type="button"
-                id="button-addon2"
-              >
-                Search
-              </button>
-            </div>
           </div>
         </div>
 
         <div className="row">
           <div className="col-lg-8">
-            {/* <div className="articles text-dark h3 mt-4">
-            <span>Your Articles</span>
-          </div> */}
             <div className="row">
-              {list.length > 0 ? (
-                list.map((item, i) => {
+              {filteredData.length > 0 ? (
+                filteredData.map((item, i) => {
                   let sitemap = item.link.substring(0, 20);
                   return (
                     <div
@@ -84,7 +89,12 @@ export default function Homepage() {
                               <span>{item.algo}</span>
                             </div>
                             <div className="float-right">
-                              <NavLink to={`/table/${i}`}>See data</NavLink>
+                              <NavLink
+                                to={`/table/${i}`}
+                                onClick={() => savedata(item.title, item.link)}
+                              >
+                                See data
+                              </NavLink>
                             </div>
                           </div>
                         </div>

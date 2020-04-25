@@ -8,6 +8,7 @@ export default function Login() {
   const toggleType = () => {
     type === "password" ? setType("text") : setType("password");
   };
+
   return (
     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
       <div className="container" style={{ paddingTop: "50px" }}>

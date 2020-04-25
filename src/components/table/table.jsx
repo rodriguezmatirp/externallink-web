@@ -12,17 +12,19 @@ function Table(props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      let id = props.match.params.url;
-      let list = await axios.get(getSitemaps);
-      if (id < list.data.result.length) {
-        let url = list.data.result[id].link;
-        let data = await axios.get(
-          `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-        );
-        console.log(data);
-        setTable(data.data.doc);
-        setData(list.data.result[id]);
-      }
+      let obj = JSON.parse(localStorage.getItem("link"));
+      // let id = props.match.params.url;
+      // let list = await axios.get(getSitemaps);
+      // if (id < list.data.result.length) {
+      //   let url = list.data.result[id].link;
+      let url = obj.site;
+      let data = await axios.get(
+        `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
+      );
+      // console.log(list.data.result[id]);
+      setTable(data.data.doc);
+      setData(obj);
+      // }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
