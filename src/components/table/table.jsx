@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
-import { getSitemaps, getScrapedData } from "../../utils/routes";
+import { getScrapedData } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import { getGlobalData } from "./../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export default function GlobalCSV() {
   const [startDate, setStartDate] = useState("");
@@ -18,10 +18,10 @@ export default function GlobalCSV() {
   const generateCSV = async () => {
     setShow(true);
     setLoader(true);
-    const endLoop = Date.now() + 4000;
-    while (Date.now() < endLoop) {
+    /* const endLoop = Date.now() + 4000;
+     while (Date.now() < endLoop) {
       let a = 1 + 1;
-    }
+    } */
     try {
       let start = getFormattedDate(startDate);
       let end = getFormattedDate(endDate);
