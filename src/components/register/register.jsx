@@ -1,73 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import styles from "./register.module.css";
 
 export default function Register() {
   return (
     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
-      {/* <div className="container">
-        <div className="row">
-          <div className="col-lg-6">
-            <div className="card" style={{ borderRadius: "5px", border: 0 }}>
-              <div className={`${styles.head} text-center pt-3`}>
-                <h4>
-                  <strong>Register </strong>
-                </h4>
-              </div>
-              <div className="card-body">
-                <form>
-                  <div className="form-row">
-                    <div className="col-lg-6 mb-4">
-                      <label for="name" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>First Name</strong>
-                      </label>
-                      <input type="text" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label for="name" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>Last Name</strong>
-                      </label>
-                      <input type="text" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label for="email" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>Email</strong>
-                      </label>
-                      <input type="email" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label
-                        for="password"
-                        style={{ color: "rgb(66, 63, 63)" }}
-                      >
-                        <strong>Password</strong>
-                      </label>
-                      <input type="password" className="form-control" />
-                    </div>
-
-                    <div className="col-lg-12 mb-2">
-                      <button
-                        type="button"
-                        className={`btn btn-secondary btn-lg btn-block ${styles.btnedt}`}
-                      >
-                        <strong style={{ fontSize: "17px" }}>
-                          Sign Up
-                          <i className="fas fa-caret-right"></i>
-                        </strong>
-                      </button>
-                    </div>
-                    <div className="col-lg-12 mt-2">
-                      <label>Already have account ? Sign In</label>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            
-          </div>
-        </div>
-      </div> */}
       <div className="container" style={{ paddingTop: "50px" }}>
         <div
           className="row"
@@ -99,12 +36,12 @@ export default function Register() {
                     <div className="form-group">
                       <label htmlFor="name">First Name:</label>
                       <input
-                        name="name"
+                        name="fname"
                         // value={this.state.name}
                         // onChange={this.handleChange}
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="fname"
                       />
                     </div>
                   </div>
@@ -112,12 +49,12 @@ export default function Register() {
                     <div className="form-group">
                       <label htmlFor="name">Last Name:</label>
                       <input
-                        name="name"
+                        name="lname"
                         // value={this.state.name}
                         // onChange={this.handleChange}
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="lname"
                       />
                     </div>
                   </div>
@@ -127,12 +64,12 @@ export default function Register() {
                 <div className="form-group">
                   <label htmlFor="name">Email:</label>
                   <input
-                    name="name"
+                    name="email"
                     // value={this.state.name}
                     // onChange={this.handleChange}
                     type="text"
                     className="form-control"
-                    id="name"
+                    id="email"
                   />
                 </div>
               </div>
@@ -140,12 +77,12 @@ export default function Register() {
                 <div className="form-group">
                   <label htmlFor="email">Password:</label>
                   <input
-                    name="email"
+                    name="password"
                     // // value={this.state.email}
                     // // onChange={this.handleChange}
                     type="password"
                     className="form-control"
-                    id="email"
+                    id="password"
                   />
                 </div>
               </div>
@@ -153,19 +90,19 @@ export default function Register() {
                 <div className="form-group">
                   <label htmlFor="email">Confirm Password:</label>
                   <input
-                    name="email"
+                    name="password"
                     // // value={this.state.email}
                     // // onChange={this.handleChange}
                     type="password"
                     className="form-control"
-                    id="email"
+                    id="cpassword"
                   />
                 </div>
               </div>
               <div className="col-lg-12 mt-4">
                 <button
                   type="submit"
-                  className={`btn btn-outline-primary btn-block `}
+                  className={`btn btn-outline-primary btn-block ${styles.prime_btn}`}
                   //   onClick={this.handleSubmit}
                 >
                   Sign Up

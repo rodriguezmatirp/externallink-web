@@ -32,7 +32,7 @@ export default function GlobalCSV() {
       setLoader(false);
     } catch (error) {
       setShow(false);
-      console.log(error.response);
+      toast.error("Something went wrong");
     }
   };
 

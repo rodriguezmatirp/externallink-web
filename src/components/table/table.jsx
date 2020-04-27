@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
-import { getSitemaps, getScrapedData } from "../../utils/routes";
+import { getScrapedData } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
 
@@ -13,10 +13,6 @@ function Table(props) {
   useEffect(() => {
     const fetchData = async () => {
       let obj = JSON.parse(localStorage.getItem("link"));
-      // let id = props.match.params.url;
-      // let list = await axios.get(getSitemaps);
-      // if (id < list.data.result.length) {
-      //   let url = list.data.result[id].link;
       let url = obj.site;
       let data = await axios.get(
         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
@@ -24,7 +20,6 @@ function Table(props) {
       // console.log(list.data.result[id]);
       setTable(data.data.doc);
       setData(obj);
-      // }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "./login.module.css";
+import { DispatchContext, AuthContext } from "../../contexts/userContext";
 
 export default function Login() {
   const [type, setType] = useState("password");
+  const dispatch = useContext(DispatchContext);
+  let Data = useContext(AuthContext);
 
   const toggleType = () => {
     type === "password" ? setType("text") : setType("password");
   };
+
+  console.log(Data);
 
   return (
     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
