@@ -70,7 +70,7 @@ function Table(props) {
           </div>
           <div className="sitemap h5">
             <p>
-              <strong>Sitemap:</strong> <span>{data ? data.link : null}</span>
+              <strong>Sitemap:</strong> <span>{data ? data.site : null}</span>
             </p>
           </div>
           {table ? (

@@ -18,10 +18,10 @@ export default function GlobalCSV() {
   const generateCSV = async () => {
     setShow(true);
     setLoader(true);
-    const endLoop = Date.now() + 4000;
-    while (Date.now() < endLoop) {
-      let a = 1 + 1;
-    }
+    // const endLoop = Date.now() + 4000;
+    // while (Date.now() < endLoop) {
+    //   let a = 1 + 1;
+    // }
     try {
       let start = getFormattedDate(startDate);
       let end = getFormattedDate(endDate);

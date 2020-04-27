@@ -90,7 +90,7 @@ export default function Homepage() {
                             </div>
                             <div className="float-right">
                               <NavLink
-                                to={`/table/${i}`}
+                                to="/table"
                                 onClick={() => savedata(item.title, item.link)}
                               >
                                 See data

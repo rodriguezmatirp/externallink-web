@@ -15,3 +15,17 @@
   -webkit-transform: translateY(-1px);
   transform: translateY(-1px);
 }
+
+.navSM {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .navSM {
+    display: block !important;
+    margin-top: 10px;
+  }
+  .navLg {
+    display: none !important;
+  }
+}
