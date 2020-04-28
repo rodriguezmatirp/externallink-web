@@ -60,7 +60,7 @@ function Table(props) {
   };
   CsvOperation(table);
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
         <div className="col-lg-12">
           <div className="title h5">
@@ -85,20 +85,14 @@ function Table(props) {
             </CSVLink>
           ) : null}
         </div>
-        {/* <div className={styles.RNNXgb}>
-          <div className={styles.SDkEP}>
-            <div className={styles.a4bIc}>
-              <TextField id="standard-basic" fullWidth />
-            </div>
-          </div>
-        </div> */}
         <div className="col-lg-12">
           <div
             className={`card ${styles.cardEdit2}`}
             style={{
-              overflowY: "scroll",
+              overflowX: "scroll",
               height: "1000px",
               display: "block",
+              overflowY: "hidden",
             }}
           >
             <table className="table ">

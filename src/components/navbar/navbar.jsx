@@ -113,7 +113,7 @@ function Navbar() {
                   >
                     <NavLink
                       to="#"
-                      class="nav-link"
+                      className="nav-link"
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
@@ -123,11 +123,11 @@ function Navbar() {
                       </Avatar>
                     </NavLink>
                     <div
-                      class="dropdown-menu"
+                      className="dropdown-menu"
                       aria-labelledby="dropdownMenuButton"
                     >
                       <NavLink
-                        class="dropdown-item"
+                        className="dropdown-item"
                         to="/"
                         onClick={handleLogout}
                       >
@@ -135,7 +135,7 @@ function Navbar() {
                       </NavLink>
                     </div>
                   </li>
-                  <li className={`nav-item navSM ${styles.navSM}`}>
+                  <li className={`nav-item ${styles.navSM}`}>
                     <NavLink
                       className="nav-link"
                       to="/"
