@@ -6,7 +6,7 @@ import axios from "axios";
 import { getGlobalData } from "./../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function GlobalCSV() {
   const [startDate, setStartDate] = useState("");
