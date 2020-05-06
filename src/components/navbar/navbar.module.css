@@ -8,10 +8,23 @@
 
 .btnSecondaryBlue:hover {
   color: #1f7ae0;
-
-  border: 1px solid rgba(31, 122, 224, 0.4);
+  /* border: 1px solid rgba(31, 122, 224, 0.4); */
   -webkit-box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.07);
   box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.07);
   -webkit-transform: translateY(-1px);
   transform: translateY(-1px);
+}
+
+.navSM {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .navSM {
+    display: block !important;
+    margin-top: 10px;
+  }
+  .navLg {
+    display: none !important;
+  }
 }

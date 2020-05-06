@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
+import React, { useContext } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/navbar/navbar";
 import Table from "./components/table/table";
@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./components/login/login";
 import Register from "./components/register/register";
+import { AuthContext } from "./contexts/userContext";
+import NotFound from "./components/notFound/notFound";
 
 function App() {
   return (
@@ -17,13 +19,26 @@ function App() {
       <Navbar />
       <Switch>
         <Route exact path="/" component={Index} />
-        <Route exact path="/home" component={Homepage} />
-        <Route exact path="/table/:url" component={Table} />
+        <PrivateRoute exact path="/home" component={Homepage} />
+        <PrivateRoute exact path="/table" component={Table} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
+        <Route path="*" component={NotFound} />
       </Switch>
     </>
   );
 }
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const Data = useContext(AuthContext);
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        Data.token !== "" ? <Component {...props} /> : <Redirect to="/" />
+      }
+    />
+  );
+};
 
 export default App;

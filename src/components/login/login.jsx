@@ -1,12 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "./login.module.css";
+import { DispatchContext } from "../../contexts/userContext";
+import useInputState from "../../hooks/useInputState";
+import axios from "axios";
+import { getLogined } from "./../../utils/routes";
+import { toast } from "react-toastify";
 
-export default function Login() {
+export default function Login(props) {
   const [type, setType] = useState("password");
+  const [email, handleEmail] = useInputState("");
+  const [password, handlePassword] = useInputState("");
+  const Dispatch = useContext(DispatchContext);
 
   const toggleType = () => {
     type === "password" ? setType("text") : setType("password");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let body = { email, password };
+    try {
+      const user = await axios.post(getLogined, body);
+      Dispatch({
+        type: "IN",
+        user: {
+          name: user.data.data.name,
+          email: user.data.data.email,
+        },
+        token: user.headers["x-auth-token"],
+      });
+      toast.success("Sign In successfully");
+      props.history.push("/home");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -34,30 +62,30 @@ export default function Login() {
                 </strong>
               </h4>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="col-lg-12">
                 <div className="form-group">
                   <label htmlFor="name">Email:</label>
                   <input
-                    name="name"
-                    // value={this.state.name}
-                    // onChange={this.handleChange}
+                    name="email"
+                    value={email}
+                    onChange={handleEmail}
                     type="text"
                     className="form-control"
-                    id="name"
+                    id="email"
                   />
                 </div>
               </div>
               <div className="col-lg-12">
                 <div className="form-group">
-                  <label htmlFor="email">Password:</label>
+                  <label htmlFor="password">Password:</label>
                   <input
-                    name="email"
-                    // // value={this.state.email}
-                    // // onChange={this.handleChange}
+                    name="password"
+                    value={password}
+                    onChange={handlePassword}
                     type={type}
                     className="form-control"
-                    id="email"
+                    id="password"
                   />
                 </div>
               </div>
@@ -90,7 +118,6 @@ export default function Login() {
                 <button
                   type="submit"
                   className={`btn btn-outline-primary btn-block ${styles.prime_btn}`}
-                  //   onClick={this.handleSubmit}
                 >
                   Sign In
                 </button>

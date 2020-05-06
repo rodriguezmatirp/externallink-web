@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./globalCSV.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,6 +14,34 @@ export default function GlobalCSV() {
   const [table, setTable] = useState("");
   const [loader, setLoader] = useState(true);
   const [show, setShow] = useState(false);
+  const [todayCSV, setTodayCSV] = useState("");
+  const [yesterdayCSV, setYesterdayCSV] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let today = new Date();
+      let yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      let todayStart = getFormattedDate(today);
+      let yesterdayStart = getFormattedDate(yesterday);
+
+      try {
+        let todayData = await axios.get(
+          `${getGlobalData}/?site=global&start=${todayStart}&end=${todayStart}`
+        );
+        let yesterdayData = await axios.get(
+          `${getGlobalData}/?site=global&start=${yesterdayStart}&end=${yesterdayStart}`
+        );
+        setTodayCSV(todayData.data.doc);
+        setYesterdayCSV(yesterdayData.data.doc);
+        console.log(todayData);
+        console.log(yesterdayData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const generateCSV = async () => {
     setShow(true);
@@ -32,7 +60,7 @@ export default function GlobalCSV() {
       setLoader(false);
     } catch (error) {
       setShow(false);
-      console.log(error.response);
+      toast.error("Something went wrong");
     }
   };
 
@@ -45,7 +73,7 @@ export default function GlobalCSV() {
   };
 
   let result = [["published_date", "articlelink", "externalLinks"]];
-  let CsvOperation = async (table) => {
+  let CsvOperation = (table) => {
     let i = 0;
 
     for (i = 0; i < table.length; i++) {
@@ -67,8 +95,11 @@ export default function GlobalCSV() {
       var dateobj = new Date(table[i].created_at.toString());
       result.push([dateobj.toString(), table[i].articlelink, links]);
     }
+    return result;
   };
-  CsvOperation(table);
+  let datedCSV = CsvOperation(table);
+  let todayCSVData = CsvOperation(todayCSV);
+  let yesterdayCSVData = CsvOperation(yesterdayCSV);
 
   return (
     <div className="fluid-container">
@@ -79,6 +110,28 @@ export default function GlobalCSV() {
               <strong>Download CSV</strong>
             </h5>
             <div className="row">
+              <div className="col-lg-6 p-3">
+                <CSVLink data={todayCSVData}>
+                  <FaFileDownload
+                    style={{
+                      fontSize: 36,
+                      marginBottom: 8,
+                    }}
+                  />
+                  Today
+                </CSVLink>
+              </div>
+              <div className="col-lg-6 p-3">
+                <CSVLink data={yesterdayCSVData}>
+                  <FaFileDownload
+                    style={{
+                      fontSize: 36,
+                      marginBottom: 8,
+                    }}
+                  />
+                  Yesterday
+                </CSVLink>
+              </div>
               <div className="col-lg-12 col-md-6 mt-2">
                 <label>From:</label>
                 <br />
@@ -122,7 +175,7 @@ export default function GlobalCSV() {
                     height="100"
                   />
                 ) : (
-                  <CSVLink data={result}>
+                  <CSVLink data={datedCSV}>
                     <FaFileDownload
                       style={{
                         fontSize: 36,

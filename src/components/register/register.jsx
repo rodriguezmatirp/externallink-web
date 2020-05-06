@@ -1,73 +1,48 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import styles from "./register.module.css";
+import useInputState from "../../hooks/useInputState";
+import axios from "axios";
+import { getRegistered } from "../../utils/routes";
+import { DispatchContext } from "../../contexts/userContext";
+import { toast } from "react-toastify";
 
-export default function Register() {
+export default function Register(props) {
+  const [fname, handleFname] = useInputState("");
+  const [lname, handleLname] = useInputState("");
+  const [email, handleEmail] = useInputState("");
+  const [password, handlePassword] = useInputState("");
+  const [cpassword, handleCpassword] = useInputState("");
+  const [showError, setShowError] = useState(false);
+  const Dispatch = useContext(DispatchContext);
+
+  useEffect(() => {
+    if (password !== cpassword) setShowError(true);
+    else setShowError(false);
+  }, [cpassword]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let name = `${fname} ${lname}`;
+    let body = { name, email, password, cpassword };
+    try {
+      const user = await axios.post(getRegistered, body);
+      Dispatch({
+        type: "IN",
+        user: {
+          name: user.data.data.name,
+          email: user.data.data.email,
+        },
+        token: user.headers["x-auth-token"],
+      });
+      toast.success("Sign Up successfully");
+      props.history.push("/home");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
-      {/* <div className="container">
-        <div className="row">
-          <div className="col-lg-6">
-            <div className="card" style={{ borderRadius: "5px", border: 0 }}>
-              <div className={`${styles.head} text-center pt-3`}>
-                <h4>
-                  <strong>Register </strong>
-                </h4>
-              </div>
-              <div className="card-body">
-                <form>
-                  <div className="form-row">
-                    <div className="col-lg-6 mb-4">
-                      <label for="name" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>First Name</strong>
-                      </label>
-                      <input type="text" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label for="name" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>Last Name</strong>
-                      </label>
-                      <input type="text" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label for="email" style={{ color: "rgb(66, 63, 63)" }}>
-                        <strong>Email</strong>
-                      </label>
-                      <input type="email" className="form-control" />
-                    </div>
-                    <div className="col-lg-6 mb-4">
-                      <label
-                        for="password"
-                        style={{ color: "rgb(66, 63, 63)" }}
-                      >
-                        <strong>Password</strong>
-                      </label>
-                      <input type="password" className="form-control" />
-                    </div>
-
-                    <div className="col-lg-12 mb-2">
-                      <button
-                        type="button"
-                        className={`btn btn-secondary btn-lg btn-block ${styles.btnedt}`}
-                      >
-                        <strong style={{ fontSize: "17px" }}>
-                          Sign Up
-                          <i className="fas fa-caret-right"></i>
-                        </strong>
-                      </button>
-                    </div>
-                    <div className="col-lg-12 mt-2">
-                      <label>Already have account ? Sign In</label>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            
-          </div>
-        </div>
-      </div> */}
       <div className="container" style={{ paddingTop: "50px" }}>
         <div
           className="row"
@@ -92,19 +67,19 @@ export default function Register() {
                 </strong>
               </h4>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="col-lg-12 ">
                 <div className="row">
                   <div className="col-lg-6">
                     <div className="form-group">
                       <label htmlFor="name">First Name:</label>
                       <input
-                        name="name"
-                        // value={this.state.name}
-                        // onChange={this.handleChange}
+                        name="fname"
+                        value={fname}
+                        onChange={handleFname}
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="fname"
                       />
                     </div>
                   </div>
@@ -112,12 +87,12 @@ export default function Register() {
                     <div className="form-group">
                       <label htmlFor="name">Last Name:</label>
                       <input
-                        name="name"
-                        // value={this.state.name}
-                        // onChange={this.handleChange}
+                        name="lname"
+                        value={lname}
+                        onChange={handleLname}
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="lname"
                       />
                     </div>
                   </div>
@@ -125,48 +100,55 @@ export default function Register() {
               </div>
               <div className="col-lg-12">
                 <div className="form-group">
-                  <label htmlFor="name">Email:</label>
+                  <label>Email:</label>
                   <input
-                    name="name"
-                    // value={this.state.name}
-                    // onChange={this.handleChange}
+                    name="email"
+                    value={email}
+                    onChange={handleEmail}
                     type="text"
                     className="form-control"
-                    id="name"
-                  />
-                </div>
-              </div>
-              <div className="col-lg-12">
-                <div className="form-group">
-                  <label htmlFor="email">Password:</label>
-                  <input
-                    name="email"
-                    // // value={this.state.email}
-                    // // onChange={this.handleChange}
-                    type="password"
-                    className="form-control"
                     id="email"
                   />
                 </div>
               </div>
               <div className="col-lg-12">
                 <div className="form-group">
-                  <label htmlFor="email">Confirm Password:</label>
+                  <label>Password:</label>
                   <input
-                    name="email"
-                    // // value={this.state.email}
-                    // // onChange={this.handleChange}
+                    name="password"
+                    value={password}
+                    onChange={handlePassword}
                     type="password"
                     className="form-control"
-                    id="email"
+                    id="password"
                   />
                 </div>
               </div>
+              <div className="col-lg-12">
+                <div className="form-group">
+                  <label>Confirm Password:</label>
+                  <input
+                    name="password"
+                    value={cpassword}
+                    onChange={handleCpassword}
+                    type="password"
+                    className="form-control"
+                    id="cpassword"
+                  />
+                </div>
+              </div>
+              {showError ? (
+                <div className="col-lg-12">
+                  <div className="alert alert-danger" role="alert">
+                    Password do not match
+                  </div>
+                </div>
+              ) : null}
+
               <div className="col-lg-12 mt-4">
                 <button
                   type="submit"
-                  className={`btn btn-outline-primary btn-block `}
-                  //   onClick={this.handleSubmit}
+                  className={`btn btn-outline-primary btn-block ${styles.prime_btn}`}
                 >
                   Sign Up
                 </button>

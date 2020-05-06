@@ -13,10 +13,6 @@ function Table(props) {
   useEffect(() => {
     const fetchData = async () => {
       let obj = JSON.parse(localStorage.getItem("link"));
-      // let id = props.match.params.url;
-      // let list = await axios.get(getSitemaps);
-      // if (id < list.data.result.length) {
-      //   let url = list.data.result[id].link;
       let url = obj.site;
       let data = await axios.get(
         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
@@ -24,7 +20,6 @@ function Table(props) {
       // console.log(list.data.result[id]);
       setTable(data.data.doc);
       setData(obj);
-      // }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +60,7 @@ function Table(props) {
   };
   CsvOperation(table);
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
         <div className="col-lg-12">
           <div className="title h5">
@@ -75,7 +70,7 @@ function Table(props) {
           </div>
           <div className="sitemap h5">
             <p>
-              <strong>Sitemap:</strong> <span>{data ? data.link : null}</span>
+              <strong>Sitemap:</strong> <span>{data ? data.site : null}</span>
             </p>
           </div>
           {table ? (
@@ -90,20 +85,14 @@ function Table(props) {
             </CSVLink>
           ) : null}
         </div>
-        {/* <div className={styles.RNNXgb}>
-          <div className={styles.SDkEP}>
-            <div className={styles.a4bIc}>
-              <TextField id="standard-basic" fullWidth />
-            </div>
-          </div>
-        </div> */}
         <div className="col-lg-12">
           <div
             className={`card ${styles.cardEdit2}`}
             style={{
-              overflowY: "scroll",
+              overflowX: "scroll",
               height: "1000px",
               display: "block",
+              overflowY: "hidden",
             }}
           >
             <table className="table ">

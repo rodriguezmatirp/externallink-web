@@ -39,7 +39,7 @@ export default function Homepage() {
   return (
     <div
       className="fluid-container pb-5"
-      style={{ backgroundColor: "#e7f6fd" }}
+      style={{ backgroundColor: "#f9fafb" }}
     >
       <div className="container pt-4">
         <div className="col-lg-9 mx-auto">
@@ -56,7 +56,7 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className="row">
+        <div className="row pt-5">
           <div className="col-lg-8">
             <div className="row">
               {filteredData.length > 0 ? (
@@ -90,7 +90,7 @@ export default function Homepage() {
                             </div>
                             <div className="float-right">
                               <NavLink
-                                to={`/table/${i}`}
+                                to="/table"
                                 onClick={() => savedata(item.title, item.link)}
                               >
                                 See data
