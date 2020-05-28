@@ -50,21 +50,13 @@ export default function Form(props) {
       <div className="container">
         <div>
           <div className="row">
-            <div
-              className="col-lg-8 col-md-7 col-12"
-              style={{ padding: "50px" }}
-            >
-              <img
-                src="./assets/images/addSite.svg"
-                width="100%"
-                className="contact__image"
-                height="100%"
-                alt=""
-              />
+            <div className="col-lg-8 col-md-7 col-12">
+              <p className="h4 mt-4">Algorithm Types</p>
+              <p className="h5">Type 1:</p>
             </div>
             <div className="col-lg-4 col-md-5 col-12 pb-4">
               <div className="col-lg-12">
-                <h4 className="title mt-4 mb-4">
+                <h4 className=" mt-4 mb-4">
                   {" "}
                   <strong>Add Sitemap</strong>
                 </h4>
@@ -102,8 +94,8 @@ export default function Form(props) {
                         <input
                           className="form-check-input"
                           type="radio"
-                          name="exampleRadios"
-                          id="exampleRadios2"
+                          name="1"
+                          id="exampleRadios1"
                           value="1"
                           onChange={handleAlgoChange}
                         />
@@ -115,7 +107,7 @@ export default function Form(props) {
                         <input
                           className="form-check-input"
                           type="radio"
-                          name="exampleRadios"
+                          name="3"
                           id="exampleRadios2"
                           value="2"
                           onChange={handleAlgoChange}
@@ -128,8 +120,8 @@ export default function Form(props) {
                         <input
                           className="form-check-input"
                           type="radio"
-                          name="exampleRadios"
-                          id="exampleRadios2"
+                          name="3"
+                          id="exampleRadios3"
                           value="3"
                           onChange={handleAlgoChange}
                         />

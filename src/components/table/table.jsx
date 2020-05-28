@@ -4,6 +4,7 @@ import axios from "axios";
 import { getScrapedData } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 function Table(props) {
   const [skip, setSkip] = useState(0);
@@ -59,6 +60,7 @@ function Table(props) {
     }
   };
   CsvOperation(table);
+  console.log(table);
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
@@ -106,14 +108,22 @@ function Table(props) {
               <tbody>
                 {table
                   ? table.map((tab, i) => {
-                      let date = tab.created_at.substring(
+                      let date = tab.lastmod.substring(
                         0,
-                        tab.created_at.indexOf("T")
+                        tab.lastmod.indexOf("T")
                       );
                       return (
                         <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
                           <td>{date}</td>
-                          <td>{tab.articlelink}</td>
+                          <td>
+                            <a
+                              href={tab.articlelink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {tab.articlelink}
+                            </a>
+                          </td>
                           <td>
                             <table className="table">
                               <tbody>
@@ -121,7 +131,15 @@ function Table(props) {
                                   tab.externalLinks.map((extLink, j) => {
                                     return (
                                       <tr key={j}>
-                                        <td>{extLink.link}</td>
+                                        <td>
+                                          <a
+                                            href={extLink.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {extLink.link}
+                                          </a>
+                                        </td>
                                         <td>{extLink.rel}</td>
                                       </tr>
                                     );

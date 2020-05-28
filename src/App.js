@@ -31,11 +31,12 @@ function App() {
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const Data = useContext(AuthContext);
+  console.log(Data);
   return (
     <Route
       {...rest}
       render={(props) =>
-        Data.token !== "" ? <Component {...props} /> : <Redirect to="/" />
+        Data.token !== " " ? <Component {...props} /> : <Redirect to="/" />
       }
     />
   );

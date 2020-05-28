@@ -29,7 +29,10 @@ export default function Homepage() {
     let filtered = list;
     if (query) {
       filtered = filtered.filter((data) => {
-        return data.title.toLowerCase().startsWith(query.toLowerCase());
+        return (
+          data.title.toLowerCase().startsWith(query.toLowerCase()) ||
+          data.link.toLowerCase().startsWith(query.toLowerCase())
+        );
       });
     }
     return filtered;

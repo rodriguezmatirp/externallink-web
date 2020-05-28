@@ -34,8 +34,6 @@ export default function GlobalCSV() {
         );
         setTodayCSV(todayData.data.doc);
         setYesterdayCSV(yesterdayData.data.doc);
-        console.log(todayData);
-        console.log(yesterdayData);
       } catch (error) {
         console.log(error);
       }
