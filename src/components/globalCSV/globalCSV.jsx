@@ -46,10 +46,17 @@ export default function GlobalCSV() {
   const generateCSV = async () => {
     setShow(true);
     setLoader(true);
+<<<<<<< HEAD
     // const endLoop = Date.now() + 4000;
     // while (Date.now() < endLoop) {
     //   let a = 1 + 1;
     // }
+=======
+    /* const endLoop = Date.now() + 4000;
+     while (Date.now() < endLoop) {
+      let a = 1 + 1;
+    } */
+>>>>>>> 712ae3d731506a86f6e4566446a84257c8dbb2ff
     try {
       let start = getFormattedDate(startDate);
       let end = getFormattedDate(endDate);

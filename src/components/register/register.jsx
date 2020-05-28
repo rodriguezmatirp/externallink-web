@@ -19,7 +19,11 @@ export default function Register(props) {
   useEffect(() => {
     if (password !== cpassword) setShowError(true);
     else setShowError(false);
+<<<<<<< HEAD
   }, [cpassword]);
+=======
+  }, [password, cpassword]);
+>>>>>>> 712ae3d731506a86f6e4566446a84257c8dbb2ff
 
   const handleSubmit = async (e) => {
     e.preventDefault();
