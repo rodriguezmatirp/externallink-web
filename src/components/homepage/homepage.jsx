@@ -69,24 +69,11 @@ export default function Homepage() {
                     >
                       <div className={styles.TypeCard}>
                         <div className="row align-items-center no-gutters">
-                          <div className="col mr-2 h5">
+                          <div className="col mr-2 h4">
                             <div className=" text-secondary  mb-1">
                               <span className="text-dark font-weight-bold">
-                                Title:{" "}
+                                {item.title}
                               </span>
-                              <span>{item.title}</span>
-                            </div>
-                            <div className=" text-secondary  mb-1">
-                              <span className="text-dark font-weight-bold">
-                                Url:{" "}
-                              </span>
-                              <span>{sitemap}...</span>
-                            </div>
-                            <div className=" text-secondary  mb-1">
-                              <span className="text-dark font-weight-bold">
-                                Algo:{" "}
-                              </span>
-                              <span>{item.algo}</span>
                             </div>
                             <div className="float-right">
                               <NavLink
