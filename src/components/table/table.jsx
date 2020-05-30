@@ -60,7 +60,6 @@ function Table(props) {
     }
   };
   CsvOperation(table);
-  console.log(table);
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
