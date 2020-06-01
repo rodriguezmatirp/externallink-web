@@ -22,8 +22,8 @@ export default function Homepage() {
     fetchData();
   }, []);
 
-  const savedata = (title, site) => {
-    localStorage.setItem("link", JSON.stringify({ title, site }));
+  const savedata = (title, site, id) => {
+    localStorage.setItem("link", JSON.stringify({ title, site, id }));
   };
   const searchData = () => {
     let filtered = list;
@@ -81,7 +81,9 @@ export default function Homepage() {
                             <div className="float-right">
                               <NavLink
                                 to="/table"
-                                onClick={() => savedata(item.title, item.link)}
+                                onClick={() =>
+                                  savedata(item.title, item.link, item._id)
+                                }
                               >
                                 See data
                               </NavLink>

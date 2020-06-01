@@ -33,6 +33,7 @@ export default function Register(props) {
       Dispatch({
         type: "IN",
         user: {
+          id: user.data.data._id,
           name: user.data.data.name,
           email: user.data.data.email,
         },

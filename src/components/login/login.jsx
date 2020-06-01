@@ -27,9 +27,11 @@ export default function Login(props) {
     let body = { email, password };
     try {
       const user = await axios.post(getLogined, body);
+      console.log(user);
       Dispatch({
         type: "IN",
         user: {
+          id: user.data.data._id,
           name: user.data.data.name,
           email: user.data.data.email,
         },
