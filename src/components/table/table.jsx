@@ -4,6 +4,7 @@ import axios from "axios";
 import { getScrapedData } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 function Table(props) {
   const [skip, setSkip] = useState(0);
@@ -59,6 +60,7 @@ function Table(props) {
     }
   };
   CsvOperation(table);
+  console.log(table);
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
@@ -106,14 +108,22 @@ function Table(props) {
               <tbody>
                 {table
                   ? table.map((tab, i) => {
-                      let date = tab.created_at.substring(
+                      let date = tab.lastmod.substring(
                         0,
-                        tab.created_at.indexOf("T")
+                        tab.lastmod.indexOf("T")
                       );
                       return (
                         <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
                           <td>{date}</td>
-                          <td>{tab.articlelink}</td>
+                          <td>
+                            <a
+                              href={tab.articlelink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {tab.articlelink}
+                            </a>
+                          </td>
                           <td>
                             <table className="table">
                               <tbody>
@@ -121,7 +131,15 @@ function Table(props) {
                                   tab.externalLinks.map((extLink, j) => {
                                     return (
                                       <tr key={j}>
-                                        <td>{extLink.link}</td>
+                                        <td>
+                                          <a
+                                            href={extLink.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {extLink.link}
+                                          </a>
+                                        </td>
                                         <td>{extLink.rel}</td>
                                       </tr>
                                     );
@@ -158,58 +176,3 @@ function Table(props) {
 }
 
 export default Table;
-
-// -webkit-tap-highlight-color: rgba(0,0,0,0);
-// -webkit-font-smoothing: antialiased;
-// line-height: 1.7;
-// font-weight: 400;
-// font-family: "Poppins";
-// color: #616161;
-// font-size: 14px;
-// cursor: pointer;
-// box-sizing: border-box;
-// width: 70%;
-// max-width: 1200px;
-// position: relative;-webkit-tap-highlight-color: rgba(0,0,0,0);
-// -webkit-font-smoothing: antialiased;
-// line-height: 1.7;
-// font-weight: 400;
-// font-family: "Poppins";
-// color: #616161;
-// font-size: 14px;
-// cursor: pointer;
-// box-sizing: border-box;
-// width: 70%;
-// max-width: 1200px;
-// position: relative;
-
-// -webkit-tap-highlight-color: rgba(0,0,0,0);
-// -webkit-font-smoothing: antialiased;
-// line-height: 1.7;
-// font-weight: 400;
-// font-family: "Poppins";
-// color: #616161;
-// font-size: 14px;
-// cursor: pointer;
-// box-sizing: border-box;
-
-// -webkit-tap-highlight-color: rgba(0,0,0,0);
-// -webkit-font-smoothing: antialiased;
-// box-sizing: border-box;
-// font: inherit;
-// font-family: inherit;
-// border: 1px solid #e3e3e3;
-// line-height: 100px!important;
-// background-color: #fff;
-// border-radius: 1000px;
-// width: 100%;
-// display: table;
-// border-width: 0px;
-// z-index: 6000;
-// padding: 0px 100px;
-// font-size: 24px!important;
-// color: #9e9e9e;
-// font-weight: 300;
-// font-style: normal;
-// box-shadow: 1px 4px 8px 1px rgba(0,0,0,0.2);
-// margin: 10px 0;
