@@ -90,9 +90,10 @@ const Table = (props) => {
       article_id: id,
     };
     try {
-      await axios.post(checkArticle, body, {
+      const response = await axios.post(checkArticle, body, {
         headers: { "x-auth-token": Data.token },
       });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
