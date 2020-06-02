@@ -64,7 +64,7 @@ export default function Homepage() {
             <div className="row">
               {filteredData.length > 0 ? (
                 filteredData.map((item, i) => {
-                  let sitemap = item.link.substring(0, 20);
+                  // let sitemap = item.link.substring(0, 20);
                   return (
                     <div
                       className="col-lg-6 col-xl-6 col-md-6 mt-4 pb-4"

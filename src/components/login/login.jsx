@@ -16,6 +16,7 @@ export default function Login(props) {
 
   useEffect(() => {
     Data.token !== "" && props.history.goBack();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleType = () => {

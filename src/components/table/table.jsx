@@ -15,9 +15,17 @@ import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 import { Checkbox } from "antd";
 import { AuthContext } from "./../../contexts/userContext";
+import { Pagination } from "antd";
+
+const getFormattedDate = (date) => {
+  var todayTime = new Date(date);
+  var day = todayTime.getDate();
+  var month = todayTime.getMonth() + 1;
+  var year = todayTime.getFullYear();
+  return year + "-" + month + "-" + day;
+};
 
 const Table = (props) => {
-  const [skip, setSkip] = useState(0);
   const [table, setTable] = useState("");
   const [data, setData] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -26,8 +34,11 @@ const Table = (props) => {
   const [dofollow, setDofollow] = useState(false);
   const [nofollow, setNofollow] = useState(false);
   const [search, setSearch] = useState(false);
+  const [searchMeta, setSearchMeta] = useState(0);
   const [main, setMain] = useState(true);
+  const [mainMeta, setMainMeta] = useState(0);
   const [filter, setFilter] = useState(false);
+  const [filterMeta, setFilterMeta] = useState(0);
   const Data = useContext(AuthContext);
   const { Option } = Select;
 
@@ -35,21 +46,28 @@ const Table = (props) => {
     const fetchData = async () => {
       let obj = JSON.parse(localStorage.getItem("link"));
       let url = obj.site;
-      // let data = await axios.get(
-      //   `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-      // );
-      let filterData = await axios.get(
-        `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
+      let data = await axios.get(
+        `${getScrapedData}/?site=${url}&limit=20&skip=0`
       );
-      setTable(filterData.data.doc);
-      // setTable(data.data.doc);
+      setTable(data.data.doc.result);
+      setMainMeta(data.data.doc.meta);
       setData(obj);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChange = (value) => {
+  const handleChange = async (value) => {
+    let obj = JSON.parse(localStorage.getItem("link"));
+    let url = obj.site;
+    let filterData = await axios.get(
+      `${getFilterData}/?site=${url}&limit=20&skip=0`
+    );
+    setFilterMeta(filterData.data.meta);
+    setFilter(true);
+    setMain(false);
+    setSearch(false);
+    setTable(filterData.data.doc);
     if (value === "nofollow") {
       setAll(false);
       setNofollow(true);
@@ -80,7 +98,7 @@ const Table = (props) => {
     }
   };
 
-  const handleSearch = async (skip) => {
+  const handleSearch = async () => {
     // setShow(true);
     // setLoader(true);
     let obj = JSON.parse(localStorage.getItem("link"));
@@ -89,10 +107,14 @@ const Table = (props) => {
       let start = getFormattedDate(startDate);
       let end = getFormattedDate(endDate);
       let data = await axios.get(
-        `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=${skip}`
+        `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=0`
       );
-      console.log(data.data.doc);
-      setTable(data.data.doc);
+      console.log(data);
+      setSearchMeta(data.data.doc.meta);
+      setSearch(true);
+      setMain(false);
+      setFilter(false);
+      setTable(data.data.doc.result);
       // setTable(data.data.doc);
       // setLoader(false);
     } catch (error) {
@@ -101,37 +123,61 @@ const Table = (props) => {
     }
   };
 
-  const getFormattedDate = (date) => {
-    var todayTime = new Date(date);
-    var day = todayTime.getDate();
-    var month = todayTime.getMonth() + 1;
-    var year = todayTime.getFullYear();
-    return year + "-" + month + "-" + day;
-  };
-
-  const counter = async (val) => {
-    if (val === "pre") {
-      setSkip(skip - 20);
+  const handlePageChange = async (p, ps) => {
+    let obj = JSON.parse(localStorage.getItem("link"));
+    let url = obj.site;
+    let skip = (p - 1) * ps;
+    try {
       if (main) {
-        let obj = JSON.parse(localStorage.getItem("link"));
-        let url = obj.site;
         let data = await axios.get(
           `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
         );
-        setTable(data.data.doc);
+        setTable(data.data.doc.result);
       }
-    } else if (val === "next") {
-      setSkip(skip + 20);
-      if (main) {
-        let obj = JSON.parse(localStorage.getItem("link"));
-        let url = obj.site;
-        let data = await axios.get(
-          `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
+      if (filter) {
+        let filterData = await axios.get(
+          `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
         );
-        setTable(data.data.doc);
+        setTable(filterData.data.doc);
       }
+      if (search) {
+        let start = getFormattedDate(startDate);
+        let end = getFormattedDate(endDate);
+        let data = await axios.get(
+          `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=${skip}`
+        );
+        console.log(data);
+        setSearchMeta(data.data.doc.meta);
+        setTable(data.data.doc.result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
+  // const counter = async (val) => {
+  //   if (val === "pre") {
+  //     setSkip(skip - 20);
+  //     if (main) {
+  //       let obj = JSON.parse(localStorage.getItem("link"));
+  //       let url = obj.site;
+  //       let data = await axios.get(
+  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
+  //       );
+  //       setTable(data.data.doc);
+  //     }
+  //   } else if (val === "next") {
+  //     setSkip(skip + 20);
+  //     if (main) {
+  //       let obj = JSON.parse(localStorage.getItem("link"));
+  //       let url = obj.site;
+  //       let data = await axios.get(
+  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
+  //       );
+  //       setTable(data.data.doc);
+  //     }
+  //   }
+  // };
 
   let result = [["published_date", "articlelink", "externalLinks"]];
   let CsvOperation = async (table) => {
@@ -152,13 +198,12 @@ const Table = (props) => {
 
         links.push([link]);
       }
-      //console.log(links);
       var dateobj = new Date(table[i].created_at.toString());
       result.push([dateobj.toString(), table[i].articlelink, links]);
     }
   };
   CsvOperation(table);
-  console.log(table);
+
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
@@ -170,7 +215,7 @@ const Table = (props) => {
           </p>
         </div>
         <div className="row">
-          <div className="col-lg-8">
+          <div className="col-lg-9">
             <div
               style={{
                 overflowX: "scroll",
@@ -198,12 +243,13 @@ const Table = (props) => {
                         return (
                           <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
                             <td>
-                              {console.log(tab.checked.includes(Data.user.id))}
                               <Checkbox
                                 onChange={() => handleCheck(tab._id)}
-                                defaultChecked={tab.checked.includes(
-                                  Data.user.id
-                                )}
+                                defaultChecked={
+                                  tab.checked.includes(Data.user.id) === true
+                                    ? true
+                                    : false
+                                }
                               ></Checkbox>
                             </td>
                             <td>{date}</td>
@@ -302,7 +348,7 @@ const Table = (props) => {
               </table>
             </div>
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-3">
             <div className={`card p-3 mb-4 ${styles.cardEdit2}`}>
               <h5>
                 <strong>Search by date</strong>
@@ -385,12 +431,22 @@ const Table = (props) => {
         </div>
         <div className="col-lg-12 mt-5">
           <div className="col-lg-6 text-center mx-auto">
-            <div className={styles.pagination}>
+            {/* <div className={styles.pagination}>
               {skip > 0 ? <p onClick={() => counter("pre")}>❮</p> : null}
               {table.length < 20 ? null : (
                 <p onClick={() => counter("next")}>❯</p>
               )}
-            </div>
+            </div> */}
+            <Pagination
+              defaultCurrent={1}
+              total={
+                (main && mainMeta) ||
+                (search && searchMeta) ||
+                (filter && filterMeta)
+              }
+              pageSize={20}
+              onChange={handlePageChange}
+            />
           </div>
         </div>
       </div>

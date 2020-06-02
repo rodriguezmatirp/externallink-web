@@ -22,6 +22,7 @@ export default function Register(props) {
     Data.token !== "" && props.history.goBack();
     if (password !== cpassword) setShowError(true);
     else setShowError(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password, cpassword]);
 
   const handleSubmit = async (e) => {
