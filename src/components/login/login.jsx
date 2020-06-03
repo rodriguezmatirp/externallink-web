@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "./login.module.css";
-import { DispatchContext } from "../../contexts/userContext";
+import { DispatchContext, AuthContext } from "../../contexts/userContext";
 import useInputState from "../../hooks/useInputState";
 import axios from "axios";
 import { getLogined } from "./../../utils/routes";
@@ -12,6 +12,12 @@ export default function Login(props) {
   const [email, handleEmail] = useInputState("");
   const [password, handlePassword] = useInputState("");
   const Dispatch = useContext(DispatchContext);
+  const Data = useContext(AuthContext);
+
+  useEffect(() => {
+    Data.token !== "" && props.history.goBack();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleType = () => {
     type === "password" ? setType("text") : setType("password");
@@ -22,9 +28,11 @@ export default function Login(props) {
     let body = { email, password };
     try {
       const user = await axios.post(getLogined, body);
+      console.log(user);
       Dispatch({
         type: "IN",
         user: {
+          id: user.data.data._id,
           name: user.data.data.name,
           email: user.data.data.email,
         },

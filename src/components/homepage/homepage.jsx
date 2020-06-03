@@ -22,8 +22,8 @@ export default function Homepage() {
     fetchData();
   }, []);
 
-  const savedata = (title, site) => {
-    localStorage.setItem("link", JSON.stringify({ title, site }));
+  const savedata = (title, site, id) => {
+    localStorage.setItem("link", JSON.stringify({ title, site, id }));
   };
   const searchData = () => {
     let filtered = list;
@@ -64,7 +64,7 @@ export default function Homepage() {
             <div className="row">
               {filteredData.length > 0 ? (
                 filteredData.map((item, i) => {
-                  let sitemap = item.link.substring(0, 20);
+                  // let sitemap = item.link.substring(0, 20);
                   return (
                     <div
                       className="col-lg-6 col-xl-6 col-md-6 mt-4 pb-4"
@@ -81,7 +81,9 @@ export default function Homepage() {
                             <div className="float-right">
                               <NavLink
                                 to="/table"
-                                onClick={() => savedata(item.title, item.link)}
+                                onClick={() =>
+                                  savedata(item.title, item.link, item._id)
+                                }
                               >
                                 See data
                               </NavLink>

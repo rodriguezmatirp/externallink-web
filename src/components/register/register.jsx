@@ -6,6 +6,7 @@ import axios from "axios";
 import { getRegistered } from "../../utils/routes";
 import { DispatchContext } from "../../contexts/userContext";
 import { toast } from "react-toastify";
+import { AuthContext } from "./../../contexts/userContext";
 
 export default function Register(props) {
   const [fname, handleFname] = useInputState("");
@@ -15,10 +16,13 @@ export default function Register(props) {
   const [cpassword, handleCpassword] = useInputState("");
   const [showError, setShowError] = useState(false);
   const Dispatch = useContext(DispatchContext);
+  const Data = useContext(AuthContext);
 
   useEffect(() => {
+    Data.token !== "" && props.history.goBack();
     if (password !== cpassword) setShowError(true);
     else setShowError(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password, cpassword]);
 
   const handleSubmit = async (e) => {
@@ -30,6 +34,7 @@ export default function Register(props) {
       Dispatch({
         type: "IN",
         user: {
+          id: user.data.data._id,
           name: user.data.data.name,
           email: user.data.data.email,
         },
