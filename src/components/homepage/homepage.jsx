@@ -59,38 +59,35 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className="row pt-5">
-          <div className="col-lg-8">
+        <div className="pt-5">
+          <div className="col-lg-12">
             <div className="row">
               {filteredData.length > 0 ? (
                 filteredData.map((item, i) => {
                   // let sitemap = item.link.substring(0, 20);
                   return (
                     <div
-                      className="col-lg-6 col-xl-6 col-md-6 mt-4 pb-4"
+                      className="col-lg-3 col-xl-3 col-md-6 mt-4 pb-4"
                       key={i}
                     >
-                      <div className={styles.TypeCard}>
-                        <div className="row align-items-center no-gutters">
-                          <div className="col mr-2 h4">
-                            <div className=" text-secondary  mb-1">
-                              <span className="text-dark font-weight-bold">
-                                {item.title}
-                              </span>
-                            </div>
-                            <div className="float-right">
-                              <NavLink
-                                to="/table"
-                                onClick={() =>
-                                  savedata(item.title, item.link, item._id)
-                                }
-                              >
-                                See data
-                              </NavLink>
+                      <NavLink
+                        to="/table"
+                        onClick={() =>
+                          savedata(item.title, item.link, item._id)
+                        }
+                      >
+                        <div className={styles.TypeCard}>
+                          <div className="row align-items-center no-gutters">
+                            <div className="col mr-2 h3">
+                              <div className=" text-secondary text-center p-3">
+                                <span className="text-dark font-weight-bold">
+                                  {item.title}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </NavLink>
                     </div>
                   );
                 })
@@ -101,9 +98,9 @@ export default function Homepage() {
               )}
             </div>
           </div>
-          <div className="col-lg-4 mt-4">
+          {/* <div className="col-lg-4 mt-4">
             <GlobalCSV />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

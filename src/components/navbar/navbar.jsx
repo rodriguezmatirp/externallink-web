@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Navbar() {
+const Navbar = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const Data = useContext(AuthContext);
   const toggleModal = (value) => {
@@ -35,12 +35,11 @@ function Navbar() {
         className="navbar navbar-expand-lg navbar-light"
         style={{
           boxShadow: "2px 0px 6px #707070",
-          background: "#fff!important",
         }}
       >
         <div className="container">
           <NavLink
-            className="navbar-brand pt-2"
+            className="navbar-brand"
             style={{
               fontWeight: 700,
               color: "rgba(12, 213, 8, 0.952)",
@@ -61,6 +60,28 @@ function Navbar() {
             <i className="fa fa-bars"></i>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            {Data.token !== "" ? (
+              <ul className="navbar-nav mr-auto" style={{ width: "100%" }}>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/home"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                  >
+                    Website Wise
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/home"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                  >
+                    Date Wise
+                  </NavLink>
+                </li>
+              </ul>
+            ) : null}
             <ul
               className="navbar-nav mr-auto nav justify-content-end"
               style={{ width: "100%" }}
@@ -90,15 +111,6 @@ function Navbar() {
                 <>
                   <li className="nav-item">
                     <NavLink
-                      className="nav-link"
-                      to="/home"
-                      style={{ color: "rgb(133, 123, 123)" }}
-                    >
-                      Home
-                    </NavLink>
-                  </li>
-                  <li className="nav-item ml-2">
-                    <NavLink
                       type="nav-link button"
                       className={`btn ${styles.btnSecondaryBlue}`}
                       onClick={() => toggleModal(true)}
@@ -109,7 +121,7 @@ function Navbar() {
                   </li>
                   <li
                     className={`nav-item dropdown ml-2 ${styles.navLg}`}
-                    style={{ marginTop: "-6px" }}
+                    // style={{ marginTop: "-6px" }}
                   >
                     <NavLink
                       to="#"
@@ -118,9 +130,11 @@ function Navbar() {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <Avatar className={classes.orange}>
+                      {/* <Avatar className={classes.orange}>
                         {Data.user.name[0]}
-                      </Avatar>
+                      </Avatar> */}
+
+                      {Data.user.name.split(" ")[0]}
                     </NavLink>
                     <div
                       className="dropdown-menu"
@@ -154,6 +168,6 @@ function Navbar() {
       <Form toggleModal={toggleModal} modalIsOpen={modalIsOpen} />
     </>
   );
-}
+};
 
 export default Navbar;
