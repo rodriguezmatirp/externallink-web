@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Navbar() {
+const Navbar = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const Data = useContext(AuthContext);
   const toggleModal = (value) => {
@@ -61,6 +61,23 @@ function Navbar() {
             <i className="fa fa-bars"></i>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item active">
+                <NavLink className="nav-link" to="#">
+                  Home
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="#">
+                  Features
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="#">
+                  Pricing
+                </NavLink>
+              </li>
+            </ul>
             <ul
               className="navbar-nav mr-auto nav justify-content-end"
               style={{ width: "100%" }}
@@ -154,6 +171,6 @@ function Navbar() {
       <Form toggleModal={toggleModal} modalIsOpen={modalIsOpen} />
     </>
   );
-}
+};
 
 export default Navbar;

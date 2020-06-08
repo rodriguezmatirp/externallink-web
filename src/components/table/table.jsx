@@ -245,6 +245,7 @@ const Table = (props) => {
                           <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
                             <td>
                               <Checkbox
+                                key={i}
                                 onChange={() => handleCheck(tab._id)}
                                 defaultChecked={
                                   tab.checked.includes(Data.user.id) === true
