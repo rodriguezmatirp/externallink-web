@@ -35,12 +35,11 @@ const Navbar = () => {
         className="navbar navbar-expand-lg navbar-light"
         style={{
           boxShadow: "2px 0px 6px #707070",
-          background: "#fff!important",
         }}
       >
         <div className="container">
           <NavLink
-            className="navbar-brand pt-2"
+            className="navbar-brand"
             style={{
               fontWeight: 700,
               color: "rgba(12, 213, 8, 0.952)",
@@ -61,23 +60,28 @@ const Navbar = () => {
             <i className="fa fa-bars"></i>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item active">
-                <NavLink className="nav-link" to="#">
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="#">
-                  Features
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="#">
-                  Pricing
-                </NavLink>
-              </li>
-            </ul>
+            {Data.token !== "" ? (
+              <ul className="navbar-nav mr-auto" style={{ width: "100%" }}>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/home"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                  >
+                    Website Wise
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/home"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                  >
+                    Date Wise
+                  </NavLink>
+                </li>
+              </ul>
+            ) : null}
             <ul
               className="navbar-nav mr-auto nav justify-content-end"
               style={{ width: "100%" }}
@@ -107,15 +111,6 @@ const Navbar = () => {
                 <>
                   <li className="nav-item">
                     <NavLink
-                      className="nav-link"
-                      to="/home"
-                      style={{ color: "rgb(133, 123, 123)" }}
-                    >
-                      Home
-                    </NavLink>
-                  </li>
-                  <li className="nav-item ml-2">
-                    <NavLink
                       type="nav-link button"
                       className={`btn ${styles.btnSecondaryBlue}`}
                       onClick={() => toggleModal(true)}
@@ -126,7 +121,7 @@ const Navbar = () => {
                   </li>
                   <li
                     className={`nav-item dropdown ml-2 ${styles.navLg}`}
-                    style={{ marginTop: "-6px" }}
+                    // style={{ marginTop: "-6px" }}
                   >
                     <NavLink
                       to="#"
@@ -135,9 +130,11 @@ const Navbar = () => {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <Avatar className={classes.orange}>
+                      {/* <Avatar className={classes.orange}>
                         {Data.user.name[0]}
-                      </Avatar>
+                      </Avatar> */}
+
+                      {Data.user.name.split(" ")[0]}
                     </NavLink>
                     <div
                       className="dropdown-menu"
