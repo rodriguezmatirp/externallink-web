@@ -8,14 +8,14 @@ import {
 } from "../../utils/routes";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
-import { Select } from "antd";
-import DatePicker from "react-datepicker";
+import { Select, Pagination, Checkbox, DatePicker } from "antd";
+// import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
-import { Checkbox } from "antd";
 import { AuthContext } from "./../../contexts/userContext";
-import { Pagination } from "antd";
+
+const { RangePicker } = DatePicker;
 
 const getFormattedDate = (date) => {
   var todayTime = new Date(date);
@@ -56,6 +56,10 @@ const Table = (props) => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleDateChange = (date, d) => {
+    console.log(date, d);
+  };
 
   const handleChange = async (value) => {
     let obj = JSON.parse(localStorage.getItem("link"));
@@ -156,30 +160,6 @@ const Table = (props) => {
     }
   };
 
-  // const counter = async (val) => {
-  //   if (val === "pre") {
-  //     setSkip(skip - 20);
-  //     if (main) {
-  //       let obj = JSON.parse(localStorage.getItem("link"));
-  //       let url = obj.site;
-  //       let data = await axios.get(
-  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-  //       );
-  //       setTable(data.data.doc);
-  //     }
-  //   } else if (val === "next") {
-  //     setSkip(skip + 20);
-  //     if (main) {
-  //       let obj = JSON.parse(localStorage.getItem("link"));
-  //       let url = obj.site;
-  //       let data = await axios.get(
-  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-  //       );
-  //       setTable(data.data.doc);
-  //     }
-  //   }
-  // };
-
   let result = [["published_date", "articlelink", "externalLinks"]];
   let CsvOperation = async (table) => {
     let i = 0;
@@ -208,12 +188,25 @@ const Table = (props) => {
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
-        <div className="col-lg-12 mb-4">
-          <p className="text-center h3 ">
+        <div className=" mb-4">
+          <p className="h3 ">
             <strong>
-              <span>{data ? data.title : null}</span>
+              External Link to <span>{data ? data.title : null}</span>
             </strong>
           </p>
+          <div className="row">
+            <div className="col-lg-4">
+              <RangePicker onChange={handleDateChange} />
+            </div>
+            <div className="col-lg-3">
+              <p
+                className={`btn btn-primary ${styles.prime_btn}`}
+                onClick={() => handleSearch()}
+              >
+                Done
+              </p>
+            </div>
+          </div>
         </div>
         <div className="row">
           <div className="col-lg-9">
@@ -246,12 +239,8 @@ const Table = (props) => {
                             <td>
                               <Checkbox
                                 key={i}
+                                checked={tab.checked.includes(Data.user.id)}
                                 onChange={() => handleCheck(tab._id)}
-                                defaultChecked={
-                                  tab.checked.includes(Data.user.id) === true
-                                    ? true
-                                    : false
-                                }
                               ></Checkbox>
                             </td>
                             <td>{date}</td>
@@ -358,19 +347,19 @@ const Table = (props) => {
               <div className="col-lg-12 col-md-6 mt-2">
                 <label>From:</label>
                 <br />
-                <DatePicker
+                {/* <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   maxDate={endDate}
                   dateFormat="dd/MM/yyyy"
                   showYearDropdown
                   scrollableMonthYearDropdown
-                />
+                /> */}
               </div>
               <div className="col-lg-12 col-md-6 mt-2">
                 <label>To: </label>
                 <br />
-                <DatePicker
+                {/* <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
                   minDate={startDate}
@@ -378,7 +367,7 @@ const Table = (props) => {
                   dateFormat="dd/MM/yyyy"
                   showYearDropdown
                   scrollableMonthYearDropdown
-                />
+                /> */}
               </div>
               <div className="col-lg-12 mt-4">
                 <p
