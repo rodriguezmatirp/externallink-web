@@ -14,7 +14,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 import { AuthContext } from "./../../contexts/userContext";
-
 const { RangePicker } = DatePicker;
 
 const getFormattedDate = (date) => {
@@ -58,10 +57,11 @@ const Table = (props) => {
   }, []);
 
   const handleDateChange = (date, d) => {
-    console.log(date, d);
+    setStartDate(d[0]);
+    setEndDate(d[1]);
   };
 
-  const handleChange = async (value) => {
+  const handleFollowChange = async (e) => {
     let obj = JSON.parse(localStorage.getItem("link"));
     let url = obj.site;
     let filterData = await axios.get(
@@ -72,47 +72,43 @@ const Table = (props) => {
     setMain(false);
     setSearch(false);
     setTable(filterData.data.doc);
-    if (value === "nofollow") {
+    if (e.target.value === "Nofollow" && e.target.checked) {
       setAll(false);
       setNofollow(true);
       setDofollow(false);
     }
-    if (value === "dofollow") {
+    if (e.target.value === "Dofollow" && e.target.checked) {
       setAll(false);
       setNofollow(false);
       setDofollow(true);
     }
-    if (value === "all") {
+    if (e.target.checked === false) {
       setAll(true);
       setNofollow(false);
       setDofollow(false);
     }
   };
 
-  const handleCheck = async (id) => {
-    const body = {
-      article_id: id,
-    };
-    try {
-      const response = await axios.post(checkArticle, body, {
-        headers: { "x-auth-token": Data.token },
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleCheck = async (id) => {
+  //   const body = {
+  //     article_id: id,
+  //   };
+  //   try {
+  //     const response = await axios.post(checkArticle, body, {
+  //       headers: { "x-auth-token": Data.token },
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleSearch = async () => {
-    // setShow(true);
-    // setLoader(true);
     let obj = JSON.parse(localStorage.getItem("link"));
     let url = obj.site;
     try {
-      let start = getFormattedDate(startDate);
-      let end = getFormattedDate(endDate);
       let data = await axios.get(
-        `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=0`
+        `${getGlobalData}/?site=${url}&start=${startDate}&end=${endDate}&limit=20&skip=0`
       );
       console.log(data);
       setSearchMeta(data.data.doc.meta);
@@ -120,10 +116,7 @@ const Table = (props) => {
       setMain(false);
       setFilter(false);
       setTable(data.data.doc.result);
-      // setTable(data.data.doc);
-      // setLoader(false);
     } catch (error) {
-      // setShow(false);
       toast.error("Something went wrong");
     }
   };
@@ -194,26 +187,37 @@ const Table = (props) => {
               External Link to <span>{data ? data.title : null}</span>
             </strong>
           </p>
-          <div className="row">
-            <div className="col-lg-4">
+          <div className="row pt-2">
+            <div className="col-lg-3">
               <RangePicker onChange={handleDateChange} />
             </div>
-            <div className="col-lg-3">
-              <p
-                className={`btn btn-primary ${styles.prime_btn}`}
+            <div className="col-lg-2">
+              <button
+                className={`btn ${styles.prime_btn}`}
                 onClick={() => handleSearch()}
               >
                 Done
-              </p>
+              </button>
             </div>
+            <div className="col-lg-2 text-center">
+              <Checkbox onChange={handleFollowChange} value="Dofollow">
+                Dofollow
+              </Checkbox>
+            </div>
+            <div className="-lg-1">
+              <Checkbox onChange={handleFollowChange} value="Nofollow">
+                Nofollow
+              </Checkbox>
+            </div>
+            <div></div>
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-9">
+          <div className="col-lg-12">
             <div
               style={{
                 overflowX: "scroll",
-                height: "1000px",
+                height: "100%",
                 display: "block",
                 overflowY: "hidden",
               }}
@@ -221,7 +225,6 @@ const Table = (props) => {
               <table className="table " border="1">
                 <thead>
                   <tr>
-                    <th scope="col"></th>
                     <th scope="col">Date</th>
                     <th scope="col">Site</th>
                     <th scope="col">External Links</th>
@@ -236,13 +239,13 @@ const Table = (props) => {
                         );
                         return (
                           <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
-                            <td>
+                            {/* <td>
                               <Checkbox
                                 key={i}
                                 checked={tab.checked.includes(Data.user.id)}
                                 onChange={() => handleCheck(tab._id)}
                               ></Checkbox>
-                            </td>
+                            </td> */}
                             <td>{date}</td>
                             <td>
                               <a
@@ -339,7 +342,7 @@ const Table = (props) => {
               </table>
             </div>
           </div>
-          <div className="col-lg-3">
+          {/* <div className="col-lg-3">
             <div className={`card p-3 mb-4 ${styles.cardEdit2}`}>
               <h5>
                 <strong>Search by date</strong>
@@ -347,19 +350,19 @@ const Table = (props) => {
               <div className="col-lg-12 col-md-6 mt-2">
                 <label>From:</label>
                 <br />
-                {/* <DatePicker
+                <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   maxDate={endDate}
                   dateFormat="dd/MM/yyyy"
                   showYearDropdown
                   scrollableMonthYearDropdown
-                /> */}
+                />
               </div>
               <div className="col-lg-12 col-md-6 mt-2">
                 <label>To: </label>
                 <br />
-                {/* <DatePicker
+                <DatePicker
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
                   minDate={startDate}
@@ -367,7 +370,7 @@ const Table = (props) => {
                   dateFormat="dd/MM/yyyy"
                   showYearDropdown
                   scrollableMonthYearDropdown
-                /> */}
+                />
               </div>
               <div className="col-lg-12 mt-4">
                 <p
@@ -418,7 +421,7 @@ const Table = (props) => {
                 </CSVLink>
               ) : null}
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-lg-12 mt-5">
           <div className="col-lg-6 text-center mx-auto">
