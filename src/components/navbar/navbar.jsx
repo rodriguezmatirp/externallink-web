@@ -74,7 +74,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/home"
+                    to="/datewise"
                     style={{ color: "rgb(133, 123, 123)" }}
                   >
                     Date Wise
