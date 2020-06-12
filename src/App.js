@@ -11,6 +11,7 @@ import Login from "./components/login/login";
 import Register from "./components/register/register";
 import { AuthContext } from "./contexts/userContext";
 import NotFound from "./components/notFound/notFound";
+import DateWise from "./components/dateWise/DateWise";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <ToastContainer />
       <Navbar />
       <Switch>
+        <Route exact path="/datewise" component={DateWise} />
         <Route exact path="/" component={Index} />
         <PrivateRoute exact path="/home" component={Homepage} />
         <PrivateRoute exact path="/table" component={Table} />
