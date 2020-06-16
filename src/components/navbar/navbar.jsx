@@ -3,16 +3,15 @@ import { NavLink } from "react-router-dom";
 import Form from "../addForm/form";
 import styles from "./navbar.module.css";
 import { AuthContext, DispatchContext } from "../../contexts/userContext";
-import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 
-const useStyles = makeStyles((theme) => ({
-  orange: {
-    height: "35px",
-    width: "35px",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   orange: {
+//     height: "35px",
+//     width: "35px",
+//   },
+// }));
 
 const Navbar = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -27,7 +26,7 @@ const Navbar = () => {
     toast.success("Log out successfully");
   };
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return (
     <>
