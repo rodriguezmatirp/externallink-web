@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
-import {
-  getScrapedData,
-  getFilterData,
-  getDownloadCSV,
-} from "../../utils/routes";
+import { getScrapedData, getFilterData } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { Pagination, Checkbox, DatePicker } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,13 +9,18 @@ import { getGlobalData, getCSVData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 const { RangePicker } = DatePicker;
 
-const getFormattedDate = (date) => {
-  var todayTime = new Date(date);
-  var day = todayTime.getDate();
-  var month = todayTime.getMonth() + 1;
-  var year = todayTime.getFullYear();
-  return year + "-" + month + "-" + day;
-};
+// const getFormattedDate = (date) => {
+//   var todayTime = new Date(date);
+//   var day = todayTime.getDate();
+//   var month = todayTime.getMonth() + 1;
+//   var year = todayTime.getFullYear();
+//   return year + "-" + month + "-" + day;
+// };
+
+const options = [
+  { label: "Dofollow", value: "Dofollow" },
+  { label: "Nofollow", value: "Nofollow" },
+];
 
 const Table = () => {
   const [table, setTable] = useState("");
@@ -82,17 +83,17 @@ const Table = () => {
     setMain(false);
     setSearch(false);
     setTable(filterData.data.doc);
-    if (e.target.value === "Nofollow" && e.target.checked) {
+    if (e[0] === "Nofollow") {
       setAll(false);
       setNofollow(true);
       setDofollow(false);
     }
-    if (e.target.value === "Dofollow" && e.target.checked) {
+    if (e[0] === "Dofollow") {
       setAll(false);
       setNofollow(false);
       setDofollow(true);
     }
-    if (e.target.checked === false) {
+    if (e[0] === undefined) {
       setAll(true);
       setNofollow(false);
       setDofollow(false);
@@ -209,15 +210,19 @@ const Table = () => {
                   Done
                 </button>
               </div>
-              <div className="col-lg-2 text-center">
-                <Checkbox onChange={handleFollowChange} value="Dofollow">
+              <div className="col-lg-4 text-center">
+                <Checkbox.Group
+                  options={options}
+                  onChange={handleFollowChange}
+                />
+                {/* <Checkbox onChange={handleFollowChange} value={["Dofollow"]}>
                   Dofollow
                 </Checkbox>
               </div>
               <div className="col-lg-2">
-                <Checkbox onChange={handleFollowChange} value="Nofollow">
+                <Checkbox onChange={handleFollowChange} value={["Nofollow"]}>
                   Nofollow
-                </Checkbox>
+                </Checkbox> */}
               </div>
               <div
                 className="col-lg-3 text-right"

@@ -3,7 +3,7 @@ import styles from "./homepage.module.css";
 import axios from "axios";
 import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
-import GlobalCSV from "./../globalCSV/globalCSV";
+// import GlobalCSV from "./../globalCSV/globalCSV";
 import useInputState from "../../hooks/useInputState";
 
 export default function Homepage() {
