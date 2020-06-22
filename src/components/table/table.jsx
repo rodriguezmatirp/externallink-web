@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
-import { getScrapedData, getFilterData } from "../../utils/routes";
+import {
+  getScrapedData,
+  getFilterData,
+  getGlobalData,
+  getCSVData,
+  getDownloadCSV,
+} from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { Pagination, Checkbox, DatePicker } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
-import { getGlobalData, getCSVData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 const { RangePicker } = DatePicker;
 
@@ -50,15 +55,15 @@ const Table = () => {
           `${getScrapedData}/?site=${url}&limit=20&skip=0`
         );
 
-        await axios.get(
-          `${getCSVData}?site=${encodeURIComponent(url)}&title=${titl}`
-        );
         setTable(data.data.doc.result);
         setMainMeta(data.data.doc.meta);
         setData(obj);
         setMain(true);
         setTitle(titl);
         setLoader(false);
+        await axios.get(
+          `${getCSVData}?site=${encodeURIComponent(url)}&title=${titl}`
+        );
       } catch (error) {
         console.log(error);
       }
@@ -229,7 +234,7 @@ const Table = () => {
                 style={{ cursor: "pointer" }}
                 // onClick={downloadCSV}
               >
-                <a href={`http://localhost:3000/ftp/uploads/${title}.csv`}>
+                <a href={`${getDownloadCSV}/${title}.csv`}>
                   <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
                 </a>
               </div>
