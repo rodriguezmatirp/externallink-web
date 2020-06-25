@@ -5,6 +5,9 @@ import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
 // import GlobalCSV from "./../globalCSV/globalCSV";
 import useInputState from "../../hooks/useInputState";
+import { RedoOutlined } from "@ant-design/icons";
+import { scrapData } from "./../../utils/routes";
+import { toast } from "react-toastify";
 
 export default function Homepage() {
   const [list, setList] = useState("");
@@ -16,7 +19,7 @@ export default function Homepage() {
         const response = await axios.get(getSitemaps);
         setList(response.data.result);
       } catch (error) {
-        console.log(error);
+        toast.error("Something went wrong");
       }
     };
     fetchData();
@@ -36,6 +39,11 @@ export default function Homepage() {
       });
     }
     return filtered;
+  };
+
+  const refreshScrap = (url) => {
+    axios.post(scrapData, { url });
+    toast.success("Scrapper Start");
   };
 
   const filteredData = searchData();
@@ -70,13 +78,20 @@ export default function Homepage() {
                       className="col-lg-3 col-xl-3 col-md-6 mt-4 pb-4"
                       key={i}
                     >
-                      <NavLink
-                        to="/table"
-                        onClick={() =>
-                          savedata(item.title, item.link, item._id)
-                        }
-                      >
-                        <div className={styles.TypeCard}>
+                      <div className={styles.TypeCard}>
+                        <div
+                          className="float-right"
+                          onClick={() => refreshScrap(item.link)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <RedoOutlined />
+                        </div>
+                        <NavLink
+                          to="/table"
+                          onClick={() =>
+                            savedata(item.title, item.link, item._id)
+                          }
+                        >
                           <div className="row align-items-center no-gutters">
                             <div className="col mr-2 h3">
                               <div className=" text-secondary text-center p-3">
@@ -86,8 +101,8 @@ export default function Homepage() {
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </NavLink>
+                        </NavLink>
+                      </div>
                     </div>
                   );
                 })
