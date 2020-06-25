@@ -1,14 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./datewise.module.css";
 import axios from "axios";
-import {
-  getScrapedData,
-  getFilterData,
-  getDownloadCSV,
-  getDownload,
-} from "../../utils/routes";
+import { getDownloadCSV, getDownload } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Select, Pagination, Checkbox, DatePicker } from "antd";
+import { DatePicker } from "antd";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 const { RangePicker } = DatePicker;
@@ -29,17 +24,17 @@ const DateWise = () => {
   const [endDate, setEndDate] = useState(() => {
     return getFormattedDate(new Date());
   });
-  const [all, setAll] = useState(true);
-  const [dofollow, setDofollow] = useState(false);
-  const [nofollow, setNofollow] = useState(false);
-  const [search, setSearch] = useState(false);
-  const [searchMeta, setSearchMeta] = useState(0);
-  const [main, setMain] = useState(true);
-  const [mainMeta, setMainMeta] = useState(0);
-  const [filter, setFilter] = useState(false);
-  const [filterMeta, setFilterMeta] = useState(0);
-  const [title, setTitle] = useState("");
-  const { Option } = Select;
+  // const [all, setAll] = useState(true);
+  // const [dofollow, setDofollow] = useState(false);
+  // const [nofollow, setNofollow] = useState(false);
+  // const [search, setSearch] = useState(false);
+  // const [searchMeta, setSearchMeta] = useState(0);
+  // const [main, setMain] = useState(true);
+  // const [mainMeta, setMainMeta] = useState(0);
+  // const [filter, setFilter] = useState(false);
+  // const [filterMeta, setFilterMeta] = useState(0);
+  // const [title, setTitle] = useState("");
+  // const { Option } = Select;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,41 +56,41 @@ const DateWise = () => {
     setEndDate(d[1]);
   };
 
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+  // function handleChange(value) {
+  //   console.log(`selected ${value}`);
+  // }
 
-  const handleFollowChange = async (e) => {
-    let obj = JSON.parse(localStorage.getItem("link"));
-    let url = obj.site;
-    let filterData = await axios.get(
-      `${getFilterData}/?site=${url}&limit=20&skip=0`
-    );
-    setFilterMeta(filterData.data.meta);
-    setFilter(true);
-    setMain(false);
-    setSearch(false);
-    setTable(filterData.data.doc);
-    if (e.target.value === "Nofollow" && e.target.checked) {
-      setAll(false);
-      setNofollow(true);
-      setDofollow(false);
-    }
-    if (e.target.value === "Dofollow" && e.target.checked) {
-      setAll(false);
-      setNofollow(false);
-      setDofollow(true);
-    }
-    if (e.target.checked === false) {
-      setAll(true);
-      setNofollow(false);
-      setDofollow(false);
-    }
-  };
+  // const handleFollowChange = async (e) => {
+  //   let obj = JSON.parse(localStorage.getItem("link"));
+  //   let url = obj.site;
+  //   let filterData = await axios.get(
+  //     `${getFilterData}/?site=${url}&limit=20&skip=0`
+  //   );
+  //   setFilterMeta(filterData.data.meta);
+  //   setFilter(true);
+  //   setMain(false);
+  //   setSearch(false);
+  //   setTable(filterData.data.doc);
+  //   if (e.target.value === "Nofollow" && e.target.checked) {
+  //     setAll(false);
+  //     setNofollow(true);
+  //     setDofollow(false);
+  //   }
+  //   if (e.target.value === "Dofollow" && e.target.checked) {
+  //     setAll(false);
+  //     setNofollow(false);
+  //     setDofollow(true);
+  //   }
+  //   if (e.target.checked === false) {
+  //     setAll(true);
+  //     setNofollow(false);
+  //     setDofollow(false);
+  //   }
+  // };
 
   const handleSearch = async () => {
     try {
-      let data = await axios.get(
+      await axios.get(
         `${getDownload}?link=global&start=${startDate}&end=${endDate}&title=${startDate}`
       );
       // console.log(data);
@@ -110,37 +105,37 @@ const DateWise = () => {
     }
   };
 
-  const handlePageChange = async (p, ps) => {
-    let obj = JSON.parse(localStorage.getItem("link"));
-    let url = obj.site;
-    let skip = (p - 1) * ps;
-    try {
-      if (main) {
-        let data = await axios.get(
-          `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-        );
-        setTable(data.data.doc.result);
-      }
-      if (filter) {
-        let filterData = await axios.get(
-          `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
-        );
-        setTable(filterData.data.doc);
-      }
-      if (search) {
-        let start = getFormattedDate(startDate);
-        let end = getFormattedDate(endDate);
-        let data = await axios.get(
-          `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=${skip}`
-        );
-        console.log(data);
-        setSearchMeta(data.data.doc.meta);
-        setTable(data.data.doc.result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handlePageChange = async (p, ps) => {
+  //   let obj = JSON.parse(localStorage.getItem("link"));
+  //   let url = obj.site;
+  //   let skip = (p - 1) * ps;
+  //   try {
+  //     if (main) {
+  //       let data = await axios.get(
+  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
+  //       );
+  //       setTable(data.data.doc.result);
+  //     }
+  //     if (filter) {
+  //       let filterData = await axios.get(
+  //         `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
+  //       );
+  //       setTable(filterData.data.doc);
+  //     }
+  //     if (search) {
+  //       let start = getFormattedDate(startDate);
+  //       let end = getFormattedDate(endDate);
+  //       let data = await axios.get(
+  //         `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=${skip}`
+  //       );
+  //       console.log(data);
+  //       setSearchMeta(data.data.doc.meta);
+  //       setTable(data.data.doc.result);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // let result = [["published_date", "articlelink", "externalLinks"]];
   // let CsvOperation = async (table) => {
@@ -214,7 +209,7 @@ const DateWise = () => {
               Nofollow
             </Checkbox>
           </div> */}
-          <div className="col-lg-3 text-right" style={{ cursor: "pointer" }}>
+          <div className="col-lg-8 text-right" style={{ cursor: "pointer" }}>
             <a href={`${getDownloadCSV}/${startDate}_date.csv`}>
               <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
             </a>
@@ -268,31 +263,29 @@ const DateWise = () => {
                             <td>
                               <table className="table">
                                 <tbody>
-                                  {all ? (
-                                    tab.externalLinks.length > 0 ? (
-                                      tab.externalLinks.map((extLink, j) => {
-                                        return (
-                                          <tr key={j}>
-                                            <td>
-                                              <a
-                                                href={extLink.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {extLink.link}
-                                              </a>
-                                            </td>
-                                            <td>{extLink.rel}</td>
-                                          </tr>
-                                        );
-                                      })
-                                    ) : (
-                                      <tr>
-                                        <td>No External Links</td>
-                                      </tr>
-                                    )
-                                  ) : null}
-                                  {nofollow ? (
+                                  {tab.externalLinks.length > 0 ? (
+                                    tab.externalLinks.map((extLink, j) => {
+                                      return (
+                                        <tr key={j}>
+                                          <td>
+                                            <a
+                                              href={extLink.link}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+                                              {extLink.link}
+                                            </a>
+                                          </td>
+                                          <td>{extLink.rel}</td>
+                                        </tr>
+                                      );
+                                    })
+                                  ) : (
+                                    <tr>
+                                      <td>No External Links</td>
+                                    </tr>
+                                  )}
+                                  {/* {nofollow ? (
                                     tab.nofollow.length > 0 ? (
                                       tab.nofollow.map((noFollowLink, j) => {
                                         return (
@@ -339,7 +332,7 @@ const DateWise = () => {
                                         <td>No External Links</td>
                                       </tr>
                                     )
-                                  ) : null}
+                                  ) : null} */}
                                 </tbody>
                               </table>
                             </td>
