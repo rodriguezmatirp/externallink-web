@@ -180,6 +180,7 @@ const Table = () => {
   //   }
   // };
   // CsvOperation(table);
+  console.log(table);
 
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
@@ -306,7 +307,11 @@ const Table = () => {
                                                   {extLink.link}
                                                 </a>
                                               </td>
-                                              <td>{extLink.rel}</td>
+                                              <td>
+                                                {extLink.rel
+                                                  ? extLink.rel
+                                                  : "Undefined"}
+                                              </td>
                                             </tr>
                                           );
                                         })

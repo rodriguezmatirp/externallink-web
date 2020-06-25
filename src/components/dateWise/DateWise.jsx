@@ -4,14 +4,13 @@ import axios from "axios";
 import {
   getScrapedData,
   getFilterData,
-  checkArticle,
+  getDownloadCSV,
+  getDownload,
 } from "../../utils/routes";
-import { CSVLink } from "react-csv";
-import { FaFileDownload } from "react-icons/fa";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 import { Select, Pagination, Checkbox, DatePicker } from "antd";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
-import moment from "moment";
 const { RangePicker } = DatePicker;
 
 const getFormattedDate = (date) => {
@@ -24,7 +23,6 @@ const getFormattedDate = (date) => {
 
 const DateWise = () => {
   const [table, setTable] = useState("");
-  const [data, setData] = useState("");
   const [startDate, setStartDate] = useState(() => {
     return getFormattedDate(new Date());
   });
@@ -45,8 +43,6 @@ const DateWise = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let obj = JSON.parse(localStorage.getItem("link"));
-      let title = obj.title;
       try {
         let todayData = await axios.get(
           `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`
@@ -97,33 +93,18 @@ const DateWise = () => {
     }
   };
 
-  // const handleCheck = async (id) => {
-  //   const body = {
-  //     article_id: id,
-  //   };
-  //   try {
-  //     const response = await axios.post(checkArticle, body, {
-  //       headers: { "x-auth-token": Data.token },
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleSearch = async () => {
-    let obj = JSON.parse(localStorage.getItem("link"));
-    let url = obj.site;
     try {
       let data = await axios.get(
-        `${getGlobalData}/?site=${url}&start=${startDate}&end=${endDate}&limit=20&skip=0`
+        `${getDownload}?link=global&start=${startDate}&end=${endDate}&title=${startDate}`
       );
-      console.log(data);
-      setSearchMeta(data.data.doc.meta);
-      setSearch(true);
-      setMain(false);
-      setFilter(false);
-      setTable(data.data.doc.result);
+      // console.log(data);
+      // setSearchMeta(data.data.doc.meta);
+      // setSearch(true);
+      // setMain(false);
+      // setFilter(false);
+      // setTable(data.data.doc.result);
+      toast.success("Creating CSV");
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -161,30 +142,30 @@ const DateWise = () => {
     }
   };
 
-  let result = [["published_date", "articlelink", "externalLinks"]];
-  let CsvOperation = async (table) => {
-    let i = 0;
+  // let result = [["published_date", "articlelink", "externalLinks"]];
+  // let CsvOperation = async (table) => {
+  //   let i = 0;
 
-    for (i = 0; i < table.length; i++) {
-      let j = 0;
-      let links = [];
-      for (j = 0; j < table[i].externalLinks.length; j++) {
-        let link =
-          "link " +
-          (j + 1) +
-          " :- " +
-          table[i].externalLinks[j].link +
-          "  , rel:-" +
-          table[i].externalLinks[j].rel +
-          "\n";
+  //   for (i = 0; i < table.length; i++) {
+  //     let j = 0;
+  //     let links = [];
+  //     for (j = 0; j < table[i].externalLinks.length; j++) {
+  //       let link =
+  //         "link " +
+  //         (j + 1) +
+  //         " :- " +
+  //         table[i].externalLinks[j].link +
+  //         "  , rel:-" +
+  //         table[i].externalLinks[j].rel +
+  //         "\n";
 
-        links.push([link]);
-      }
-      var dateobj = new Date(table[i].created_at.toString());
-      result.push([dateobj.toString(), table[i].articlelink, links]);
-    }
-  };
-  CsvOperation(table);
+  //       links.push([link]);
+  //     }
+  //     var dateobj = new Date(table[i].created_at.toString());
+  //     result.push([dateobj.toString(), table[i].articlelink, links]);
+  //   }
+  // };
+  // CsvOperation(table);
 
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
@@ -198,7 +179,7 @@ const DateWise = () => {
               className={`btn ${styles.prime_btn}`}
               onClick={() => handleSearch()}
             >
-              Done
+              Generate CSV
             </button>
           </div>
         </div>
@@ -214,7 +195,7 @@ const DateWise = () => {
               </div>
             )}
           </div>
-          <div className="col-lg-4">
+          {/* <div className="col-lg-4">
             <Select
               defaultValue="all"
               style={{ width: 120 }}
@@ -222,8 +203,8 @@ const DateWise = () => {
             >
               <Option value="all">All</Option>
             </Select>
-          </div>
-          <div className="col-lg-2 text-right">
+          </div> */}
+          {/* <div className="col-lg-2 text-right">
             <Checkbox onChange={handleFollowChange} value="Dofollow">
               Dofollow
             </Checkbox>
@@ -232,6 +213,11 @@ const DateWise = () => {
             <Checkbox onChange={handleFollowChange} value="Nofollow">
               Nofollow
             </Checkbox>
+          </div> */}
+          <div className="col-lg-3 text-right" style={{ cursor: "pointer" }}>
+            <a href={`${getDownloadCSV}/${startDate}_date.csv`}>
+              <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
+            </a>
           </div>
         </div>
 
@@ -276,7 +262,7 @@ const DateWise = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                {title}
+                                {tab.articlelink}
                               </a>
                             </td>
                             <td>
@@ -366,7 +352,7 @@ const DateWise = () => {
             </div>
           </div>
         </div>
-        <div className="col-lg-12 mt-5">
+        {/* <div className="col-lg-12 mt-5">
           <div className="col-lg-6 text-center mx-auto">
             <Pagination
               defaultCurrent={1}
@@ -379,7 +365,7 @@ const DateWise = () => {
               onChange={handlePageChange}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
