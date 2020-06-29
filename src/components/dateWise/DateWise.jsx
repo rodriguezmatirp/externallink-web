@@ -6,6 +6,7 @@ import { FaCloudDownloadAlt } from "react-icons/fa";
 import { DatePicker } from "antd";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
+import { CSVLink, CSVDownload } from "react-csv";
 const { RangePicker } = DatePicker;
 
 const getFormattedDate = (date) => {
@@ -15,6 +16,28 @@ const getFormattedDate = (date) => {
   var year = todayTime.getFullYear();
   return year + "-" + month + "-" + day;
 };
+
+const generateCsv = (data) => {
+  const csvData = [["article-Link", "External-Link", "Rel", "Date of Post"]]
+  for (let i = 0; i < data.length; i++) {
+    let arr = data[i].externalLinks;
+    for (let j = 0; j < arr.length; j++) {
+      var temp=[]
+      temp.push(data[i].articlelink)
+      temp.push(arr[i].link)
+      if(arr[i].rel==undefined){
+        temp.push("Not-Defined")
+      }
+      else{
+        temp.push(arr[i].rel)
+      }
+      temp.push(getFormattedDate(data[i].lastmod))
+      csvData.push(temp);
+    }
+  }
+
+
+}
 
 const DateWise = () => {
   const [table, setTable] = useState("");
@@ -36,13 +59,15 @@ const DateWise = () => {
   // const [title, setTitle] = useState("");
   // const { Option } = Select;
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchData = async () => {
       try {
         let todayData = await axios.get(
           `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`
         );
+
         setTable(todayData.data.doc.result);
+        await generateCsv(todayData.data.doc.result);
         console.log(todayData);
       } catch (error) {
         console.log(error);
@@ -185,10 +210,10 @@ const DateWise = () => {
                 <strong>{startDate}</strong>
               </div>
             ) : (
-              <div className="h4">
-                <strong>{startDate + " to " + endDate}</strong>
-              </div>
-            )}
+                <div className="h4">
+                  <strong>{startDate + " to " + endDate}</strong>
+                </div>
+              )}
           </div>
           {/* <div className="col-lg-4">
             <Select
@@ -237,55 +262,55 @@ const DateWise = () => {
                 <tbody>
                   {table
                     ? table.map((tab, i) => {
-                        let date = tab.lastmod.substring(
-                          0,
-                          tab.lastmod.indexOf("T")
-                        );
-                        return (
-                          <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
-                            {/* <td>
+                      let date = tab.lastmod.substring(
+                        0,
+                        tab.lastmod.indexOf("T")
+                      );
+                      return (
+                        <tr style={{ backgroundColor: "#f2f2f2" }} key={i}>
+                          {/* <td>
                                 <Checkbox
                                   key={i}
                                   checked={tab.checked.includes(Data.user.id)}
                                   onChange={() => handleCheck(tab._id)}
                                 ></Checkbox>
                               </td> */}
-                            <td style={{ width: "60%" }}>{date}</td>
-                            <td style={{ width: "100%" }}>
-                              <a
-                                href={tab.articlelink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {tab.articlelink}
-                              </a>
-                            </td>
-                            <td>
-                              <table className="table">
-                                <tbody>
-                                  {tab.externalLinks.length > 0 ? (
-                                    tab.externalLinks.map((extLink, j) => {
-                                      return (
-                                        <tr key={j}>
-                                          <td>
-                                            <a
-                                              href={extLink.link}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                            >
-                                              {extLink.link}
-                                            </a>
-                                          </td>
-                                          <td>{extLink.rel}</td>
-                                        </tr>
-                                      );
-                                    })
-                                  ) : (
+                          <td style={{ width: "60%" }}>{date}</td>
+                          <td style={{ width: "100%" }}>
+                            <a
+                              href={tab.articlelink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {tab.articlelink}
+                            </a>
+                          </td>
+                          <td>
+                            <table className="table">
+                              <tbody>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
+                                      <tr key={j}>
+                                        <td>
+                                          <a
+                                            href={extLink.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {extLink.link}
+                                          </a>
+                                        </td>
+                                        <td>{extLink.rel}</td>
+                                      </tr>
+                                    );
+                                  })
+                                ) : (
                                     <tr>
                                       <td>No External Links</td>
                                     </tr>
                                   )}
-                                  {/* {nofollow ? (
+                                {/* {nofollow ? (
                                     tab.nofollow.length > 0 ? (
                                       tab.nofollow.map((noFollowLink, j) => {
                                         return (
@@ -333,12 +358,12 @@ const DateWise = () => {
                                       </tr>
                                     )
                                   ) : null} */}
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        );
-                      })
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      );
+                    })
                     : null}
                 </tbody>
               </table>
