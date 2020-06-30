@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./datewise.module.css";
 import axios from "axios";
-import { getDownloadCSV, getDownload } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { DatePicker } from "antd";
 import { getGlobalData } from "./../../utils/routes";
 import { toast } from "react-toastify";
+import { CSVLink } from "react-csv";
 const { RangePicker } = DatePicker;
 
 const getFormattedDate = (date) => {
@@ -24,17 +24,7 @@ const DateWise = () => {
   const [endDate, setEndDate] = useState(() => {
     return getFormattedDate(new Date());
   });
-  // const [all, setAll] = useState(true);
-  // const [dofollow, setDofollow] = useState(false);
-  // const [nofollow, setNofollow] = useState(false);
-  // const [search, setSearch] = useState(false);
-  // const [searchMeta, setSearchMeta] = useState(0);
-  // const [main, setMain] = useState(true);
-  // const [mainMeta, setMainMeta] = useState(0);
-  // const [filter, setFilter] = useState(false);
-  // const [filterMeta, setFilterMeta] = useState(0);
-  // const [title, setTitle] = useState("");
-  // const { Option } = Select;
+  const [data, setData] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,13 +32,14 @@ const DateWise = () => {
         let todayData = await axios.get(
           `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`
         );
+
         setTable(todayData.data.doc.result);
-        console.log(todayData);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
   const handleDateChange = (date, d) => {
@@ -56,112 +47,37 @@ const DateWise = () => {
     setEndDate(d[1]);
   };
 
-  // function handleChange(value) {
-  //   console.log(`selected ${value}`);
-  // }
-
-  // const handleFollowChange = async (e) => {
-  //   let obj = JSON.parse(localStorage.getItem("link"));
-  //   let url = obj.site;
-  //   let filterData = await axios.get(
-  //     `${getFilterData}/?site=${url}&limit=20&skip=0`
-  //   );
-  //   setFilterMeta(filterData.data.meta);
-  //   setFilter(true);
-  //   setMain(false);
-  //   setSearch(false);
-  //   setTable(filterData.data.doc);
-  //   if (e.target.value === "Nofollow" && e.target.checked) {
-  //     setAll(false);
-  //     setNofollow(true);
-  //     setDofollow(false);
-  //   }
-  //   if (e.target.value === "Dofollow" && e.target.checked) {
-  //     setAll(false);
-  //     setNofollow(false);
-  //     setDofollow(true);
-  //   }
-  //   if (e.target.checked === false) {
-  //     setAll(true);
-  //     setNofollow(false);
-  //     setDofollow(false);
-  //   }
-  // };
-
-  const handleSearch = async () => {
-    try {
-      await axios.get(
-        `${getDownload}?link=global&start=${startDate}&end=${endDate}&title=${startDate}`
-      );
-      // console.log(data);
-      // setSearchMeta(data.data.doc.meta);
-      // setSearch(true);
-      // setMain(false);
-      // setFilter(false);
-      // setTable(data.data.doc.result);
-      toast.success("Creating CSV");
-    } catch (error) {
-      toast.error("Something went wrong");
+  const csvData = [["article-Link", "External-Link", "Rel", "Date of Post"]];
+  const generateCsv = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      let arr = data[i].externalLinks;
+      for (let j = 0; j < arr.length; j++) {
+        var temp = [];
+        temp.push(data[i].articlelink);
+        temp.push(arr[j].link);
+        if (arr[j].rel === undefined) {
+          temp.push("Not-Defined");
+        } else {
+          temp.push(arr[j].rel);
+        }
+        temp.push(getFormattedDate(data[i].lastmod));
+        csvData.push(temp);
+      }
     }
+    return csvData;
   };
 
-  // const handlePageChange = async (p, ps) => {
-  //   let obj = JSON.parse(localStorage.getItem("link"));
-  //   let url = obj.site;
-  //   let skip = (p - 1) * ps;
-  //   try {
-  //     if (main) {
-  //       let data = await axios.get(
-  //         `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
-  //       );
-  //       setTable(data.data.doc.result);
-  //     }
-  //     if (filter) {
-  //       let filterData = await axios.get(
-  //         `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
-  //       );
-  //       setTable(filterData.data.doc);
-  //     }
-  //     if (search) {
-  //       let start = getFormattedDate(startDate);
-  //       let end = getFormattedDate(endDate);
-  //       let data = await axios.get(
-  //         `${getGlobalData}/?site=${url}&start=${start}&end=${end}&limit=20&skip=${skip}`
-  //       );
-  //       console.log(data);
-  //       setSearchMeta(data.data.doc.meta);
-  //       setTable(data.data.doc.result);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // let result = [["published_date", "articlelink", "externalLinks"]];
-  // let CsvOperation = async (table) => {
-  //   let i = 0;
-
-  //   for (i = 0; i < table.length; i++) {
-  //     let j = 0;
-  //     let links = [];
-  //     for (j = 0; j < table[i].externalLinks.length; j++) {
-  //       let link =
-  //         "link " +
-  //         (j + 1) +
-  //         " :- " +
-  //         table[i].externalLinks[j].link +
-  //         "  , rel:-" +
-  //         table[i].externalLinks[j].rel +
-  //         "\n";
-
-  //       links.push([link]);
-  //     }
-  //     var dateobj = new Date(table[i].created_at.toString());
-  //     result.push([dateobj.toString(), table[i].articlelink, links]);
-  //   }
-  // };
-  // CsvOperation(table);
-
+  const handleSearch = async () => {
+    if (table) {
+      try {
+        let response = generateCsv(table);
+        setData(response);
+        toast.success("Creating CSV");
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
+    }
+  };
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
       <div className="container pt-5 pb-5">
@@ -190,29 +106,16 @@ const DateWise = () => {
               </div>
             )}
           </div>
-          {/* <div className="col-lg-4">
-            <Select
-              defaultValue="all"
-              style={{ width: 120 }}
-              onChange={handleChange}
-            >
-              <Option value="all">All</Option>
-            </Select>
-          </div> */}
-          {/* <div className="col-lg-2 text-right">
-            <Checkbox onChange={handleFollowChange} value="Dofollow">
-              Dofollow
-            </Checkbox>
-          </div>
-          <div className="col-lg-2">
-            <Checkbox onChange={handleFollowChange} value="Nofollow">
-              Nofollow
-            </Checkbox>
-          </div> */}
           <div className="col-lg-8 text-right" style={{ cursor: "pointer" }}>
-            <a href={`${getDownloadCSV}/${startDate}_date.csv`}>
-              <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
-            </a>
+            <CSVLink data={data}>
+              <FaCloudDownloadAlt
+                style={{
+                  fontSize: 28,
+                  marginBottom: 8,
+                }}
+              />{" "}
+              Export
+            </CSVLink>
           </div>
         </div>
 
@@ -285,54 +188,6 @@ const DateWise = () => {
                                       <td>No External Links</td>
                                     </tr>
                                   )}
-                                  {/* {nofollow ? (
-                                    tab.nofollow.length > 0 ? (
-                                      tab.nofollow.map((noFollowLink, j) => {
-                                        return (
-                                          <tr key={j}>
-                                            <td>
-                                              <a
-                                                href={noFollowLink.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {noFollowLink.link}
-                                              </a>
-                                            </td>
-                                            <td>{noFollowLink.rel}</td>
-                                          </tr>
-                                        );
-                                      })
-                                    ) : (
-                                      <tr>
-                                        <td>No External Links</td>
-                                      </tr>
-                                    )
-                                  ) : null}
-                                  {dofollow ? (
-                                    tab.dofollow.length > 0 ? (
-                                      tab.dofollow.map((doFollowLink, j) => {
-                                        return (
-                                          <tr key={j}>
-                                            <td>
-                                              <a
-                                                href={doFollowLink.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                              >
-                                                {doFollowLink.link}
-                                              </a>
-                                            </td>
-                                            <td>{doFollowLink.rel}</td>
-                                          </tr>
-                                        );
-                                      })
-                                    ) : (
-                                      <tr>
-                                        <td>No External Links</td>
-                                      </tr>
-                                    )
-                                  ) : null} */}
                                 </tbody>
                               </table>
                             </td>
@@ -345,20 +200,6 @@ const DateWise = () => {
             </div>
           </div>
         </div>
-        {/* <div className="col-lg-12 mt-5">
-          <div className="col-lg-6 text-center mx-auto">
-            <Pagination
-              defaultCurrent={1}
-              total={
-                (main && mainMeta) ||
-                (search && searchMeta) ||
-                (filter && filterMeta)
-              }
-              pageSize={20}
-              onChange={handlePageChange}
-            />
-          </div>
-        </div> */}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ export const getGlobalData = `${url}/get/Date`;
 export const getFilterData = `${url}/get/follow`;
 export const checkArticle = `${url}/check`;
 export const getCSVData = `${url}/downloadAll`;
-export const getDownloadCSV = `${url}/ftp/uploads`;
+export const getDownloadCSV = `${url}/uploads`;
 export const getDownload = `${url}/downloadByDate`;
 
 export const getRegistered = `${url}/users/register`;
