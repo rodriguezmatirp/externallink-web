@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styles from "./datewise.module.css";
 import axios from "axios";
 import { DownloadOutlined } from "@ant-design/icons";
 import { DatePicker, Button, Skeleton } from "antd";
