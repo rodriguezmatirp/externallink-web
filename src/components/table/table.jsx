@@ -156,6 +156,8 @@ const Table = () => {
     }
   };
 
+  console.log(table);
+
   // let result = [["published_date", "articlelink", "externalLinks"]];
   // let CsvOperation = async (table) => {
   //   let i = 0;
@@ -180,7 +182,6 @@ const Table = () => {
   //   }
   // };
   // CsvOperation(table);
-  console.log(table);
 
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
