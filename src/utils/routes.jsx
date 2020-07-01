@@ -1,5 +1,6 @@
-const url =
-  process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3000";
+// const url =
+//   process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3000";
+const url = "http://139.59.94.64/api";
 
 export const addSitemap = `${url}/master`;
 export const getSitemaps = `${url}/master`;
