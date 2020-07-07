@@ -7,6 +7,7 @@ import {
   getGlobalData,
   getCSVData,
   getDownloadCSV,
+  changeStatus
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { Pagination, Checkbox, DatePicker } from "antd";
@@ -24,7 +25,7 @@ const { RangePicker } = DatePicker;
 
 const options = [
   { label: "Dofollow", value: "Dofollow" },
-  { label: "Nofollow", value: "Nofollow" },
+  { label: "Nofollow", value: "Nofollow" }
 ];
 
 const Table = () => {
@@ -54,7 +55,20 @@ const Table = () => {
         let data = await axios.get(
           `${getScrapedData}/?site=${url}&limit=20&skip=0`
         );
+        let cpyResult = [];
 
+        for (let websiteData of data.data.doc.result) {
+          for (let externalLink of websiteData.externalLinks) {
+            let cpy = JSON.parse(JSON.stringify(websiteData));
+            if (externalLink.link !== undefined) {
+              cpy["externalLinks"] = [externalLink];
+              cpyResult.push(cpy);
+            }
+          }
+        }
+
+        data.data.doc.result = cpyResult;
+        // console.log(data)
         setTable(data.data.doc.result);
         setMainMeta(data.data.doc.meta);
         setData(obj);
@@ -83,11 +97,34 @@ const Table = () => {
     let filterData = await axios.get(
       `${getFilterData}/?site=${url}&limit=20&skip=0`
     );
+    console.log(filterData)
+    let cpyResult = [];
+
+    for (let websiteData of filterData.data.doc) {
+      if (websiteData.dofollow != null) {
+        for (let dofollow of websiteData.dofollow) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          if (dofollow.link !== undefined) {
+            cpy["dofollow"] = [dofollow];
+            cpyResult.push(cpy);
+          }
+        }
+      } else if (websiteData.nofollow != null) {
+        for (let nofollow of websiteData.nofollow) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          if (nofollow.link !== undefined) {
+            cpy["nofollow"] = [nofollow];
+            cpyResult.push(cpy);
+          }
+        }
+      }
+    }
+
+    filterData.data.doc = cpyResult;
     setFilterMeta(filterData.data.meta);
     setFilter(true);
     setMain(false);
     setSearch(false);
-    setTable(filterData.data.doc);
     if (e[0] === "Nofollow") {
       setAll(false);
       setNofollow(true);
@@ -99,11 +136,15 @@ const Table = () => {
       setDofollow(true);
     }
     if (e[0] === undefined) {
+      window.location.reload()
       setAll(true);
       setNofollow(false);
       setDofollow(false);
     }
+
+    setTable(filterData.data.doc);
   };
+
 
   const handleSearch = async () => {
     setLoader(true);
@@ -113,6 +154,20 @@ const Table = () => {
       let data = await axios.get(
         `${getGlobalData}/?site=${url}&start=${startDate}&end=${endDate}&limit=20&skip=0`
       );
+      console.log(data)
+      let cpyResult = [];
+
+      for (let websiteData of data.data.doc.result) {
+        for (let externalLink of websiteData.externalLinks) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          if (externalLink.link !== undefined) {
+            cpy["externalLinks"] = [externalLink];
+            cpyResult.push(cpy);
+          }
+        }
+      }
+
+      data.data.doc.result = cpyResult;
       setSearchMeta(data.data.doc.meta);
       setSearch(true);
       setMain(false);
@@ -127,6 +182,32 @@ const Table = () => {
     }
   };
 
+
+  const onStatusChecked = async (link, parent_link, check) => {
+    try {
+      let data = await axios.get(
+        `${changeStatus}?link=${link}&parent=${parent_link}`
+      )
+      let dataCpy = []
+      dataCpy.push(data.data.doc.result)
+      let cpyResult = []
+      for (let websiteData of dataCpy) {
+        for (let externalLink of websiteData.externalLinks) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          if (externalLink.link !== undefined) {
+            cpy["externalLinks"] = [externalLink];
+            cpyResult.push(cpy);
+          }
+        }
+      }
+
+      dataCpy = cpyResult;
+      setTable(dataCpy);
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const handlePageChange = async (p, ps) => {
     let obj = JSON.parse(localStorage.getItem("link"));
     let url = obj.site;
@@ -136,20 +217,81 @@ const Table = () => {
         let data = await axios.get(
           `${getScrapedData}/?site=${url}&limit=20&skip=${skip}`
         );
+        let cpyResult = [];
+
+        for (let websiteData of data.data.doc.result) {
+          for (let externalLink of websiteData.externalLinks) {
+            let cpy = JSON.parse(JSON.stringify(websiteData));
+            if (externalLink.link !== undefined) {
+              cpy["externalLinks"] = [externalLink];
+              cpyResult.push(cpy);
+            }
+          }
+        }
+
+        data.data.doc.result = cpyResult;
         setTable(data.data.doc.result);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        })
       }
       if (filter) {
         let filterData = await axios.get(
           `${getFilterData}/?site=${url}&limit=20&skip=${skip}`
         );
+        let cpyResult = [];
+
+        for (let websiteData of filterData.data.doc) {
+          if (websiteData.dofollow != null) {
+            for (let dofollow of websiteData.dofollow) {
+              let cpy = JSON.parse(JSON.stringify(websiteData));
+              if (dofollow.link !== undefined) {
+                cpy["dofollow"] = [dofollow];
+                cpyResult.push(cpy);
+              }
+            }
+          } else if (websiteData.nofollow != null) {
+            for (let nofollow of websiteData.nofollow) {
+              let cpy = JSON.parse(JSON.stringify(websiteData));
+              if (nofollow.link !== undefined) {
+                cpy["nofollow"] = [nofollow];
+                cpyResult.push(cpy);
+              }
+            }
+          }
+        }
+
+        filterData.data.doc = cpyResult;
         setTable(filterData.data.doc);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        })
       }
       if (search) {
         let data = await axios.get(
           `${getGlobalData}/?site=${url}&start=${startDate}&end=${endDate}&limit=20&skip=${skip}`
         );
+        let cpyResult = [];
+
+        for (let websiteData of data.data.doc.result) {
+          for (let externalLink of websiteData.externalLinks) {
+            let cpy = JSON.parse(JSON.stringify(websiteData));
+            if (externalLink.link !== undefined) {
+              cpy["externalLinks"] = [externalLink];
+              cpyResult.push(cpy);
+            }
+          }
+        }
+
+        data.data.doc.result = cpyResult;
         setSearchMeta(data.data.doc.meta);
         setTable(data.data.doc.result);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        })
       }
     } catch (error) {
       console.log(error);
@@ -184,7 +326,7 @@ const Table = () => {
   // CsvOperation(table);
 
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
       {loader ? (
         <div
           className="text-center"
@@ -198,31 +340,32 @@ const Table = () => {
           />
         </div>
       ) : (
-        <div className="container pt-5 pb-5">
-          <div className=" mb-4">
-            <p className="h3 ">
-              <strong>
-                External Link to <span>{Data ? Data.title : null}</span>
-              </strong>
-            </p>
-            <div className="row pt-2">
-              <div className="col-lg-3">
-                <RangePicker onChange={handleDateChange} />
-              </div>
-              <div className="col-lg-2">
-                <button
-                  className={`btn ${styles.prime_btn}`}
-                  onClick={() => handleSearch()}
-                >
-                  Done
+          <div className="container pt-5 pb-5">
+            <div className=" mb-4">
+              <p className="h3 ">
+                <strong>
+                  External Link to <span>{Data ? Data.title : null}</span>
+                </strong>
+              </p>
+              <div className="row pt-2">
+                <div className="col-lg-3">
+                  <RangePicker onChange={handleDateChange} />
+                </div>
+                <div className="col-lg-2">
+                  <button
+                    className={`btn ${styles.prime_btn}`}
+                    onClick={() => handleSearch()}
+                  >
+                    Done
                 </button>
-              </div>
-              <div className="col-lg-4 text-center">
-                <Checkbox.Group
-                  options={options}
-                  onChange={handleFollowChange}
-                />
-                {/* <Checkbox onChange={handleFollowChange} value={["Dofollow"]}>
+                </div>
+                <div className="col-lg-4 text-center">
+                  <Checkbox.Group
+                    options={options}
+                    onChange={handleFollowChange}
+                    defaultValue={["Nofollow" , "Dofollow"]}
+                  />
+                  {/* <Checkbox onChange={handleFollowChange} value={["Dofollow"]}>
                   Dofollow
                 </Checkbox>
               </div>
@@ -230,39 +373,41 @@ const Table = () => {
                 <Checkbox onChange={handleFollowChange} value={["Nofollow"]}>
                   Nofollow
                 </Checkbox> */}
-              </div>
-              <div
-                className="col-lg-3 text-right"
-                style={{ cursor: "pointer" }}
+                </div>
+                <div
+                  className="col-lg-3 text-right"
+                  style={{ cursor: "pointer" }}
                 // onClick={downloadCSV}
-              >
-                <a href={`${getDownloadCSV}/${title}.csv`}>
-                  <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
+                >
+                  <a href={`${getDownloadCSV}/${title}.csv`}>
+                    <FaCloudDownloadAlt style={{ fontSize: "28px" }} /> Export
                 </a>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-lg-12">
-              <div
-                style={{
-                  overflowX: "scroll",
-                  height: "100%",
-                  display: "block",
-                  overflowY: "hidden",
-                }}
-              >
-                <table className="table " border="1">
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Site</th>
-                      <th scope="col">External Links</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {table
-                      ? table.map((tab, i) => {
+            <div className="row">
+              <div className="col-lg-12">
+                <div
+                  style={{
+                    overflowX: "scroll",
+                    height: "100%",
+                    display: "block",
+                    overflowY: "hidden",
+                  }}
+                >
+                  <table className="table" border="1">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Website</th>
+                        <th scope="col">External Links</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {table
+                        ? table.map((tab, i) => {
                           let date = tab.lastmod.substring(
                             0,
                             tab.lastmod.indexOf("T")
@@ -270,7 +415,7 @@ const Table = () => {
                           return (
                             <tr
                               style={{
-                                backgroundColor: "#f2f2f2",
+                                backgroundColor: "#fff",
                               }}
                               key={i}
                             >
@@ -282,122 +427,175 @@ const Table = () => {
                               ></Checkbox>
                             </td> */}
                               <td style={{ width: "60%" }}>{date}</td>
-                              <td style={{ width: "100%" }}>
+                              <td style={{ width: "60%" }}>
                                 <a
                                   href={tab.articlelink}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {Data.title}
+                                  {tab.articlelink}
                                 </a>
                               </td>
                               <td>
-                                <table className="table">
-                                  <tbody>
-                                    {all ? (
-                                      tab.externalLinks.length > 0 ? (
-                                        tab.externalLinks.map((extLink, j) => {
-                                          return (
-                                            <tr key={j}>
-                                              <td>
-                                                <a
-                                                  href={extLink.link}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {extLink.link}
-                                                </a>
-                                              </td>
-                                              <td>
-                                                {extLink.rel
-                                                  ? extLink.rel
-                                                  : "Undefined"}
-                                              </td>
-                                            </tr>
-                                          );
-                                        })
-                                      ) : (
-                                        <tr>
-                                          <td>No External Links</td>
-                                        </tr>
-                                      )
-                                    ) : null}
-                                    {nofollow ? (
-                                      tab.nofollow.length > 0 ? (
-                                        tab.nofollow.map((noFollowLink, j) => {
-                                          return (
-                                            <tr key={j}>
-                                              <td>
-                                                <a
-                                                  href={noFollowLink.link}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {noFollowLink.link}
-                                                </a>
-                                              </td>
-                                              <td>{noFollowLink.rel}</td>
-                                            </tr>
-                                          );
-                                        })
-                                      ) : (
-                                        <tr>
-                                          <td>No External Links</td>
-                                        </tr>
-                                      )
-                                    ) : null}
-                                    {dofollow ? (
-                                      tab.dofollow.length > 0 ? (
-                                        tab.dofollow.map((doFollowLink, j) => {
-                                          return (
-                                            <tr key={j}>
-                                              <td>
-                                                <a
-                                                  href={doFollowLink.link}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {doFollowLink.link}
-                                                </a>
-                                              </td>
-                                              <td>{doFollowLink.rel}</td>
-                                            </tr>
-                                          );
-                                        })
-                                      ) : (
-                                        <tr>
-                                          <td>No External Links</td>
-                                        </tr>
-                                      )
-                                    ) : null}
-                                  </tbody>
-                                </table>
+                                {all ? (
+                                  tab.externalLinks.length > 0 ? (
+                                    tab.externalLinks.map((extLink, j) => {
+                                      return (
+                                        <p key={j}><a
+                                          href={extLink.link}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {extLink.link}
+                                        </a></p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No External Links</p>
+                                    )
+                                ) : null}
+                                {nofollow ? (
+                                  tab.nofollow.length > 0 ? (
+                                    tab.nofollow.map((noFollowLink, j) => {
+                                      return (
+                                        <p key={j}><a
+                                          href={noFollowLink.link}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {noFollowLink.link}
+                                        </a></p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No External Links</p>
+                                    )
+                                ) : null}
+                                {dofollow ? (
+                                  tab.dofollow.length > 0 ? (
+                                    tab.dofollow.map((doFollowLink, j) => {
+                                      return (
+                                        <p key={j}><a
+                                          href={doFollowLink.link}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {doFollowLink.link}
+                                        </a></p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No External Links</p>
+                                    )
+                                ) : null}
                               </td>
+                              <td>
+                                {all ? (
+                                  tab.externalLinks.length > 0 ? (
+                                    tab.externalLinks.map((extLink, j) => {
+                                      return (<p key={j}>
+                                        {extLink.rel
+                                          ? extLink.rel
+                                          : "dofollow"}</p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}
+                                {nofollow ? (
+                                  tab.nofollow.length > 0 ? (
+                                    tab.nofollow.map((noFollowLink, j) => {
+                                      return (
+                                        <p key={j}>{noFollowLink.rel}</p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}
+                                {dofollow ? (
+                                  tab.dofollow.length > 0 ? (
+                                    tab.dofollow.map((doFollowLink, j) => {
+                                      return (
+                                        <p key={j}>{doFollowLink.rel}</p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}
+                              </td>
+                              <td>{all ? (
+                                tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (<input key={j}
+                                      type="checkbox"
+                                      checked={extLink.status}
+                                      onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
+                                    ></input>
+                                    );
+                                  })
+                                ) : (
+                                    <p>--</p>
+                                  )
+                              ) : null}
+                                {nofollow ? (
+                                  tab.nofollow.length > 0 ? (
+                                    tab.nofollow.map((noFollowLink, j) => {
+                                      return (
+                                        <input key={j}
+                                          type="checkbox"
+                                          checked={noFollowLink.status}
+                                          onChange={() => onStatusChecked(noFollowLink.link, tab.articlelink, noFollowLink.status)}
+                                        ></input>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}
+                                {dofollow ? (
+                                  tab.dofollow.length > 0 ? (
+                                    tab.dofollow.map((doFollowLink, j) => {
+                                      return (
+                                        <input key={j}
+                                          type="checkbox"
+                                          checked={doFollowLink.status}
+                                          onChange={() => onStatusChecked(doFollowLink.link, tab.articlelink, doFollowLink.status)}
+                                        ></input>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}</td>
                             </tr>
                           );
                         })
-                      : null}
-                  </tbody>
-                </table>
+                        : null}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+  
+            <div className="col-lg-12 mt-5">
+              <div className="col-lg-6 text-center mx-auto">
+                <Pagination
+                  defaultCurrent={1}
+                  total={
+                    (main && mainMeta) ||
+                    (search && searchMeta) ||
+                    (filter && filterMeta)
+                  }
+                  pageSize={20}
+                  onChange={handlePageChange}
+                />
               </div>
             </div>
           </div>
-          <div className="col-lg-12 mt-5">
-            <div className="col-lg-6 text-center mx-auto">
-              <Pagination
-                defaultCurrent={1}
-                total={
-                  (main && mainMeta) ||
-                  (search && searchMeta) ||
-                  (filter && filterMeta)
-                }
-                pageSize={20}
-                onChange={handlePageChange}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };

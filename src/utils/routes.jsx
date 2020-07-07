@@ -11,6 +11,8 @@ export const checkArticle = `${url}/check`;
 export const getCSVData = `${url}/downloadAll`;
 export const getDownloadCSV = `${url}/uploads`;
 export const getDownload = `${url}/downloadByDate`;
+export const changeStatus = `${url}/status`;
+export const restrictFilter = `${url}/restrict`;
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;

@@ -43,6 +43,7 @@ export default function Homepage() {
 
   const refreshScrap = (url) => {
     axios.post(scrapData, { url });
+    console.log(url)
     toast.success("Scrapper Start");
   };
 
@@ -82,7 +83,7 @@ export default function Homepage() {
                         <div
                           className="float-right"
                           onClick={() => refreshScrap(item.link)}
-                          style={{ cursor: "pointer" }}
+                          style={{ cursor: "pointer" , fontSize : "24px"}}
                         >
                           <RedoOutlined />
                         </div>
@@ -93,9 +94,10 @@ export default function Homepage() {
                           }
                         >
                           <div className="row align-items-center no-gutters">
-                            <div className="col mr-2 h3">
+                            <div className="col mr-2 h4">
                               <div className=" text-secondary text-center p-3">
-                                <span className="text-dark font-weight-bold">
+                                <span className="text-dark font-weight-bold float-left"
+                                  style={{paddingTop : "20px" , paddingRight : "10px"}}>
                                   {item.title}
                                 </span>
                               </div>

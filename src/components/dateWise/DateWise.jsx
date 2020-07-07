@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { DownloadOutlined } from "@ant-design/icons";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 import { DatePicker, Button, Skeleton } from "antd";
-import { getGlobalData } from "./../../utils/routes";
+import {
+  getGlobalData,
+  changeStatus
+} from "./../../utils/routes";
 import { toast } from "react-toastify";
 import { CSVLink } from "react-csv";
 const { RangePicker } = DatePicker;
+
 
 const getFormattedDate = (date) => {
   var todayTime = new Date(date);
@@ -36,7 +40,19 @@ const DateWise = () => {
         let todayData = await axios.get(
           `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`
         );
+        let cpyResult = [];
 
+        for (let websiteData of todayData.data.doc.result) {
+          for (let externalLink of websiteData.externalLinks) {
+            if (externalLink.link !== undefined) {
+              let cpy = JSON.parse(JSON.stringify(websiteData));
+              cpy["externalLinks"] = [externalLink];
+              cpyResult.push(cpy);
+            }
+          }
+        }
+        console.log(cpyResult)
+        todayData.data.doc.result = cpyResult;
         setTable(todayData.data.doc.result);
         setShowSkeleton(false);
         setGenerateButton(false);
@@ -73,6 +89,31 @@ const DateWise = () => {
     return csvData;
   };
 
+  const onStatusChecked = async (link, parent_link, check) => {
+    try {
+      let data = await axios.get(
+        `${changeStatus}?link=${link}&parent=${parent_link}`
+      )
+      let dataCpy = []
+      dataCpy.push(data.data.doc.result)
+      let cpyResult = []
+      for (let websiteData of dataCpy) {
+        for (let externalLink of websiteData.externalLinks) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          if (externalLink.link !== undefined) {
+            cpy["externalLinks"] = [externalLink];
+            cpyResult.push(cpy);
+          }
+        }
+      }
+
+      dataCpy = cpyResult;
+      setTable(dataCpy);
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const handleSearch = async () => {
     setButtonDisabled(true);
     if (table) {
@@ -92,59 +133,47 @@ const DateWise = () => {
     }
   };
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#f9fafb" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
       <div className="container pt-5 pb-5">
-        <div className="row mb-4">
-          <div className="col-lg-6 text-right">
-            <RangePicker onChange={handleDateChange} />
-          </div>
-          <div className="col-lg-6">
-            <Button
-              type="primary"
-              size="default"
-              onClick={() => handleSearch()}
-              disabled={generateButton}
-            >
-              Generate CSV
-            </Button>
-          </div>
-        </div>
-        <div className="row pt-2 pb-4">
-          <div className="col-lg-4">
+        <div className="mb-4">
             {startDate === endDate ? (
-              <div className="h4">
+              <p className="h3">
                 <strong>{startDate}</strong>
-              </div>
+              </p>
             ) : (
-              <div className="h4">
-                <strong>{startDate + " to " + endDate}</strong>
-              </div>
-            )}
-          </div>
-          <div className="col-lg-8 text-right">
-            <CSVLink data={data}>
+                <p className="h3">
+                  <strong>{startDate + " to " + endDate}</strong>
+                </p>
+              )}
+
+          <div className="row pt-2">
+            <div className="col-lg-3">
+              <RangePicker onChange={handleDateChange} />
+            </div>
+            <div className="col-lg-3">
               <Button
                 type="primary"
-                icon={<DownloadOutlined />}
                 size="default"
-                disabled={buttonDisabled}
+                onClick={() => handleSearch()}
+                disabled={generateButton}
               >
-                Download
+                Generate CSV
+            </Button>
+            </div>
+            <div className="col text-right">
+              <CSVLink data={data}>
+                <Button
+                  type="primary"
+                  icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
+                  size="default"
+                  disabled={buttonDisabled}
+                >
+                  Export
               </Button>
-            </CSVLink>
-
-            {/* <CSVLink data={data}>
-              <FaCloudDownloadAlt
-                style={{
-                  fontSize: 28,
-                  marginBottom: 8,
-                }}
-              />{" "}
-              Export
-            </CSVLink> */}
+              </CSVLink>
+            </div>
           </div>
         </div>
-
         <div className="row">
           <Skeleton loading={showSkeleton} active>
             <div className="col-lg-12">
@@ -158,82 +187,99 @@ const DateWise = () => {
                   }}
                 >
                   <table className="table " border="1">
-                    <thead>
+                    <thead className="thead-dark">
                       <tr>
                         <th scope="col">Date</th>
                         <th scope="col">Site</th>
                         <th scope="col">External Links</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {table
                         ? table.map((tab, i) => {
-                            let date = tab.lastmod.substring(
-                              0,
-                              tab.lastmod.indexOf("T")
-                            );
-                            return (
-                              <tr
-                                style={{ backgroundColor: "#f2f2f2" }}
-                                key={i}
-                              >
-                                {/* <td>
+                          let date = tab.lastmod.substring(
+                            0,
+                            tab.lastmod.indexOf("T")
+                          );
+                          return (
+                            <tr
+                              style={{ backgroundColor: "#fff" }}
+                              key={i}
+                            >
+                              {/* <td>
                                 <Checkbox
                                   key={i}
                                   checked={tab.checked.includes(Data.user.id)}
                                   onChange={() => handleCheck(tab._id)}
                                 ></Checkbox>
                               </td> */}
-                                <td style={{ width: "60%" }}>{date}</td>
-                                <td style={{ width: "100%" }}>
-                                  <a
-                                    href={tab.articlelink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {tab.articlelink}
-                                  </a>
-                                </td>
-                                <td>
-                                  <table className="table">
-                                    <tbody>
-                                      {tab.externalLinks.length > 0 ? (
-                                        tab.externalLinks.map((extLink, j) => {
-                                          return (
-                                            <tr key={j}>
-                                              <td>
-                                                <a
-                                                  href={extLink.link}
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {extLink.link}
-                                                </a>
-                                              </td>
-                                              <td>{extLink.rel}</td>
-                                            </tr>
-                                          );
-                                        })
-                                      ) : (
-                                        <tr>
-                                          <td>No External Links</td>
-                                        </tr>
-                                      )}
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            );
-                          })
+                              <td style={{ width: "60%" }}>{date}</td>
+                              <td style={{ width: "100%" }}>
+                                <a
+                                  href={tab.articlelink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {tab.articlelink}
+                                </a>
+                              </td>
+                              <td>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
+                                      <p key={j}><a
+                                        href={extLink.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        {extLink.link}
+                                      </a></p>
+                                    );
+                                  })
+                                ) : (
+                                    <p>No External Links</p>
+                                  )}
+                              </td>
+                              <td>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
+                                      <p key={j}>{extLink.rel ? extLink.rel : "dofollow"}</p>
+                                    );
+                                  })
+                                ) : (
+                                    <p>--</p>
+                                  )}
+                              </td>
+                              <td>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
+                                      <input key={j}
+                                        type="checkbox"
+                                        checked={extLink.status}
+                                        onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
+                                      ></input>
+                                    );
+                                  })
+                                ) : (
+                                    <p>--</p>
+                                  )}
+                              </td>
+                            </tr>
+                          );
+                        })
                         : null}
                     </tbody>
                   </table>
                 </div>
               ) : (
-                <div style={{ textAlign: "center" }}>
-                  No data. Scrap to see data
+                  <div style={{ textAlign: "center" }}>
+                    No data. Scrap to see data
                 </div>
-              )}
+                )}
             </div>
           </Skeleton>
         </div>
