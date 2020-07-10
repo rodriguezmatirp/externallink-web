@@ -13,6 +13,8 @@ export const getDownloadCSV = `${url}/uploads`;
 export const getDownload = `${url}/downloadByDate`;
 export const changeStatus = `${url}/status`;
 export const restrictFilter = `${url}/restrict`;
+export const deleteWebsite = `${url}/deleteWebsite`;
+export const deleteRestricted = `${url}/deleteRestricted`;
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;

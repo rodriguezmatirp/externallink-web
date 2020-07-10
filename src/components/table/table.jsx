@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import styles from "./table.module.css";
 import axios from "axios";
@@ -60,10 +61,8 @@ const Table = () => {
         for (let websiteData of data.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
             let cpy = JSON.parse(JSON.stringify(websiteData));
-            if (externalLink.link !== undefined) {
               cpy["externalLinks"] = [externalLink];
               cpyResult.push(cpy);
-            }
           }
         }
 
@@ -185,24 +184,10 @@ const Table = () => {
 
   const onStatusChecked = async (link, parent_link, check) => {
     try {
-      let data = await axios.get(
+      await axios.get(
         `${changeStatus}?link=${link}&parent=${parent_link}`
       )
-      let dataCpy = []
-      dataCpy.push(data.data.doc.result)
-      let cpyResult = []
-      for (let websiteData of dataCpy) {
-        for (let externalLink of websiteData.externalLinks) {
-          let cpy = JSON.parse(JSON.stringify(websiteData));
-          if (externalLink.link !== undefined) {
-            cpy["externalLinks"] = [externalLink];
-            cpyResult.push(cpy);
-          }
-        }
-      }
-
-      dataCpy = cpyResult;
-      setTable(dataCpy);
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }
@@ -401,6 +386,7 @@ const Table = () => {
                         <th scope="col">Date</th>
                         <th scope="col">Website</th>
                         <th scope="col">External Links</th>
+                        <th scope="col">Title</th>
                         <th scope="col">Type</th>
                         <th scope="col">Status</th>
                       </tr>
@@ -486,6 +472,47 @@ const Table = () => {
                                     })
                                   ) : (
                                       <p>No External Links</p>
+                                    )
+                                ) : null}
+                              </td>
+                              <td>
+                                {all ? (
+                                  tab.externalLinks.length > 0 ? (
+                                    tab.externalLinks.map((extLink, j) => {
+                                      return (
+                                        <p key={j}>
+                                          {extLink.text}
+                                        </p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No text</p>
+                                    )
+                                ) : null}
+                                {nofollow ? (
+                                  tab.nofollow.length > 0 ? (
+                                    tab.nofollow.map((noFollowLink, j) => {
+                                      return (
+                                        <p key={j}>
+                                          {noFollowLink.link}
+                                        </p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No text</p>
+                                    )
+                                ) : null}
+                                {dofollow ? (
+                                  tab.dofollow.length > 0 ? (
+                                    tab.dofollow.map((doFollowLink, j) => {
+                                      return (
+                                        <p key={j}>
+                                          {doFollowLink.link}
+                                        </p>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>No text</p>
                                     )
                                 ) : null}
                               </td>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./adminFilter.module.css";
 import axios from "axios";
-import { restrictFilter } from "../../utils/routes";
+import { restrictFilter , deleteRestricted } from "../../utils/routes";
 import { toast } from "react-toastify";
 import useInputState from "../../hooks/useInputState";
-import { RedoOutlined } from "@ant-design/icons";
+import { FieldTimeOutlined, DeleteFilled } from "@ant-design/icons";
 
 const Admin = () => {
     const [data, setData] = useState("")
@@ -69,6 +69,17 @@ const Admin = () => {
         }
     }
 
+    const deleteRestrict_ = async(link)=>{
+        if(window.confirm("Remove " + link + " from Restricted")){
+            axios.get(`${deleteRestricted}/?link=${link}`)
+            toast.success("Successfully removed " + link)
+        }else{
+            toast.error("Remove Falied")
+            return
+        }
+        window.location.reload()
+    }
+
     return (
         <div className="container pt-5 pb-5">
             <div className=" mb-4">
@@ -114,16 +125,24 @@ const Admin = () => {
                                                     >
                                                         <div className={styles.TypeCard}>
                                                             <div
-                                                                className="float-right"
+                                                                className="float-left"
                                                                 onClick={() => timeScrap(item.title)}
-                                                                style={{ cursor: "pointer" }}
+                                                                style={{ cursor: "pointer", fontSize: "26px", color: "#41D0EB" }}
+                                                            ><FieldTimeOutlined />
+                                                            </div>
+                                                            <div
+                                                                className="float-right"
+                                                                onClick={() => deleteRestrict_(item.title)}
+                                                                style={{ cursor: "pointer", fontSize: "26px", color: "#EB4141" }}
                                                             >
-                                                                <RedoOutlined />
+                                                                <DeleteFilled />
                                                             </div>
                                                             <div className="row align-items-center no-gutters">
-                                                                <div className="col mr-2 h4">
+                                                                <div className="col mr-2 h6">
                                                                     <div className=" text-secondary text-center p-3">
-                                                                        <span className="text-dark font-weight-bold">
+                                                                        <span className="text-dark font-weight-bold float-left"
+                                                                            style={{paddingTop:"25px" , paddingRight:"10px"}}    
+                                                                        >
                                                                             {item.title}
                                                                         </span>
                                                                     </div>

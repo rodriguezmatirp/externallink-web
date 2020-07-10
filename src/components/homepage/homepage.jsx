@@ -5,8 +5,8 @@ import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
 // import GlobalCSV from "./../globalCSV/globalCSV";
 import useInputState from "../../hooks/useInputState";
-import { RedoOutlined } from "@ant-design/icons";
-import { scrapData } from "./../../utils/routes";
+import { RedoOutlined, DeleteFilled } from "@ant-design/icons";
+import { scrapData, deleteWebsite } from "./../../utils/routes";
 import { toast } from "react-toastify";
 
 export default function Homepage() {
@@ -47,6 +47,22 @@ export default function Homepage() {
     toast.success("Scrapper Start");
   };
 
+  const deleteWebsite_ = (url) => {
+    var pass = window.prompt("Admin Access needed ")
+    if (pass === "confirmDelete") {
+      if (window.confirm("Delete " + url)) {
+        axios.get(`${deleteWebsite}/?link=${url}`)
+        toast.success("Successfully deleted " + url)
+      } else {
+        toast.error("Delete failed")
+        return
+      }
+      window.location.reload()
+    } else {
+      toast.error("Delete Failed")
+    }
+  }
+
   const filteredData = searchData();
   return (
     <div
@@ -81,11 +97,18 @@ export default function Homepage() {
                     >
                       <div className={styles.TypeCard}>
                         <div
-                          className="float-right"
+                          className="float-left"
                           onClick={() => refreshScrap(item.link)}
-                          style={{ cursor: "pointer" , fontSize : "24px"}}
+                          style={{ cursor: "pointer", fontSize: "26px", color: "#41D0EB" }}
                         >
                           <RedoOutlined />
+                        </div>
+                        <div
+                          className="float-right"
+                          onClick={() => deleteWebsite_(item.link)}
+                          style={{ cursor: "pointer", fontSize: "26px", color: "#EB4141" }}
+                        >
+                          <DeleteFilled />
                         </div>
                         <NavLink
                           to="/table"
@@ -94,10 +117,10 @@ export default function Homepage() {
                           }
                         >
                           <div className="row align-items-center no-gutters">
-                            <div className="col mr-2 h4">
+                            <div className="col mr-2 h6">
                               <div className=" text-secondary text-center p-3">
                                 <span className="text-dark font-weight-bold float-left"
-                                  style={{paddingTop : "20px" , paddingRight : "10px"}}>
+                                  style={{ paddingTop: "25px", paddingRight: "10px" }}>
                                   {item.title}
                                 </span>
                               </div>
@@ -109,10 +132,10 @@ export default function Homepage() {
                   );
                 })
               ) : (
-                <div className="col-lg-6">
-                  <h4>No any sitemap data</h4>
-                </div>
-              )}
+                  <div className="col-lg-6">
+                    <h4>No any sitemap data</h4>
+                  </div>
+                )}
             </div>
           </div>
           {/* <div className="col-lg-4 mt-4">

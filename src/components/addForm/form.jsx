@@ -11,7 +11,7 @@ export default function Form(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    var webpage = link + '/sitemap.xml'
+    var webpage = link + 'sitemap.xml'
     var extracted_title = link.match( /:\/\/(.[^/]+)/)[1];
     console.log(extracted_title)
     console.log(webpage)

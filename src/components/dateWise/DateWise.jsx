@@ -44,11 +44,9 @@ const DateWise = () => {
 
         for (let websiteData of todayData.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
-            if (externalLink.link !== undefined) {
               let cpy = JSON.parse(JSON.stringify(websiteData));
               cpy["externalLinks"] = [externalLink];
               cpyResult.push(cpy);
-            }
           }
         }
         console.log(cpyResult)
@@ -78,7 +76,7 @@ const DateWise = () => {
         temp.push(data[i].articlelink);
         temp.push(arr[j].link);
         if (arr[j].rel === undefined) {
-          temp.push("Not-Defined");
+          temp.push("doFollow");
         } else {
           temp.push(arr[j].rel);
         }
@@ -91,24 +89,9 @@ const DateWise = () => {
 
   const onStatusChecked = async (link, parent_link, check) => {
     try {
-      let data = await axios.get(
+      await axios.get(
         `${changeStatus}?link=${link}&parent=${parent_link}`
       )
-      let dataCpy = []
-      dataCpy.push(data.data.doc.result)
-      let cpyResult = []
-      for (let websiteData of dataCpy) {
-        for (let externalLink of websiteData.externalLinks) {
-          let cpy = JSON.parse(JSON.stringify(websiteData));
-          if (externalLink.link !== undefined) {
-            cpy["externalLinks"] = [externalLink];
-            cpyResult.push(cpy);
-          }
-        }
-      }
-
-      dataCpy = cpyResult;
-      setTable(dataCpy);
     } catch (e) {
       console.log(e)
     }
@@ -161,7 +144,7 @@ const DateWise = () => {
             </Button>
             </div>
             <div className="col text-right">
-              <CSVLink data={data}>
+              <CSVLink filename={startDate + "-" + endDate}  data={data}>
                 <Button
                   type="primary"
                   icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
@@ -192,6 +175,7 @@ const DateWise = () => {
                         <th scope="col">Date</th>
                         <th scope="col">Site</th>
                         <th scope="col">External Links</th>
+                        <th scope="col">Title</th>
                         <th scope="col">Type</th>
                         <th scope="col">Status</th>
                       </tr>
@@ -246,6 +230,19 @@ const DateWise = () => {
                                 {tab.externalLinks.length > 0 ? (
                                   tab.externalLinks.map((extLink, j) => {
                                     return (
+                                      <p key={j}>
+                                        {extLink.text}
+                                      </p>
+                                    );
+                                  })
+                                ) : (
+                                    <p>No title</p>
+                                  )}
+                              </td>
+                              <td>
+                                {tab.externalLinks.length > 0 ? (
+                                  tab.externalLinks.map((extLink, j) => {
+                                    return (
                                       <p key={j}>{extLink.rel ? extLink.rel : "dofollow"}</p>
                                     );
                                   })
@@ -260,7 +257,8 @@ const DateWise = () => {
                                       <input key={j}
                                         type="checkbox"
                                         checked={extLink.status}
-                                        onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
+                                        id="check"
+                                        onChange={()=>onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
                                       ></input>
                                     );
                                   })
