@@ -61,8 +61,10 @@ const Table = () => {
         for (let websiteData of data.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
             let cpy = JSON.parse(JSON.stringify(websiteData));
+            if (externalLink.link !== undefined) {
               cpy["externalLinks"] = [externalLink];
               cpyResult.push(cpy);
+            }
           }
         }
 
@@ -348,7 +350,7 @@ const Table = () => {
                   <Checkbox.Group
                     options={options}
                     onChange={handleFollowChange}
-                    defaultValue={["Nofollow" , "Dofollow"]}
+                    defaultValue={["Nofollow", "Dofollow"]}
                   />
                   {/* <Checkbox onChange={handleFollowChange} value={["Dofollow"]}>
                   Dofollow
@@ -606,7 +608,7 @@ const Table = () => {
                 </div>
               </div>
             </div>
-  
+
             <div className="col-lg-12 mt-5">
               <div className="col-lg-6 text-center mx-auto">
                 <Pagination

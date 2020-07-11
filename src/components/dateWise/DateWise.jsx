@@ -45,8 +45,10 @@ const DateWise = () => {
         for (let websiteData of todayData.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
             let cpy = JSON.parse(JSON.stringify(websiteData));
-            cpy["externalLinks"] = [externalLink];
-            cpyResult.push(cpy);
+            if (externalLink.link !== undefined) {
+              cpy["externalLinks"] = [externalLink];
+              cpyResult.push(cpy);
+            }
           }
         }
         console.log(cpyResult)
@@ -100,8 +102,10 @@ const DateWise = () => {
       for (let websiteData of todayData.data.doc.result) {
         for (let externalLink of websiteData.externalLinks) {
           let cpy = JSON.parse(JSON.stringify(websiteData));
-          cpy["externalLinks"] = [externalLink];
-          cpyResult.push(cpy);
+          if (externalLink.link !== undefined) {
+            cpy["externalLinks"] = [externalLink];
+            cpyResult.push(cpy);
+          }
         }
       }
       console.log(cpyResult)
