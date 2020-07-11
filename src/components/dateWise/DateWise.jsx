@@ -44,9 +44,9 @@ const DateWise = () => {
 
         for (let websiteData of todayData.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
-              let cpy = JSON.parse(JSON.stringify(websiteData));
-              cpy["externalLinks"] = [externalLink];
-              cpyResult.push(cpy);
+            let cpy = JSON.parse(JSON.stringify(websiteData));
+            cpy["externalLinks"] = [externalLink];
+            cpyResult.push(cpy);
           }
         }
         console.log(cpyResult)
@@ -92,6 +92,23 @@ const DateWise = () => {
       await axios.get(
         `${changeStatus}?link=${link}&parent=${parent_link}`
       )
+      let todayData = await axios.get(
+        `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`
+      );
+      let cpyResult = [];
+
+      for (let websiteData of todayData.data.doc.result) {
+        for (let externalLink of websiteData.externalLinks) {
+          let cpy = JSON.parse(JSON.stringify(websiteData));
+          cpy["externalLinks"] = [externalLink];
+          cpyResult.push(cpy);
+        }
+      }
+      console.log(cpyResult)
+      todayData.data.doc.result = cpyResult;
+      setTable(todayData.data.doc.result);
+      setShowSkeleton(false);
+      setGenerateButton(false);
     } catch (e) {
       console.log(e)
     }
@@ -119,15 +136,15 @@ const DateWise = () => {
     <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
       <div className="container pt-5 pb-5">
         <div className="mb-4">
-            {startDate === endDate ? (
+          {startDate === endDate ? (
+            <p className="h3">
+              <strong>{startDate}</strong>
+            </p>
+          ) : (
               <p className="h3">
-                <strong>{startDate}</strong>
+                <strong>{startDate + " to " + endDate}</strong>
               </p>
-            ) : (
-                <p className="h3">
-                  <strong>{startDate + " to " + endDate}</strong>
-                </p>
-              )}
+            )}
 
           <div className="row pt-2">
             <div className="col-lg-3">
@@ -144,7 +161,7 @@ const DateWise = () => {
             </Button>
             </div>
             <div className="col text-right">
-              <CSVLink filename={startDate + "-" + endDate}  data={data}>
+              <CSVLink filename={startDate + "-" + endDate} data={data}>
                 <Button
                   type="primary"
                   icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
@@ -258,7 +275,7 @@ const DateWise = () => {
                                         type="checkbox"
                                         checked={extLink.status}
                                         id="check"
-                                        onChange={()=>onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
+                                        onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
                                       ></input>
                                     );
                                   })
