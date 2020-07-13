@@ -15,6 +15,10 @@ export const changeStatus = `${url}/status`;
 export const restrictFilter = `${url}/restrict`;
 export const deleteWebsite = `${url}/deleteWebsite`;
 export const deleteRestricted = `${url}/deleteRestricted`;
+export const webInfo = `${url}/info`;
+export const crawlAll = `${url}/crawlAll`
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;
+export const deleteUserData = `${url}/deleteProfile`;
+export const getUsersData = `${url}/getUsers`;

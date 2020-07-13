@@ -48,7 +48,7 @@ export default function Homepage() {
   };
 
   const deleteWebsite_ = (url) => {
-    var pass = window.prompt("Admin Access needed ")
+    var pass = window.prompt("Admin access needed ")
     if (pass === "confirmDelete") {
       if (window.confirm("Delete " + url)) {
         axios.get(`${deleteWebsite}/?link=${url}`)

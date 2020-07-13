@@ -11,7 +11,7 @@ export default function Form(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!/(https|http):\/\/.*com\/$/.test(link)) {
+    if (!/(https|http):\/\/.*[com|net|in|us|org|info|xyz]\/$/.test(link)) {
       toast.error("Check the url")
     } else {
       var webpage = link + 'sitemap.xml'
