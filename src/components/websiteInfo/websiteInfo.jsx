@@ -43,7 +43,7 @@ const WebInfo = () => {
 
     const crawlall = async()=>{
         try{
-            axios.get(`${crawlAll}`)
+            await axios.get(crawlAll)
             toast.success("Crawling all the data")
         }catch(e){
             console.log(e)
