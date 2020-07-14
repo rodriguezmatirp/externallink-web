@@ -53,6 +53,7 @@ const DateWise = () => {
         let todayData = await axios.get(
           `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}&limit=20&skip=0`
         );
+        // console.log(startDate + "----------" + endDate)
         let cpyResult = [];
 
         for (let websiteData of todayData.data.doc.result) {
@@ -138,6 +139,7 @@ const DateWise = () => {
     );
     console.log(filterData)
     let cpyResult = [];
+    // console.log(startDate + "------------" + endDate)
 
     for (let websiteData of filterData.data.doc) {
       if (websiteData.dofollow != null) {

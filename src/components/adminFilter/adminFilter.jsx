@@ -109,7 +109,7 @@ const Admin = () => {
                                         <select
                                             className="selectpicker"
                                             style={{ fontSize: "16px" }} id="select" >
-                                            <option selected>Select options</option>
+                                            <option defaultValue>Select options</option>
                                             <option value="ALL">Apply to all</option>
                                             <option value="EST">Except Startup Talky</option>
                                         </select>
