@@ -83,7 +83,7 @@ const DateWise = () => {
     setEndDate(d[1]);
   };
 
-  const csvData = [["article-Link", "External-Link", "Rel", "Date of Post"]];
+  const csvData = [["article-Link", "External-Link","Title", "Rel", "Date of Post"]];
   const generateCsv = (data) => {
     for (let i = 0; i < data.length; i++) {
       let arr = data[i].externalLinks;
@@ -91,6 +91,7 @@ const DateWise = () => {
         var temp = [];
         temp.push(data[i].articlelink);
         temp.push(arr[j].link);
+        temp.push(arr[j].text)
         if (arr[j].rel === undefined) {
           temp.push("doFollow");
         } else {

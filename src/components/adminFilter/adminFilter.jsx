@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./adminFilter.module.css";
 import axios from "axios";
-import { restrictFilter , deleteRestricted } from "../../utils/routes";
+import { restrictFilter, deleteRestricted } from "../../utils/routes";
 import { toast } from "react-toastify";
 import useInputState from "../../hooks/useInputState";
 import { FieldTimeOutlined, DeleteFilled } from "@ant-design/icons";
@@ -22,9 +22,8 @@ const Admin = () => {
                     `${restrictFilter}`
                 )
                 let result = []
-                console.log(data.data.result.doc)
                 data.data.result.doc.forEach((data) => {
-                    result.push({ title: data.restricted_link, created: data.created_at })
+                    result.push({ title: data.restricted_link, created: data.created_at, type: data.restricted_type })
                 })
                 console.log(result)
                 setData(result)
@@ -36,9 +35,9 @@ const Admin = () => {
         fetchData();
     }, []);
 
-    const timeScrap = async (link) => {
+    const timeScrap = async (link, type) => {
         data.forEach((data_) => {
-            if (data_.title === link) {
+            if (data_.title === link && data_.type === type) {
                 console.log(data_.created)
                 var created_date = new Date(data_.created)
                 var date = created_date.getDate();
@@ -55,12 +54,14 @@ const Admin = () => {
             toast.warn("Please Enter the value")
         } else {
             try {
+                var select = document.getElementById("select").value
+                console.log(select)
                 let data = await axios.post(
-                    `${restrictFilter}/?link=${value}`
+                    `${restrictFilter}/?link=${value}&options=${select}`
                 )
                 rF();
                 console.log(data)
-                window.location = '/filterRestrict'
+                window.location = '/admin_restrict'
                 toast.success("Restriction Added")
             } catch (e) {
                 console.log(e)
@@ -69,11 +70,11 @@ const Admin = () => {
         }
     }
 
-    const deleteRestrict_ = async(link)=>{
-        if(window.confirm("Remove " + link + " from Restricted")){
-            axios.get(`${deleteRestricted}/?link=${link}`)
+    const deleteRestrict_ = async (link, type) => {
+        if (window.confirm("Remove " + link + " from Restricted")) {
+            axios.get(`${deleteRestricted}/?link=${link}&type=${type}`)
             toast.success("Successfully removed " + link)
-        }else{
+        } else {
             toast.error("Remove Falied")
             return
         }
@@ -103,7 +104,16 @@ const Admin = () => {
                                             value={filter}
                                             onChange={setFilter}
                                             required={true}
-                                        /><button
+                                        />
+
+                                        <select
+                                            className="selectpicker"
+                                            style={{ fontSize: "16px" }} id="select" >
+                                            <option selected>Select options</option>
+                                            <option value="ALL">Apply to all</option>
+                                            <option value="EST">Except Startup Talky</option>
+                                        </select>
+                                        <button
                                             type="submit"
                                             className={`btn ${styles.prime_btn}`}
                                             onClick={() => addFilter()}
@@ -120,19 +130,20 @@ const Admin = () => {
                                             data.map((item, i) => {
                                                 return (
                                                     <div
-                                                        className="col-lg-3 col-xl-3 col-md-6 mt-4 pb-4"
+                                                        className="col-4"
+                                                        style={{ padding: "20px" }}
                                                         key={i}
                                                     >
                                                         <div className={styles.TypeCard}>
                                                             <div
                                                                 className="float-left"
-                                                                onClick={() => timeScrap(item.title)}
+                                                                onClick={() => timeScrap(item.title, item.type)}
                                                                 style={{ cursor: "pointer", fontSize: "26px", color: "#41D0EB" }}
                                                             ><FieldTimeOutlined />
                                                             </div>
                                                             <div
                                                                 className="float-right"
-                                                                onClick={() => deleteRestrict_(item.title)}
+                                                                onClick={() => deleteRestrict_(item.title, item.type)}
                                                                 style={{ cursor: "pointer", fontSize: "26px", color: "#EB4141" }}
                                                             >
                                                                 <DeleteFilled />
@@ -141,9 +152,9 @@ const Admin = () => {
                                                                 <div className="col mr-2 h6">
                                                                     <div className=" text-secondary text-center p-3">
                                                                         <span className="text-dark font-weight-bold float-left"
-                                                                            style={{paddingTop:"25px" , paddingRight:"10px"}}    
+                                                                            style={{ paddingTop: "25px", paddingRight: "10px" }}
                                                                         >
-                                                                            {item.title}
+                                                                            {item.title} -  {item.type}
                                                                         </span>
                                                                     </div>
                                                                 </div>

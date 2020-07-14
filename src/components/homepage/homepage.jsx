@@ -5,8 +5,8 @@ import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
 // import GlobalCSV from "./../globalCSV/globalCSV";
 import useInputState from "../../hooks/useInputState";
-import { RedoOutlined, DeleteFilled } from "@ant-design/icons";
-import { scrapData, deleteWebsite } from "./../../utils/routes";
+import { RedoOutlined } from "@ant-design/icons";
+import { scrapData } from "./../../utils/routes";
 import { toast } from "react-toastify";
 
 export default function Homepage() {
@@ -47,21 +47,21 @@ export default function Homepage() {
     toast.success("Scrapper Start");
   };
 
-  const deleteWebsite_ = (url) => {
-    var pass = window.prompt("Admin access needed ")
-    if (pass === "confirmDelete") {
-      if (window.confirm("Delete " + url)) {
-        axios.get(`${deleteWebsite}/?link=${url}`)
-        toast.success("Successfully deleted " + url)
-      } else {
-        toast.error("Delete failed")
-        return
-      }
-      window.location.reload()
-    } else {
-      toast.error("Delete Failed")
-    }
-  }
+  // const deleteWebsite_ = (url) => {
+  //   var pass = window.prompt("Admin access needed ")
+  //   if (pass === "confirmDelete") {
+  //     if (window.confirm("Delete " + url)) {
+  //       axios.get(`${deleteWebsite}/?link=${url}`)
+  //       toast.success("Successfully deleted " + url)
+  //     } else {
+  //       toast.error("Delete failed")
+  //       return
+  //     }
+  //     window.location.reload()
+  //   } else {
+  //     toast.error("Delete Failed")
+  //   }
+  // }
 
   const filteredData = searchData();
   return (
@@ -97,19 +97,19 @@ export default function Homepage() {
                     >
                       <div className={styles.TypeCard}>
                         <div
-                          className="float-left"
+                          className="float-right"
                           onClick={() => refreshScrap(item.link)}
                           style={{ cursor: "pointer", fontSize: "26px", color: "#41D0EB" }}
                         >
                           <RedoOutlined />
                         </div>
-                        <div
+                        {/* <div
                           className="float-right"
                           onClick={() => deleteWebsite_(item.link)}
                           style={{ cursor: "pointer", fontSize: "26px", color: "#EB4141" }}
                         >
                           <DeleteFilled />
-                        </div>
+                        </div> */}
                         <NavLink
                           to="/table"
                           onClick={() =>
