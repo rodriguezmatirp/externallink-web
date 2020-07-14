@@ -108,7 +108,7 @@ const AdminST = () => {
                                 })
                             ) : (
                                     <div className="col-lg-6">
-                                        <h4>No Filters</h4>
+                                        <h4>No Userdata</h4>
                                     </div>
                                 )}
                         </div>
