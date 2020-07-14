@@ -77,11 +77,12 @@ const AdminST = () => {
                                 data.map((user, i) => {
                                     return (
                                         <div className="container-fluid" key={i}
-                                            style={{ padding: "10px" , backgroundColor:"#EDEDED" }}
+                                            style={{ padding: "10px", backgroundColor: "#EDEDED" }}
                                         >
                                             <div className="row"
                                                 style={{ fontSize: "20px" }}>
-                                                <div className="col-md-4 text-center" >                                                   {user.username}
+                                                <div className="col-md-4 text-center" >
+                                                    {user.username}
                                                 </div>
                                                 <div className="col-md-6">
                                                     {user.email}
@@ -96,7 +97,7 @@ const AdminST = () => {
                                                 </div>
                                                 <div className="col-md-1">
                                                     <div
-                                                        onClick={() => deleteUser(user.email, user.name)}
+                                                        onClick={() => deleteUser(user.email, user.username)}
                                                         style={{ cursor: "pointer", fontSize: "25px", color: "#EB4141" }}
                                                     >
                                                         <DeleteFilled />
