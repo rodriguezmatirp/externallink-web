@@ -14,6 +14,7 @@ export default function Homepage() {
   const [query, handleQuery] = useInputState("");
 
   useEffect(() => {
+    document.title = "Home"
     const fetchData = async () => {
       try {
         const response = await axios.get(getSitemaps);

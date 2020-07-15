@@ -11,6 +11,7 @@ const AdminST = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            document.title = "Admin_Users"
             let obj = JSON.parse(localStorage.getItem("UserData"))
             console.log(obj)
             const name_ = obj.user.name

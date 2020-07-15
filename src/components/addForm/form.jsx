@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 export default function Form(props) {
   const [link, handleLinkChange, rL] = useInputState("");
-
+  document.title = "Add Site"
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!/(https|http):\/\/.*[com|net|in|us|org|info|xyz]\/$/.test(link)) {

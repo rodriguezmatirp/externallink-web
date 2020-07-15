@@ -19,6 +19,7 @@ export default function Register(props) {
   const Data = useContext(AuthContext);
 
   useEffect(() => {
+    document.title = "Register"
     Data.token !== "" && props.history.goBack();
     if (password !== cpassword) setShowError(true);
     else setShowError(false);

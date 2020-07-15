@@ -12,9 +12,9 @@ import Register from "./components/register/register";
 import { AuthContext } from "./contexts/userContext";
 import NotFound from "./components/notFound/notFound";
 import DateWise from "./components/dateWise/DateWise";
-import adminFilter from "./components/adminFilter/adminFilter";
-import adminST from "./components/emailFilter/emailFilter";
-import websiteInfo from "./components/websiteInfo/websiteInfo";
+import AdminFilter from "./components/adminFilter/adminFilter";
+import AdminST from "./components/emailFilter/emailFilter";
+import WebsiteInfo from "./components/websiteInfo/websiteInfo";
 
 function App() {
     return ( <
@@ -30,13 +30,13 @@ function App() {
         component = { DateWise }
         /><
         Route exact path = "/admin_info"
-        component = { websiteInfo }
+        component = { WebsiteInfo }
         /> <
         Route exact path = "/"
         component = { Index }
         /> <
         Route exact path = "/admin_email"
-        component = { adminST }
+        component = { AdminST }
         /><
         PrivateRoute exact path = "/home"
         component = { Homepage }
@@ -51,7 +51,7 @@ function App() {
         component = { Register }
         /> <
         Route exact path = "/admin_restrict"
-        component = { adminFilter }
+        component = { AdminFilter }
         /> <
         Route path = "*"
         component = { NotFound }

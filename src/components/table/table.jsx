@@ -51,6 +51,7 @@ const Table = () => {
       setLoader(true);
       let obj = JSON.parse(localStorage.getItem("link"));
       let url = obj.site;
+      document.title = url
       let titl = obj.title.replace(" ", "");
       try {
         let data = await axios.get(

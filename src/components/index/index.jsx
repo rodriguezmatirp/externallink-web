@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./index.module.css";
 
 export default function Index() {
+  document.title = "Scrapper"
   return (
     <div className="fluid-container">
       <div className={`${styles.top}`}>

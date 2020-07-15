@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { DatePicker, Button, Skeleton, Pagination , Checkbox } from "antd";
+import { DatePicker, Button, Skeleton, Pagination } from "antd";
 import {
   getGlobalData,
-  changeStatus,
-  getFilterData
+  changeStatus
+  // getFilterData
 } from "./../../utils/routes";
 import { toast } from "react-toastify";
 import { CSVLink } from "react-csv";
@@ -20,10 +20,10 @@ const getFormattedDate = (date) => {
   return year + "-" + month + "-" + day;
 };
 
-const options = [
-  { label: "Dofollow", value: "Dofollow" },
-  { label: "Nofollow", value: "Nofollow" }
-];
+// const options = [
+//   { label: "Dofollow", value: "Dofollow" },
+//   { label: "Nofollow", value: "Nofollow" }
+// ];
 
 const DateWise = () => {
   const [table, setTable] = useState("");
@@ -39,13 +39,14 @@ const DateWise = () => {
   const [generateButton, setGenerateButton] = useState(true);
   const [mainMeta, setMainMeta] = useState(0);
   const [all, setAll] = useState(true);
-  const [dofollow, setDofollow] = useState(false);
-  const [nofollow, setNofollow] = useState(false);
+  // const [dofollow, setDofollow] = useState(false);
+  // const [nofollow, setNofollow] = useState(false);
   const [main, setMain] = useState(true);
-  const [filter, setFilter] = useState(false);
-  const [filterMeta, setFilterMeta] = useState(0);
+  // const [filter, setFilter] = useState(false);
+  // const [filterMeta, setFilterMeta] = useState(0);
 
   useEffect(() => {
+    document.title = "Datewise"
     const fetchData = async () => {
       setShowSkeleton(true);
       setGenerateButton(true);
@@ -55,6 +56,11 @@ const DateWise = () => {
         );
         // console.log(startDate + "----------" + endDate)
         let cpyResult = [];
+
+
+        setAll(true)
+        setMain(true)
+
 
         for (let websiteData of todayData.data.doc.result) {
           for (let externalLink of websiteData.externalLinks) {
@@ -84,7 +90,7 @@ const DateWise = () => {
     setEndDate(d[1]);
   };
 
-  const csvData = [["article-Link", "External-Link","Title", "Rel", "Date of Post"]];
+  const csvData = [["article-Link", "External-Link", "Title", "Rel", "Date of Post"]];
   const generateCsv = (data) => {
     for (let i = 0; i < data.length; i++) {
       let arr = data[i].externalLinks;
@@ -133,64 +139,76 @@ const DateWise = () => {
       console.log(e)
     }
   }
-  const handleFollowChange = async (e) => {
-    let filterData = await axios.get(
-      `${getFilterData}/?site=global&limit=20&skip=0&start=${startDate}&end=${endDate}`
-    );
-    console.log(filterData)
-    let cpyResult = [];
-    // console.log(startDate + "------------" + endDate)
+  // const handleFollowChange = async (e) => {
+  //   let filterData = await axios.get(
+  //     `${getFilterData}/?site=global&limit=20&skip=0&start=${startDate}&end=${endDate}`
+  //   );
+  //   console.log(filterData)
+  //   let cpyResult = [];
+  //   // console.log(startDate + "------------" + endDate)
 
-    for (let websiteData of filterData.data.doc) {
-      if (websiteData.dofollow != null) {
-        for (let dofollow of websiteData.dofollow) {
-          let cpy = JSON.parse(JSON.stringify(websiteData));
-          if (dofollow.link !== undefined) {
-            cpy["dofollow"] = [dofollow];
-            cpyResult.push(cpy);
-          }
-        }
-      } else if (websiteData.nofollow != null) {
-        for (let nofollow of websiteData.nofollow) {
-          let cpy = JSON.parse(JSON.stringify(websiteData));
-          if (nofollow.link !== undefined) {
-            cpy["nofollow"] = [nofollow];
-            cpyResult.push(cpy);
-          }
-        }
-      }
-    }
+  //   for (let websiteData of filterData.data.doc) {
+  //     if (websiteData.dofollow != null) {
+  //       for (let dofollow of websiteData.dofollow) {
+  //         let cpy = JSON.parse(JSON.stringify(websiteData));
+  //         if (dofollow.link !== undefined) {
+  //           cpy["dofollow"] = [dofollow];
+  //           cpyResult.push(cpy);
+  //         }
+  //       }
+  //     } else if (websiteData.nofollow != null) {
+  //       for (let nofollow of websiteData.nofollow) {
+  //         let cpy = JSON.parse(JSON.stringify(websiteData));
+  //         if (nofollow.link !== undefined) {
+  //           cpy["nofollow"] = [nofollow];
+  //           cpyResult.push(cpy);
+  //         }
+  //       }
+  //     }
+  //   }
 
-    filterData.data.doc = cpyResult;
-    setFilterMeta(filterData.data.meta);
-    setFilter(true);
-    setMain(false);
-    if (e[0] === "Nofollow") {
-      setAll(false);
-      setNofollow(true);
-      setDofollow(false);
-    }
-    if (e[0] === "Dofollow") {
-      setAll(false);
-      setNofollow(false);
-      setDofollow(true);
-    }
-    if (e[0] === undefined) {
-      window.location.reload()
-      setAll(true);
-      setNofollow(false);
-      setDofollow(false);
-    }
+  //   filterData.data.doc = cpyResult;
+  //   setFilterMeta(filterData.data.meta);
+  //   setFilter(true);
+  //   setMain(false);
+  //   if (e[0] === "Nofollow") {
+  //     setAll(false);
+  //     setNofollow(true);
+  //     setDofollow(false);
+  //   }
+  //   if (e[0] === "Dofollow") {
+  //     setAll(false);
+  //     setNofollow(false);
+  //     setDofollow(true);
+  //   }
+  //   if (e[0] === undefined) {
+  //     window.location.reload()
+  //     setAll(true);
+  //     setNofollow(false);
+  //     setDofollow(false);
+  //   }
 
-    setTable(filterData.data.doc);
-  };
+  //   setTable(filterData.data.doc);
+  // };
   const handleSearch = async () => {
     setButtonDisabled(true);
     if (table) {
       try {
         if (table.length !== 0) {
-          let response = await generateCsv(table);
-          setData(response);
+          var downloadData = []
+          if (all) {
+            var response = await axios.get(
+              `${getGlobalData}/?site=global&start=${startDate}&end=${endDate}`)
+            downloadData = response.data.doc.result
+          }
+          // else if(nofollow){
+          //   let filterData = await axios.get(
+          //     `${getFilterData}/?site=global&start=${startDate}&end=${endDate}`
+          //   );
+          //   downloadData = filterData.data.doc
+          // }
+          let response_ = await generateCsv(downloadData)
+          setData(response_);
           toast.success("Creating CSV");
           setButtonDisabled(false);
         } else {
@@ -229,39 +247,39 @@ const DateWise = () => {
           behavior: "smooth"
         })
       }
-      if (filter) {
-        let filterData = await axios.get(
-          `${getFilterData}/?site=global&start=${startDate}&end=${endDate}&limit=20&skip=${skip}`
-        );
-        let cpyResult = [];
+      // if (filter) {
+      //   let filterData = await axios.get(
+      //     `${getFilterData}/?site=global&start=${startDate}&end=${endDate}&limit=20&skip=${skip}`
+      //   );
+      //   let cpyResult = [];
 
-        for (let websiteData of filterData.data.doc) {
-          if (websiteData.dofollow != null) {
-            for (let dofollow of websiteData.dofollow) {
-              let cpy = JSON.parse(JSON.stringify(websiteData));
-              if (dofollow.link !== undefined) {
-                cpy["dofollow"] = [dofollow];
-                cpyResult.push(cpy);
-              }
-            }
-          } else if (websiteData.nofollow != null) {
-            for (let nofollow of websiteData.nofollow) {
-              let cpy = JSON.parse(JSON.stringify(websiteData));
-              if (nofollow.link !== undefined) {
-                cpy["nofollow"] = [nofollow];
-                cpyResult.push(cpy);
-              }
-            }
-          }
-        }
+      //   for (let websiteData of filterData.data.doc) {
+      //     if (websiteData.dofollow != null) {
+      //       for (let dofollow of websiteData.dofollow) {
+      //         let cpy = JSON.parse(JSON.stringify(websiteData));
+      //         if (dofollow.link !== undefined) {
+      //           cpy["dofollow"] = [dofollow];
+      //           cpyResult.push(cpy);
+      //         }
+      //       }
+      //     } else if (websiteData.nofollow != null) {
+      //       for (let nofollow of websiteData.nofollow) {
+      //         let cpy = JSON.parse(JSON.stringify(websiteData));
+      //         if (nofollow.link !== undefined) {
+      //           cpy["nofollow"] = [nofollow];
+      //           cpyResult.push(cpy);
+      //         }
+      //       }
+      //     }
+      //   }
 
-        filterData.data.doc = cpyResult;
-        setTable(filterData.data.doc);
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        })
-      }
+      //   filterData.data.doc = cpyResult;
+      //   setTable(filterData.data.doc);
+      //   window.scrollTo({
+      //     top: 0,
+      //     behavior: "smooth"
+      //   })
+      // }
 
     } catch (e) {
       console.log(e)
@@ -297,14 +315,14 @@ const DateWise = () => {
                 Generate CSV
             </Button>
             </div>
-            <div className="col-lg-4 text-center">
+            {/* <div className="col-lg-4 text-center">
               <Checkbox.Group
                 options={options}
                 onChange={handleFollowChange}
                 defaultValue={["Nofollow", "Dofollow"]}
-              /></div>
+              /></div> */}
             <div className="col text-right">
-              <CSVLink filename={startDate + "-" + endDate} data={data}>
+              <CSVLink filename={startDate + "-" + endDate + '.csv'} data={data}>
                 <Button
                   type="primary"
                   icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
@@ -363,7 +381,7 @@ const DateWise = () => {
                                 </a>
                               </td>
                               <td>
-                              {all ? (
+                                {all ? (
                                   tab.externalLinks.length > 0 ? (
                                     tab.externalLinks.map((extLink, j) => {
                                       return (
@@ -380,7 +398,7 @@ const DateWise = () => {
                                       <p>No External Links</p>
                                     )
                                 ) : null}
-                                {nofollow ? (
+                                {/* {nofollow ? (
                                   tab.nofollow.length > 0 ? (
                                     tab.nofollow.map((noFollowLink, j) => {
                                       return (
@@ -413,10 +431,10 @@ const DateWise = () => {
                                   ) : (
                                       <p>No External Links</p>
                                     )
-                                ) : null}
+                                ) : null} */}
                               </td>
                               <td>
-                              {all ? (
+                                {all ? (
                                   tab.externalLinks.length > 0 ? (
                                     tab.externalLinks.map((extLink, j) => {
                                       return (
@@ -429,7 +447,7 @@ const DateWise = () => {
                                       <p>No text</p>
                                     )
                                 ) : null}
-                                {nofollow ? (
+                                {/* {nofollow ? (
                                   tab.nofollow.length > 0 ? (
                                     tab.nofollow.map((noFollowLink, j) => {
                                       return (
@@ -454,10 +472,10 @@ const DateWise = () => {
                                   ) : (
                                       <p>No text</p>
                                     )
-                                ) : null}
+                                ) : null} */}
                               </td>
                               <td>
-                              {all ? (
+                                {all ? (
                                   tab.externalLinks.length > 0 ? (
                                     tab.externalLinks.map((extLink, j) => {
                                       return (<p key={j}>
@@ -470,7 +488,7 @@ const DateWise = () => {
                                       <p>--</p>
                                     )
                                 ) : null}
-                                {nofollow ? (
+                                {/* {nofollow ? (
                                   tab.nofollow.length > 0 ? (
                                     tab.nofollow.map((noFollowLink, j) => {
                                       return (
@@ -491,24 +509,24 @@ const DateWise = () => {
                                   ) : (
                                       <p>--</p>
                                     )
-                                ) : null}
+                                ) : null} */}
                               </td>
                               <td>
-                              {all ? (
-                                tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<input key={j}
-                                      type="checkbox"
-                                      checked={extLink.status}
-                                      onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
-                                    ></input>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )
-                              ) : null}
-                                {nofollow ? (
+                                {all ? (
+                                  tab.externalLinks.length > 0 ? (
+                                    tab.externalLinks.map((extLink, j) => {
+                                      return (<input key={j}
+                                        type="checkbox"
+                                        checked={extLink.status}
+                                        onChange={() => onStatusChecked(extLink.link, tab.articlelink, extLink.status)}
+                                      ></input>
+                                      );
+                                    })
+                                  ) : (
+                                      <p>--</p>
+                                    )
+                                ) : null}
+                                {/* {nofollow ? (
                                   tab.nofollow.length > 0 ? (
                                     tab.nofollow.map((noFollowLink, j) => {
                                       return (
@@ -537,7 +555,7 @@ const DateWise = () => {
                                   ) : (
                                       <p>--</p>
                                     )
-                                ) : null}
+                                ) : null} */}
                               </td>
                             </tr>
                           );
@@ -559,8 +577,8 @@ const DateWise = () => {
             <Pagination
               defaultCurrent={1}
               total={
-                (main && mainMeta) ||
-                (filter && filterMeta)
+                (main && mainMeta) 
+                //  || (filter && filterMeta)
               }
               pageSize={20}
               onChange={handlePageChange}

@@ -10,6 +10,7 @@ const WebInfo = () => {
     const [data, setData] = useState("")
 
     useEffect(() => {
+        document.title = "Admin_Info"
         const fetchData = async () => {
             let obj = JSON.parse(localStorage.getItem("UserData"))
             // console.log(obj)

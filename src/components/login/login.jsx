@@ -15,6 +15,7 @@ export default function Login(props) {
   const Data = useContext(AuthContext);
 
   useEffect(() => {
+    document.title = "Login"
     Data.token !== "" && props.history.goBack();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

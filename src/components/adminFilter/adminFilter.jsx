@@ -12,6 +12,7 @@ const Admin = () => {
     const [filter, setFilter, rF] = useInputState("")
 
     useEffect(() => {
+        document.title = "Admin_Restrict"
         const fetchData = async () => {
             let obj = JSON.parse(localStorage.getItem("UserData"))
             console.log(obj)
