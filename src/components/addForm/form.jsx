@@ -21,7 +21,7 @@ export default function Form(props) {
       let body = { link: webpage, title: extracted_title, algo: 1 };
       try {
         await axios.post(addSitemap, body);
-        axios.post(scrapData, { url: link });
+        axios.post(scrapData, { url: webpage });
         props.toggleModal(false);
         rL();
         toast.success("Sitemap Added");

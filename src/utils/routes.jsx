@@ -17,6 +17,7 @@ export const deleteWebsite = `${url}/deleteWebsite`;
 export const deleteRestricted = `${url}/deleteRestricted`;
 export const webInfo = `${url}/info`;
 export const crawlAll = `${url}/crawlAll`;
+export const getData = `${url}/getData`;
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;
