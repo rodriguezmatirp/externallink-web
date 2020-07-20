@@ -107,6 +107,7 @@ const DateWise = () => {
   useEffect(() => {
     document.title = "Datewise"
     const fetchData = async () => {
+      setLoader(true)
       try {
         setLoader(true)
         setTableData()

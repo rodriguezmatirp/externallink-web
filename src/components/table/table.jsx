@@ -102,8 +102,8 @@ const Table = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoader(true)
       try {
-        setLoader(true)
         setTableData()
         console.log('---------------')
         setLoader(false)
