@@ -103,6 +103,7 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoader(true)
         setTableData()
         console.log('---------------')
         setLoader(false)
