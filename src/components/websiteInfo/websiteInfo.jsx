@@ -124,14 +124,14 @@ const WebInfo = () => {
                                                         {data_.sitemapCount > 0 ? (
                                                             <p>{data_.sitemapCount}</p>
                                                         ) : (
-                                                                <p>Null</p>
+                                                                <p>0</p>
                                                             )}
                                                     </td>
                                                     <td>
                                                         {data_.websiteCount > 0 ? (
                                                             <p>{data_.websiteCount}</p>
                                                         ) : (
-                                                                <p>Null</p>
+                                                                <p>0</p>
                                                             )}
                                                     </td>
                                                     <td>
@@ -152,7 +152,7 @@ const WebInfo = () => {
                         </div>
                     ) : (
                             <div style={{ textAlign: "center" }}>
-                                No data. Scrap to see data
+                                Loading....Please Wait
                 </div>
                         )}
                 </div>

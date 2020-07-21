@@ -134,7 +134,7 @@ export default function Homepage() {
                 })
               ) : (
                   <div className="col-lg-6">
-                    <h4>No any sitemap data</h4>
+                    <h4 style={{color : "red"}}>Loading....</h4>
                   </div>
                 )}
             </div>

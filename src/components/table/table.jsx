@@ -30,9 +30,9 @@ const Table = () => {
   const [main, setMain] = useState(true);
   const [mainMeta, setMainMeta] = useState(0);
   const [loader, setLoader] = useState(true);
-  const [pageNum, setPageNum] = useState(1)
-  const pageSize = 20
-  const [filename, setFilename] = useState("")
+  const [pageNum, setPageNum] = useState(1);
+  const pageSize = 20;
+  const [filename, setFilename] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
 
@@ -45,6 +45,7 @@ const Table = () => {
 
     if (!dofollow && !nofollow) {
       setTable(null)
+      setLoader(false)
       setButtonDisabled(true)
       toast.error("No data")
       return
@@ -77,6 +78,7 @@ const Table = () => {
     if(data.data.result.length === 0){
       toast.error("No Data")
       setButtonDisabled(true)
+      setLoader(false)
     }
 
     let expandedResult = [];
@@ -95,6 +97,7 @@ const Table = () => {
 
     console.log(data)
     setFilename(tempFilename)
+    setLoader(false)
     setTable(expandedResult);
     setData(obj);
     setMain(true);
@@ -105,7 +108,7 @@ const Table = () => {
       setLoader(true)
       try {
         setTableData()
-        console.log('---------------')
+        console.log(loader)
         setLoader(false)
       } catch (error) {
         console.log(error);
@@ -119,12 +122,14 @@ const Table = () => {
 
 
   const handleDateChange = (date, d) => {
+    setLoader(true)
     setStartDate(d[0]);
     setEndDate(d[1]);
     setPageNum(1)
   };
 
   const handleFollowChange = (e) => {
+    setLoader(true)
     console.log(e)
     setPageNum(1)
     setNofollow(false)
