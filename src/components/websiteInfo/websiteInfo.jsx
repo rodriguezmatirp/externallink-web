@@ -113,14 +113,14 @@ const WebInfo = () => {
                                                     style={{ backgroundColor: "#fff" }}
                                                     key={i}
                                                 >
-                                                    <td>{data_.main_link}</td>
+                                                    <td>{data_.title}</td>
                                                     <td>
                                                         <a
-                                                            href={data_.sitemap_link}
+                                                            href={data_.link}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                         >
-                                                            {data_.sitemap_link}
+                                                            {data_.link}
                                                         </a>
                                                     </td>
                                                     <td>{date ? (<p>{date}</p>) : (<p>Null</p>)}</td>
@@ -134,7 +134,7 @@ const WebInfo = () => {
                                                     <td>
                                                         <div
                                                             className="text-center"
-                                                            onClick={() => deleteWebsite_(data_.sitemap_link)}
+                                                            onClick={() => deleteWebsite_(data_.link)}
                                                             style={{ cursor: "pointer", fontSize: "20px", color: "#EB4141" }}
                                                         >
                                                             <DeleteFilled />
