@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { crawlAll, webInfo, deleteWebsite } from "../../utils/routes";
 import { toast } from "react-toastify";
-import { DeleteFilled, AimOutlined } from "@ant-design/icons";
+import { DeleteFilled } from "@ant-design/icons";
+import { Button } from 'antd';
 
 const WebInfo = () => {
 
     const [name, setName] = useState("")
     const [data, setData] = useState("")
+    const [buttonDisabled , setButtonDisabled] = useState(false)
 
     useEffect(() => {
         document.title = "Admin_Info"
@@ -45,10 +47,12 @@ const WebInfo = () => {
     const crawlall = async()=>{
         try{
             toast.success("Crawling started")
+            setButtonDisabled(true)
             await axios.get(crawlAll)
             toast.success("Crawling all the data")
         }catch(e){
             console.log(e)
+            setButtonDisabled(false)
             toast.error("Something went wrong")
         }
     }
@@ -63,11 +67,12 @@ const WebInfo = () => {
                         </strong></p>
                 </div>
                 <div className="col text-left">
-                    <div style={{ fontSize: "26px", color: "#d47522" }}>
+                    <div style={{ fontSize: "24px" , color : "#87f04f"}}>
                         Crawl Websites&emsp;
-                        <AimOutlined 
+                        <Button type="primary" danger
                         onClick={()=>crawlall()}
-                        style={{ cursor: "pointer", fontSize: "30px", color: "#55ed7e"}} />
+                        disabled={buttonDisabled}
+                        >Start</Button>
                     </div>
                 </div>
             </div >
@@ -98,46 +103,38 @@ const WebInfo = () => {
                                 <tbody>
                                     {data
                                         ? data.map((data_, i) => {
-                                            let date = data_.lastUpdate.substring(
+                                            let date = data_.updatedAt.substring(
                                                 0,
-                                                data_.lastUpdate.indexOf("T")
+                                                data_.updatedAt.indexOf("T")
                                             );
-                                            let time = new Date(data_.lastUpdate).toLocaleTimeString()
+                                            let time = new Date(data_.updatedAt).toLocaleTimeString()
                                             return (
                                                 <tr
                                                     style={{ backgroundColor: "#fff" }}
                                                     key={i}
                                                 >
-                                                    <td>{data_.title}</td>
+                                                    <td>{data_.main_link}</td>
                                                     <td>
                                                         <a
-                                                            href={data_.baseSitemap}
+                                                            href={data_.sitemap_link}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                         >
-                                                            {data_.baseSitemap}
+                                                            {data_.sitemap_link}
                                                         </a>
                                                     </td>
                                                     <td>{date ? (<p>{date}</p>) : (<p>Null</p>)}</td>
                                                     <td>{date ? (<p>{time}</p>) : (<p>Null</p>)}</td>
                                                     <td>
-                                                        {data_.sitemapCount > 0 ? (
-                                                            <p>{data_.sitemapCount}</p>
-                                                        ) : (
-                                                                <p>0</p>
-                                                            )}
+                                                        {data_.sitemap_count}
                                                     </td>
                                                     <td>
-                                                        {data_.websiteCount > 0 ? (
-                                                            <p>{data_.websiteCount}</p>
-                                                        ) : (
-                                                                <p>0</p>
-                                                            )}
+                                                        {data_.website_count}
                                                     </td>
                                                     <td>
                                                         <div
                                                             className="text-center"
-                                                            onClick={() => deleteWebsite_(data_.baseSitemap)}
+                                                            onClick={() => deleteWebsite_(data_.sitemap_link)}
                                                             style={{ cursor: "pointer", fontSize: "20px", color: "#EB4141" }}
                                                         >
                                                             <DeleteFilled />
