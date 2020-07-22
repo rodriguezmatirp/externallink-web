@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { crawlAll, webInfo, deleteWebsite , updateData } from "../../utils/routes";
+import { crawlAll, webInfo, deleteWebsite  } from "../../utils/routes";
 import { toast } from "react-toastify";
 import { DeleteFilled } from "@ant-design/icons";
 import { Button } from 'antd';
@@ -19,7 +19,7 @@ const WebInfo = () => {
             const name_ = obj.user.name
             setName(name_)
             try {
-                await axios.get(`${updateData}`)
+                // await axios.get(`${updateData}`)
                 let data = await axios.get(`${webInfo}`)
                 console.log(data.data.result.doc)
                 setData(data.data.result.doc)
