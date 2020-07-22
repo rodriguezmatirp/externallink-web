@@ -10,8 +10,8 @@ const WebInfo = () => {
     const [name, setName] = useState("")
     const [data, setData] = useState("")
     const [buttonDisabled, setButtonDisabled] = useState(false)
-    const [main , setMain] = useState(true)
-    const [mainMeta , setMainMeta] = useState(0)
+    const [main, setMain] = useState(true)
+    const [mainMeta, setMainMeta] = useState(0)
     const pageSize = 20
 
 
@@ -51,8 +51,8 @@ const WebInfo = () => {
         }
     }
 
-    const handlePageChange = async(p , ps)=>{
-        let skip = (p-1)*pageSize
+    const handlePageChange = async (p, ps) => {
+        let skip = (p - 1) * pageSize
         try {
             let data = await axios.get(`${webInfo}?limit=20&skip=${skip}`)
             console.log(data.data.result.doc)
@@ -121,11 +121,15 @@ const WebInfo = () => {
                                 <tbody>
                                     {data
                                         ? data.map((data_, i) => {
-                                            let date = data_.updatedAt.substring(
-                                                0,
-                                                data_.updatedAt.indexOf("T")
-                                            );
-                                            let time = new Date(data_.updatedAt).toLocaleTimeString()
+                                            var date = undefined
+                                            var time = undefined
+                                            if (data_.updatedAt !== undefined) {
+                                                date = data_.updatedAt.substring(
+                                                    0,
+                                                    data_.updatedAt.indexOf("T")
+                                                );
+                                                time = new Date(data_.updatedAt).toLocaleTimeString()
+                                            }
                                             return (
                                                 <tr
                                                     style={{ backgroundColor: "#fff" }}
