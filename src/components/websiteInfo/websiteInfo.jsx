@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { crawlAll, webInfo, deleteWebsite  } from "../../utils/routes";
+import { crawlAll, webInfo, deleteWebsite } from "../../utils/routes";
 import { toast } from "react-toastify";
 import { DeleteFilled } from "@ant-design/icons";
-import { Button } from 'antd';
+import { Button, Pagination } from 'antd';
 
 const WebInfo = () => {
 
     const [name, setName] = useState("")
     const [data, setData] = useState("")
-    const [buttonDisabled , setButtonDisabled] = useState(false)
+    const [buttonDisabled, setButtonDisabled] = useState(false)
+    const [main , setMain] = useState(true)
+    const [mainMeta , setMainMeta] = useState(0)
+    const pageSize = 20
+
 
     useEffect(() => {
         document.title = "Admin_Info"
@@ -20,9 +24,11 @@ const WebInfo = () => {
             setName(name_)
             try {
                 // await axios.get(`${updateData}`)
-                let data = await axios.get(`${webInfo}`)
+                let data = await axios.get(`${webInfo}?limit=20&skip=0`)
                 console.log(data.data.result.doc)
+                setMainMeta(data.data.result.mainMeta)
                 setData(data.data.result.doc)
+                setMain(true)
             } catch (e) {
                 console.log(e)
             }
@@ -45,13 +51,24 @@ const WebInfo = () => {
         }
     }
 
-    const crawlall = async()=>{
-        try{
+    const handlePageChange = async(p , ps)=>{
+        let skip = (p-1)*pageSize
+        try {
+            let data = await axios.get(`${webInfo}?limit=20&skip=${skip}`)
+            console.log(data.data.result.doc)
+            setData(data.data.result.doc)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const crawlall = async () => {
+        try {
             toast.success("Crawling started")
             setButtonDisabled(true)
             await axios.get(crawlAll)
             toast.success("Crawling all the data")
-        }catch(e){
+        } catch (e) {
             console.log(e)
             setButtonDisabled(false)
             toast.error("Something went wrong")
@@ -68,11 +85,11 @@ const WebInfo = () => {
                         </strong></p>
                 </div>
                 <div className="col text-left">
-                    <div style={{ fontSize: "24px" , color : "#87f04f"}}>
+                    <div style={{ fontSize: "24px", color: "#87f04f" }}>
                         Crawl Websites&emsp;
                         <Button type="primary" danger
-                        onClick={()=>crawlall()}
-                        disabled={buttonDisabled}
+                            onClick={() => crawlall()}
+                            disabled={buttonDisabled}
                         >Start</Button>
                     </div>
                 </div>
@@ -153,6 +170,18 @@ const WebInfo = () => {
                                 Loading....Please Wait
                 </div>
                         )}
+                </div>
+                <div className="col-lg-12 mt-5">
+                    <div className="col-lg-6 text-center mx-auto">
+                        <Pagination
+                            defaultCurrent={1}
+                            total={
+                                (main && mainMeta)
+                            }
+                            pageSize={pageSize}
+                            onChange={handlePageChange}
+                        />
+                    </div>
                 </div>
             </div>
         </div >
