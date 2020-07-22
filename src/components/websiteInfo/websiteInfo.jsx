@@ -26,7 +26,7 @@ const WebInfo = () => {
                 // await axios.get(`${updateData}`)
                 let data = await axios.get(`${webInfo}?limit=20&skip=0`)
                 console.log(data.data.result.doc)
-                setMainMeta(data.data.result.mainMeta)
+                setMainMeta(data.data.result.meta)
                 setData(data.data.result.doc)
                 setMain(true)
             } catch (e) {
