@@ -12,7 +12,7 @@ const WebInfo = () => {
     const [buttonDisabled, setButtonDisabled] = useState(false)
     const [main, setMain] = useState(true)
     const [mainMeta, setMainMeta] = useState(0)
-    const pageSize = 20
+    const [pageSize , setPagesize] = useState(20)
 
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const WebInfo = () => {
             setName(name_)
             try {
                 // await axios.get(`${updateData}`)
-                let data = await axios.get(`${webInfo}?limit=20&skip=0`)
+                let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=0`)
                 console.log(data.data.result.doc)
                 setMainMeta(data.data.result.meta)
                 setData(data.data.result.doc)
@@ -53,10 +53,14 @@ const WebInfo = () => {
 
     const handlePageChange = async (p, ps) => {
         let skip = (p - 1) * pageSize
+        if(ps > 20){
+            setPagesize(ps)
+        }
         try {
-            let data = await axios.get(`${webInfo}?limit=20&skip=${skip}`)
+            let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=${skip}`)
             console.log(data.data.result.doc)
             setData(data.data.result.doc)
+            setMainMeta(data.data.result.meta)
         } catch (e) {
             console.log(e)
         }
