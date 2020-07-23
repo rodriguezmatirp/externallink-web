@@ -12,7 +12,7 @@ const WebInfo = () => {
     const [buttonDisabled, setButtonDisabled] = useState(false)
     const [main, setMain] = useState(true)
     const [mainMeta, setMainMeta] = useState(0)
-    const [pageSize , setPagesize] = useState(20)
+    const [pageSize, setPagesize] = useState(20)
 
 
     useEffect(() => {
@@ -34,7 +34,9 @@ const WebInfo = () => {
             }
         }
         fetchData();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+        [pageSize]);
     const deleteWebsite_ = (url) => {
         var pass = window.prompt("Admin access needed ")
         if (pass === "confirm") {
@@ -53,7 +55,7 @@ const WebInfo = () => {
 
     const handlePageChange = async (p, ps) => {
         let skip = (p - 1) * pageSize
-        if(ps > 20){
+        if (ps > 20) {
             setPagesize(ps)
         }
         try {
