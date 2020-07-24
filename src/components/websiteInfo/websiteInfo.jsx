@@ -63,6 +63,10 @@ const WebInfo = () => {
             console.log(data.data.result.doc)
             setData(data.data.result.doc)
             setMainMeta(data.data.result.meta)
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+              })
         } catch (e) {
             console.log(e)
         }
