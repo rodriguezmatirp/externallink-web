@@ -15,6 +15,7 @@ import DateWise from "./components/dateWise/DateWise";
 import AdminFilter from "./components/adminFilter/adminFilter";
 import AdminST from "./components/emailFilter/emailFilter";
 import WebsiteInfo from "./components/websiteInfo/websiteInfo";
+import ExternalLinks from './components/externalLinks/externalLinks';
 
 function App() {
     return ( <
@@ -32,6 +33,9 @@ function App() {
         Route exact path = "/admin_info"
         component = { WebsiteInfo }
         /> <
+        Route exact path = "/admin_externalLink"
+        component = { ExternalLinks }
+        /><
         Route exact path = "/"
         component = { Index }
         /> <

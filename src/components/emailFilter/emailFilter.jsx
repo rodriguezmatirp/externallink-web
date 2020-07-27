@@ -78,7 +78,7 @@ const AdminST = () => {
                                 data.map((user, i) => {
                                     return (
                                         <div className="container-fluid" key={i}
-                                            style={{ padding: "10px", backgroundColor: "#EDEDED" }}
+                                            style={{ padding: "10px", backgroundColor: "#f2e9e9" , borderTop : "5px solid" }}
                                         >
                                             <div className="row"
                                                 style={{ fontSize: "20px" }}>

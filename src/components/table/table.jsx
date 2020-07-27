@@ -7,7 +7,7 @@ import {
   getData
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Pagination, Checkbox, DatePicker, Button } from "antd";
+import { Pagination, Checkbox, DatePicker, Button, Alert, Spin } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { CSVLink } from "react-csv";
@@ -52,10 +52,10 @@ const Table = () => {
     }
     if (nofollow && !dofollow) {
       query += "type=nofollow&"
-      tempFilename +="-nofollow"
+      tempFilename += "-nofollow"
     } else if (!nofollow && dofollow) {
       query += "type=dofollow&"
-      tempFilename +="-dofollow"
+      tempFilename += "-dofollow"
     }
 
     if (startDate !== "") {
@@ -64,7 +64,7 @@ const Table = () => {
     }
     if (endDate !== "") {
       query += "end=" + endDate + "&"
-      tempFilename +="-end_"  + endDate
+      tempFilename += "-end_" + endDate
     }
 
     if (url) {
@@ -75,7 +75,7 @@ const Table = () => {
       `${getData}/?${query}`
     );
 
-    if(data.data.result.length === 0){
+    if (data.data.result.length === 0) {
       toast.error("No Data")
       setButtonDisabled(true)
       setLoader(false)
@@ -105,31 +105,28 @@ const Table = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoader(true)
+      // setLoader(true)
       try {
         setTableData()
         console.log(loader)
-        setLoader(false)
       } catch (error) {
         console.log(error);
         setLoader(false)
       }
     };
     fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, nofollow, dofollow, pageNum ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, nofollow, dofollow, pageNum]);
 
 
 
   const handleDateChange = (date, d) => {
-    setLoader(true)
     setStartDate(d[0]);
     setEndDate(d[1]);
     setPageNum(1)
   };
 
   const handleFollowChange = (e) => {
-    setLoader(true)
     console.log(e)
     setPageNum(1)
     setNofollow(false)
@@ -195,7 +192,7 @@ const Table = () => {
       }
       setDownloadData(dupe)
     }
-    if(data === null){
+    if (data === null) {
       toast.error("No data")
     }
   };
@@ -210,12 +207,19 @@ const Table = () => {
           className="text-center"
           style={{ paddingTop: "300px", paddingBottom: "300px" }}
         >
-          <img
+          <Spin tip="Loading...">
+            <Alert
+              message="Website wise information"
+              description="Your is either loading or not found"
+              type="info"
+            />
+          </Spin>
+          {/* <img
             className="img-fluid"
             src="./assets/images/loader.gif"
             alt="loader"
             width="80"
-          />
+          /> */}
         </div>
       ) : (
           <div className="container pt-5 pb-5">

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import styles from "./datewise.module.css";
+import styles from "./externalLinks.module.css";
 import axios from "axios";
 import {
-  changeStatus,
-  getData
+  getExternalLinks,
+  changeStatusExtLink
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Pagination, Checkbox, DatePicker, Button, Spin, Alert } from "antd";
+import { Pagination, DatePicker, Button, Spin, Alert } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { CSVLink } from "react-csv";
@@ -20,12 +20,8 @@ const getFormattedDate = (date) => {
   return year + "-" + month + "-" + day;
 };
 
-const options = [
-  { label: "Dofollow", value: "Dofollow" },
-  { label: "Nofollow", value: "Nofollow" }
-];
 
-const DateWise = () => {
+const ExternalLinks = () => {
   const [table, setTable] = useState("");
   const [downloadData, setDownloadData] = useState("");
   const [startDate, setStartDate] = useState(() => {
@@ -34,8 +30,6 @@ const DateWise = () => {
   const [endDate, setEndDate] = useState(() => {
     return getFormattedDate(new Date());
   });
-  const [dofollow, setDofollow] = useState(true);
-  const [nofollow, setNofollow] = useState(true);
   const [main, setMain] = useState(true);
   const [mainMeta, setMainMeta] = useState(0);
   const [loader, setLoader] = useState(true);
@@ -48,20 +42,7 @@ const DateWise = () => {
   const setTableData = async () => {
     var query = ""
     var tempFilename = ""
-
-    if (!dofollow && !nofollow) {
-      setTable(null)
-      setButtonDisabled(true)
-      toast.error("No data")
-      return
-    }
-    if (nofollow && !dofollow) {
-      query += "type=nofollow&"
-      tempFilename += "-nofollow"
-    } else if (!nofollow && dofollow) {
-      query += "type=dofollow&"
-      tempFilename += "-dofollow"
-    }
+    var skip = (pageNum - 1) * pageSize
 
     if (startDate !== "") {
       query += "start=" + startDate + "&"
@@ -74,9 +55,10 @@ const DateWise = () => {
 
     console.log(query)
     let data = await axios.get(
-      `${getData}/?${query}`
+      `${getExternalLinks}?${query}limit=${pageSize}&skip=${skip}`
     );
 
+    console.log(data)
     if (data.data.result.length === 0) {
       toast.error("No Data")
       setButtonDisabled(true)
@@ -84,29 +66,18 @@ const DateWise = () => {
       setButtonDisabled(false)
     }
 
-    let expandedResult = [];
-
-    for (let websiteData of data.data.result) {
-      for (let externalLink of websiteData.externalLinks) {
-        let cpy = JSON.parse(JSON.stringify(websiteData));
-        cpy["externalLinks"] = [externalLink];
-        expandedResult.push(cpy);
-      }
-    }
-
-    generateCsv(expandedResult)
-    setMainMeta(expandedResult.length);
-    expandedResult = expandedResult.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
+    generateCsv(data.data.result)
+    setMainMeta(data.data.meta);
 
     console.log(data)
     setFilename(tempFilename)
-    setTable(expandedResult);
+    setTable(data.data.result);
     setMain(true);
     setLoader(false)
   }
 
   useEffect(() => {
-    document.title = "Datewise"
+    document.title = "External Links"
     const fetchData = async () => {
       try {
         // setLoader(true)
@@ -119,7 +90,7 @@ const DateWise = () => {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, nofollow, dofollow, pageNum ]);
+  }, [startDate, endDate, pageNum ]);
 
 
 
@@ -129,25 +100,10 @@ const DateWise = () => {
     setPageNum(1)
   };
 
-  const handleFollowChange = (e) => {
-    console.log(e)
-    setPageNum(1)
-    setNofollow(false)
-    setDofollow(false)
-    for (let x of e) {
-      console.log(x)
-      if (x === "Nofollow") {
-        setNofollow(true)
-      } else if (x === "Dofollow") {
-        setDofollow(true)
-      }
-    }
-  };
-
-  const onStatusChecked = async (link, parent_link) => {
+  const onStatusChecked = async (extLink , status) => {
     try {
       await axios.get(
-        `${changeStatus}?link=${link}&parent=${parent_link}`
+        `${changeStatusExtLink}?link=${extLink}&status=${status}`
       )
       setTableData()
     } catch (e) {
@@ -163,27 +119,24 @@ const DateWise = () => {
     })
   }
 
-  const csvHeader = ["Article-Link", "External-Link", "Title", "Rel", "Date of Post"];
+  const csvHeader = ["Article-Link", "External-Link", "Date of Post" , "Count" , "Status"];
   const generateCsv = (data) => {
     if (data !== null) {
       setDownloadData("")
       let dupe = []
       dupe.push(csvHeader)
       for (let i = 0; i < data.length; i++) {
-        let arr = data[i].externalLinks;
-        for (let j = 0; j < arr.length; j++) {
-          var temp = [];
-          temp.push(data[i].articlelink);
-          temp.push(arr[j].link);
-          temp.push(arr[j].text)
-          if (arr[j].rel === undefined) {
-            temp.push("doFollow");
-          } else {
-            temp.push(arr[j].rel);
-          }
-          temp.push(getFormattedDate(data[i].lastmod));
-          dupe.push(temp);
+        var temp =[]
+        temp.push(data[i].article_link)
+        temp.push(data[i].externalLink)
+        temp.push(getFormattedDate(data[i].lastmod))
+        temp.push(data[i].count)
+        if(data[i].status){
+            temp.push("Verified")
+        }else{
+            temp.push("Not yet verified")
         }
+        dupe.push(temp)
       }
       setDownloadData(dupe)
     }
@@ -204,17 +157,12 @@ const DateWise = () => {
         >
           <Spin tip="Loading...">
             <Alert
-              message="Datewise"
+              message="External Links"
               description="Your data is loading..."
               type="info"
             />
           </Spin>
-          {/* <img
-            className="img-fluid"
-            src="./assets/images/loader.gif"
-            alt="loader"
-            width="80"
-          /> */}
+
         </div>
 
       ) : (
@@ -241,15 +189,8 @@ const DateWise = () => {
                     Refresh
                 </button>
                 </div>
-                <div className="col-lg-4 text-center">
-                  <Checkbox.Group
-                    options={options}
-                    onChange={handleFollowChange}
-                    defaultValue={["Nofollow", "Dofollow"]}
-                  />
-                </div>
                 <div
-                  className="col-lg-3 text-right"
+                  className="col text-right"
                 >
                   <CSVLink filename={filename + '.csv'} data={downloadData}>
                     <Button
@@ -281,8 +222,7 @@ const DateWise = () => {
                         <th scope="col">Date</th>
                         <th scope="col">Website</th>
                         <th scope="col">External Links</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Type</th>
+                        <th scope="col">Count</th>
                         <th scope="col">Status</th>
                       </tr>
                     </thead>
@@ -308,69 +248,32 @@ const DateWise = () => {
                               <td style={{ width: "60%" }}>{date}</td>
                               <td style={{ width: "60%" }}>
                                 <a
-                                  href={tab.articlelink}
+                                  href={tab.article_link}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {tab.articlelink}
+                                  {tab.article_link}
                                 </a>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}><a
-                                        href={extLink.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        {extLink.link}
-                                      </a></p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No External Links</p>
-                                  )}
+                              <a
+                                  href={tab.externalLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {tab.externalLink}
+                                </a>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}>
-                                        {extLink.text}
-                                      </p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No text</p>
-                                  )}
+                                {tab.externalLink_count}
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<p key={j}>
-                                      {extLink.rel
-                                        ? extLink.rel
-                                        : "dofollow"}</p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
-                              </td>
-                              <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<input key={j}
-                                      type="checkbox"
-                                      checked={extLink.status}
-                                      onChange={() => onStatusChecked(extLink.link, tab.articlelink)}
-                                    ></input>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
+                              <input
+                                type="checkbox"
+                                checked={tab.status}
+                                  onChange={() => onStatusChecked(tab.externalLink , tab.status)}
+                                >
+                                </input>
                               </td>
                             </tr>
                           );
@@ -400,4 +303,4 @@ const DateWise = () => {
   );
 };
 
-export default DateWise;
+export default ExternalLinks;

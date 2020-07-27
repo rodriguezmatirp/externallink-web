@@ -5,9 +5,11 @@ import { getSitemaps } from "../../utils/routes";
 import { NavLink } from "react-router-dom";
 // import GlobalCSV from "./../globalCSV/globalCSV";
 import useInputState from "../../hooks/useInputState";
-import { RedoOutlined } from "@ant-design/icons";
+import { RedoOutlined  } from "@ant-design/icons";
 import { scrapData } from "./../../utils/routes";
 import { toast } from "react-toastify";
+import { Alert, Spin } from "antd";
+
 
 export default function Homepage() {
   const [list, setList] = useState("");
@@ -133,8 +135,14 @@ export default function Homepage() {
                   );
                 })
               ) : (
-                  <div className="col-lg-6">
-                    <h4 style={{color : "red"}}>Loading....</h4>
+                  <div className="col">
+                    <Spin tip="Loading...">
+                      <Alert
+                        message="Websites"
+                        description="Your content is either loading or not found"
+                        type="info"
+                      />
+                    </Spin>
                   </div>
                 )}
             </div>

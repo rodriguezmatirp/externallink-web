@@ -19,6 +19,8 @@ export const webInfo = `${url}/info`;
 export const crawlAll = `${url}/crawlAll`;
 export const getData = `${url}/getData`;
 export const updateData = `${url}/update`;
+export const getExternalLinks = `${url}/getExtLink`;
+export const changeStatusExtLink = `${url}/verify`;
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;
