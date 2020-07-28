@@ -60,14 +60,19 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             {Data.token !== "" ? (
-              <ul className="navbar-nav mr-auto" style={{ width: "100%" }}>
+              <ul className="navbar-nav mr-auto" >
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
                     to="/home"
                     style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#65d668",
+                      borderBottom : "1.5px solid #77f77b"
+                    }}
                   >
-                    Website Wise
+                    WebsiteWise
                   </NavLink>
                 </li>
                 <li className="nav-item">
@@ -75,8 +80,69 @@ const Navbar = () => {
                     className="nav-link"
                     to="/datewise"
                     style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#65d668",
+                      borderBottom : "1.5px solid #77f77b"
+                    }}
                   >
-                    Date Wise
+                    DateWise
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/admin_restrict"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#f26666",
+                      borderBottom : "1.5px solid #f78383"
+                    }}
+                  >
+                    Filter
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/admin_info"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#f2aa4b",
+                      borderBottom : "1.5px solid #f7be72"
+                    }}
+                  >
+                    Stats
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/admin_email"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#f2aa4b",
+                      borderBottom : "1.5px solid #f7be72"
+                    }}
+                  >
+                    Users
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/admin_externalLink"
+                    style={{ color: "rgb(133, 123, 123)" }}
+                    activeStyle={{
+                      fontWeight: "bold",
+                      color: "#65d668",
+                      borderBottom : "1.5px solid #77f77b"
+                    }}
+                  >
+                    ExternalLinks
                   </NavLink>
                 </li>
               </ul>

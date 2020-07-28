@@ -24,12 +24,8 @@ const getFormattedDate = (date) => {
 const ExternalLinks = () => {
   const [table, setTable] = useState("");
   const [downloadData, setDownloadData] = useState("");
-  const [startDate, setStartDate] = useState(() => {
-    return getFormattedDate(new Date());
-  });
-  const [endDate, setEndDate] = useState(() => {
-    return getFormattedDate(new Date());
-  });
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("")
   const [main, setMain] = useState(true);
   const [mainMeta, setMainMeta] = useState(0);
   const [loader, setLoader] = useState(true);
@@ -222,6 +218,7 @@ const ExternalLinks = () => {
                         <th scope="col">Date</th>
                         <th scope="col">Website</th>
                         <th scope="col">External Links</th>
+                        <th scope="col">Rel</th>
                         <th scope="col">Count</th>
                         <th scope="col">Status</th>
                       </tr>
@@ -265,13 +262,16 @@ const ExternalLinks = () => {
                                 </a>
                               </td>
                               <td>
+                                {tab.rel}
+                              </td>
+                              <td>
                                 {tab.externalLink_count}
                               </td>
                               <td>
                               <input
                                 type="checkbox"
                                 checked={tab.status}
-                                  onChange={() => onStatusChecked(tab.externalLink , tab.status)}
+                                onChange={() => onStatusChecked(tab.externalLink , tab.status)}
                                 >
                                 </input>
                               </td>
