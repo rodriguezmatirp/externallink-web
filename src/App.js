@@ -30,16 +30,16 @@ function App() {
         Route exact path = "/datewise"
         component = { DateWise }
         /><
-        Route exact path = "/admin_info"
+        Route exact path = "/stats"
         component = { WebsiteInfo }
         /> <
-        Route exact path = "/admin_externalLink"
+        Route exact path = "/externalLink"
         component = { ExternalLinks }
         /><
         Route exact path = "/"
         component = { Index }
         /> <
-        Route exact path = "/admin_email"
+        Route exact path = "/users"
         component = { AdminST }
         /><
         PrivateRoute exact path = "/home"
@@ -54,7 +54,7 @@ function App() {
         Route exact path = "/register"
         component = { Register }
         /> <
-        Route exact path = "/admin_restrict"
+        Route exact path = "/filter"
         component = { AdminFilter }
         /> <
         Route path = "*"

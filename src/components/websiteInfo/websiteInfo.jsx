@@ -3,7 +3,7 @@ import axios from "axios";
 import { crawlAll, webInfo, deleteWebsite } from "../../utils/routes";
 import { toast } from "react-toastify";
 import { DeleteFilled } from "@ant-design/icons";
-import { Button, Pagination , Radio } from 'antd';
+import { Button, Pagination, Radio } from 'antd';
 
 const WebInfo = () => {
 
@@ -12,20 +12,23 @@ const WebInfo = () => {
     const [buttonDisabled, setButtonDisabled] = useState(false)
     const [main, setMain] = useState(true)
     const [mainMeta, setMainMeta] = useState(0)
-    const [pageSize, setPagesize] = useState(20)
-    const [type , setType] = useState("websiteCount")
-    const [sort , setSort] = useState('-1')
+    const pageSize = 20;
+    const [type, setType] = useState("websiteCount")
+    const [sort, setSort] = useState('-1')
+    const [pageNum, setPageNum] = useState(1)
+
 
     useEffect(() => {
-        document.title = "Admin_Info"
+        document.title = "Crawler Stats"
         const fetchData = async () => {
             let obj = JSON.parse(localStorage.getItem("UserData"))
             // console.log(obj)
             const name_ = obj.user.name
             setName(name_)
+            var skip = (pageNum - 1) * pageSize
             try {
                 // await axios.get(`${updateData}`)
-                let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=0&sort=${sort}&type=${type}`)
+                let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}`)
                 console.log(data.data.result.doc)
                 setMainMeta(data.data.result.meta)
                 setData(data.data.result.doc)
@@ -37,7 +40,7 @@ const WebInfo = () => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-        [pageSize , sort , type]);
+        [sort, type, pageNum]);
     const deleteWebsite_ = (url) => {
         var pass = window.prompt("Admin access needed ")
         if (pass === "confirm") {
@@ -54,37 +57,26 @@ const WebInfo = () => {
         }
     }
 
-    const handleRadioChange = (e)=>{
+    const handleRadioChange = (e) => {
         var value = e.target.value
-        if(value === "wc"){
-          setType("websiteCount")
-        }else if(value === "dw"){
-          setType("dateWise")
-        }else if(value === "asc"){
-          setSort('1')
-        }else if(value === "desc"){
-          setSort('-1')
+        if (value === "wc") {
+            setType("websiteCount")
+        } else if (value === "dw") {
+            setType("dateWise")
+        } else if (value === "asc") {
+            setSort('1')
+        } else if (value === "desc") {
+            setSort('-1')
         }
         console.log(value)
-      }
+    }
 
     const handlePageChange = async (p, ps) => {
-        let skip = (p - 1) * pageSize
-        if (ps > 20) {
-            setPagesize(ps)
-        }
-        try {
-            let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=${skip}`)
-            console.log(data.data.result.doc)
-            setData(data.data.result.doc)
-            setMainMeta(data.data.result.meta)
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-              })
-        } catch (e) {
-            console.log(e)
-        }
+        setPageNum(p)
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
     }
 
     const crawlall = async () => {
@@ -109,38 +101,39 @@ const WebInfo = () => {
                             Welcome <span>{name ? name : "Admin"}</span>
                         </strong></p>
                 </div>
-                <div className="col text-left">
+                <div className="col">
                     <div style={{ fontSize: "24px", color: "#87f04f" }}>
                         Crawl Websites&emsp;
-                        <Button type="primary" danger
+                        <Button type="primary"
                             onClick={() => crawlall()}
+                            size="26px"
                             disabled={buttonDisabled}
                         >Start</Button>
                     </div>
                 </div>
                 <div className="row">
-                <div className="col" >
-                  <Radio.Group
-                    defaultValue="wc"
-                    style={{ marginTop: 16 }}
-                    onChange={handleRadioChange}
-                    className="type"
-                  >
-                    <Radio.Button value="wc">Website Count</Radio.Button>
-                    <Radio.Button value="dw">Date Wise</Radio.Button>
-                  </Radio.Group>
+                    <div className="col" >
+                        <Radio.Group
+                            defaultValue="wc"
+                            style={{ marginTop: 16 }}
+                            onChange={handleRadioChange}
+                            className="type"
+                        >
+                            <Radio.Button value="wc">Website Count</Radio.Button>
+                            <Radio.Button value="dw">Date Wise</Radio.Button>
+                        </Radio.Group>
+                    </div>
+                    <div className="col text-right">
+                        <Radio.Group
+                            defaultValue="desc"
+                            style={{ marginTop: 16 }}
+                            onChange={handleRadioChange}
+                        >
+                            <Radio.Button value="asc">Ascending</Radio.Button>
+                            <Radio.Button value="desc">Descending</Radio.Button>
+                        </Radio.Group>
+                    </div>
                 </div>
-                <div className="col text-right">
-                  <Radio.Group 
-                  defaultValue="desc" 
-                  style={{ marginTop: 16 }}
-                  onChange={handleRadioChange}
-                  >
-                    <Radio.Button value="asc">Ascending</Radio.Button>
-                    <Radio.Button value="desc">Descending</Radio.Button>
-                  </Radio.Group>
-                </div>
-              </div>
             </div >
             <div className="row">
                 <div className="col-lg-12">

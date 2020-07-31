@@ -98,7 +98,9 @@ export default function Homepage() {
                       className="col-lg-3 col-xl-3 col-md-6 mt-4 pb-4"
                       key={i}
                     >
-                      <div className={styles.TypeCard}>
+                      <div className={styles.TypeCard} 
+                      style={{border : item.blocked ? "1.2px solid red" : "1.2px solid #46d714"}}
+                      >
                         <div
                           className="float-right"
                           onClick={() => refreshScrap(item.link)}

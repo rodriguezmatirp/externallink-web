@@ -92,7 +92,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/admin_restrict"
+                    to="/filter"
                     style={{ color: "rgb(133, 123, 123)" }}
                     activeStyle={{
                       fontWeight: "bold",
@@ -106,7 +106,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/admin_info"
+                    to="/stats"
                     style={{ color: "rgb(133, 123, 123)" }}
                     activeStyle={{
                       fontWeight: "bold",
@@ -120,7 +120,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/admin_email"
+                    to="/users"
                     style={{ color: "rgb(133, 123, 123)" }}
                     activeStyle={{
                       fontWeight: "bold",
@@ -134,7 +134,7 @@ const Navbar = () => {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/admin_externalLink"
+                    to="/externalLink"
                     style={{ color: "rgb(133, 123, 123)" }}
                     activeStyle={{
                       fontWeight: "bold",

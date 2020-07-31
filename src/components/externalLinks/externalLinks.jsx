@@ -5,7 +5,7 @@ import {
   getExternalLinks,
   changeStatusExtLink
 } from "../../utils/routes";
-import { FaCloudDownloadAlt, FaCommentsDollar } from "react-icons/fa";
+import { FaCloudDownloadAlt} from "react-icons/fa";
 import { Pagination, DatePicker, Button, Spin, Alert, Radio } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
@@ -52,6 +52,7 @@ const ExternalLinks = () => {
     }
 
     console.log(query)
+    console.log(sort + ' ' + type + ' ' + status)
     let data = await axios.get(
       `${getExternalLinks}?${query}limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}&showOnly=${status}`
     );
