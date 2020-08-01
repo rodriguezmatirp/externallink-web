@@ -51,6 +51,8 @@ const ExternalLinks = () => {
       tempFilename += "-end_" + endDate
     }
 
+    tempFilename += "-sort_" + sort + "-type_" + type + "-status_" + status 
+
     console.log(query)
     console.log(sort + ' ' + type + ' ' + status)
     let data = await axios.get(
@@ -64,8 +66,11 @@ const ExternalLinks = () => {
     } else {
       setButtonDisabled(false)
     }
+    let csv_data = await axios.get(
+      `${getExternalLinks}?${query}&sort=${sort}&type=${type}&showOnly=${status}`
+    );
 
-    generateCsv(data.data.result)
+    generateCsv(csv_data.data.result)
     setMainMeta(data.data.meta);
 
     console.log(data)
@@ -139,7 +144,7 @@ const ExternalLinks = () => {
     console.log(value)
   }
 
-  const csvHeader = ["Article-Link", "External-Link", "Date of Post", "Count", "Status"];
+  const csvHeader = ["Article-Link", "External-Link","Rel" , "Anchor Text" ,"Date of Post", "Count", "Status"];
   const generateCsv = (data) => {
     if (data !== null) {
       setDownloadData("")
@@ -149,8 +154,10 @@ const ExternalLinks = () => {
         var temp = []
         temp.push(data[i].article_link)
         temp.push(data[i].externalLink)
-        temp.push(getFormattedDate(data[i].lastmod))
-        temp.push(data[i].count)
+        temp.push(data[i].rel)
+        temp.push(data[i].anchor_text)
+        temp.push(getFormattedDate(data[i].createdAt))
+        temp.push(data[i].externalLink_count)
         if (data[i].status) {
           temp.push("Verified")
         } else {
