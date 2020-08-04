@@ -67,7 +67,7 @@ const ExternalLinks = () => {
       setButtonDisabled(false)
     }
     let csv_data = await axios.get(
-      `${getExternalLinks}?${query}&sort=${sort}&type=${type}&showOnly=${status}`
+      `${getExternalLinks}?${query}&limit=1000&sort=${sort}&type=${type}&showOnly=${status}`
     );
 
     generateCsv(csv_data.data.result)
