@@ -20,6 +20,7 @@ export default function Homepage() {
     const fetchData = async () => {
       try {
         const response = await axios.get(getSitemaps);
+        console.log(response)
         setList(response.data.result);
       } catch (error) {
         toast.error("Something went wrong");
@@ -28,16 +29,15 @@ export default function Homepage() {
     fetchData();
   }, []);
 
-  const savedata = (title, site, id) => {
-    localStorage.setItem("link", JSON.stringify({ title, site, id }));
+  const savedata = ( site) => {
+    localStorage.setItem("link", JSON.stringify({ site}));
   };
   const searchData = () => {
     let filtered = list;
     if (query) {
       filtered = filtered.filter((data) => {
         return (
-          data.title.toLowerCase().startsWith(query.toLowerCase()) ||
-          data.link.toLowerCase().startsWith(query.toLowerCase())
+          data.domainSitemap.toLowerCase().startsWith(query.toLowerCase())
         );
       });
     }
@@ -103,7 +103,7 @@ export default function Homepage() {
                       >
                         <div
                           className="float-right"
-                          onClick={() => refreshScrap(item.link)}
+                          onClick={() => refreshScrap(item.domainSitemap)}
                           style={{ cursor: "pointer", fontSize: "26px", color: "#41D0EB" }}
                         >
                           <RedoOutlined />
@@ -118,7 +118,7 @@ export default function Homepage() {
                         <NavLink
                           to="/table"
                           onClick={() =>
-                            savedata(item.title, item.link, item._id)
+                            savedata(item.domainSitemap)
                           }
                         >
                           <div className="row align-items-center no-gutters">
@@ -126,7 +126,7 @@ export default function Homepage() {
                               <div className=" text-secondary text-center p-3">
                                 <span className="text-dark font-weight-bold float-left"
                                   style={{ paddingTop: "25px", paddingRight: "10px" }}>
-                                  {item.title}
+                                  {item.domainSitemap.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2]}
                                 </span>
                               </div>
                             </div>

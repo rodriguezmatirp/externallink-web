@@ -30,7 +30,7 @@ const WebInfo = () => {
                 // await axios.get(`${updateData}`)
                 let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}`)
                 console.log(data.data.result.doc)
-                setMainMeta(data.data.result.meta)
+                setMainMeta(data.data.result.totalCount)
                 setData(data.data.result.doc)
                 setMain(true)
             } catch (e) {
@@ -149,7 +149,7 @@ const WebInfo = () => {
                             <table className="table " border="1">
                                 <thead className="thead-dark">
                                     <tr>
-                                        <th scope="col">URL</th>
+                                        {/* <th scope="col">URL</th> */}
                                         <th scope="col">Sitemap</th>
                                         <th scope="col">Last Crawl Date</th>
                                         <th scope="col">Time</th>
@@ -175,28 +175,28 @@ const WebInfo = () => {
                                                     style={{ backgroundColor: "#fff" }}
                                                     key={i}
                                                 >
-                                                    <td>{data_.title}</td>
+                                                    {/* <td>{data_.title}</td> */}
                                                     <td>
                                                         <a
-                                                            href={data_.link}
+                                                            href={data_.domainSitemap}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                         >
-                                                            {data_.link}
+                                                            {data_.domainSitemap}
                                                         </a>
                                                     </td>
                                                     <td>{date ? (<p>{date}</p>) : (<p>Null</p>)}</td>
                                                     <td>{date ? (<p>{time}</p>) : (<p>Null</p>)}</td>
                                                     <td>
-                                                        {data_.sitemap_count}
+                                                        {data_.subSitemapCount}
                                                     </td>
                                                     <td>
-                                                        {data_.website_count}
+                                                        {data_.websiteCount}
                                                     </td>
                                                     <td>
                                                         <div
                                                             className="text-center"
-                                                            onClick={() => deleteWebsite_(data_.link)}
+                                                            onClick={() => deleteWebsite_(data_.domainSitemap)}
                                                             style={{ cursor: "pointer", fontSize: "20px", color: "#EB4141" }}
                                                         >
                                                             <DeleteFilled />

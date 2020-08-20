@@ -39,7 +39,7 @@ const Table = () => {
   const setTableData = async () => {
     let obj = JSON.parse(localStorage.getItem("link"));
     let url = obj.site;
-    document.title = url
+    document.title = obj.site
     var query = ""
     var tempFilename = url
 
@@ -141,10 +141,11 @@ const Table = () => {
     }
   };
 
-  const onStatusChecked = async (link, parent_link) => {
+  const onStatusChecked = async (linkId, status) => {
+    var changed_status = !status
     try {
       await axios.get(
-        `${changeStatus}?link=${link}&parent=${parent_link}`
+        `${changeStatus}?linkId=${linkId}&status=${changed_status}`
       )
       setTableData()
     } catch (e) {
@@ -178,15 +179,15 @@ const Table = () => {
         let arr = data[i].externalLinks;
         for (let j = 0; j < arr.length; j++) {
           var temp = [];
-          temp.push(data[i].articlelink);
-          temp.push(arr[j].link);
-          temp.push(arr[j].text)
+          temp.push(data[i].articleLink);
+          temp.push(arr[j].externalLink);
+          temp.push(arr[j].anchorText)
           if (arr[j].rel === undefined) {
             temp.push("doFollow");
           } else {
             temp.push(arr[j].rel);
           }
-          temp.push(getFormattedDate(data[i].lastmod));
+          temp.push(getFormattedDate(data[i].lastModified));
           dupe.push(temp);
         }
       }
@@ -289,9 +290,9 @@ const Table = () => {
                     <tbody>
                       {table
                         ? table.map((tab, i) => {
-                          let date = tab.lastmod.substring(
+                          let date = tab.lastModified.substring(
                             0,
-                            tab.lastmod.indexOf("T")
+                            tab.lastModified.indexOf("T")
                           );
                           return (
                             <tr
@@ -308,11 +309,11 @@ const Table = () => {
                               <td style={{ width: "60%" }}>{date}</td>
                               <td style={{ width: "60%" }}>
                                 <a
-                                  href={tab.articlelink}
+                                  href={tab.articleLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {tab.articlelink}
+                                  {tab.articleLink}
                                 </a>
                               </td>
                               <td>
@@ -320,11 +321,11 @@ const Table = () => {
                                   tab.externalLinks.map((extLink, j) => {
                                     return (
                                       <p key={j}><a
-                                        href={extLink.link}
+                                        href={extLink.externalLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                       >
-                                        {extLink.link}
+                                        {extLink.externalLink}
                                       </a></p>
                                     );
                                   })
@@ -337,7 +338,7 @@ const Table = () => {
                                   tab.externalLinks.map((extLink, j) => {
                                     return (
                                       <p key={j}>
-                                        {extLink.text}
+                                        {extLink.anchorText}
                                       </p>
                                     );
                                   })
@@ -364,7 +365,7 @@ const Table = () => {
                                     return (<input key={j}
                                       type="checkbox"
                                       checked={extLink.status}
-                                      onChange={() => onStatusChecked(extLink.link, tab.articlelink)}
+                                      onChange={() => onStatusChecked(extLink._id , extLink.status)}
                                     ></input>
                                     );
                                   })

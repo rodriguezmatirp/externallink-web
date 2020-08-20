@@ -3,58 +3,41 @@ import styles from "./externalLinks.module.css";
 import axios from "axios";
 import {
   getExternalLinks,
-  changeStatusExtLink
+  changeStatusExtLink,
+  downloadExternalLinks,
 } from "../../utils/routes";
-import { FaCloudDownloadAlt} from "react-icons/fa";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 import { Pagination, DatePicker, Button, Spin, Alert, Radio } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
-import { CSVLink } from "react-csv";
 const { RangePicker } = DatePicker;
 
-const getFormattedDate = (date) => {
-  var todayTime = new Date(date);
-  var day = todayTime.getDate();
-  var month = todayTime.getMonth() + 1;
-  var year = todayTime.getFullYear();
-  return year + "-" + month + "-" + day;
-};
 
 const ExternalLinks = () => {
   const [table, setTable] = useState("");
-  const [downloadData, setDownloadData] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [type , setType] = useState("websiteCount")
-  const [sort , setSort] = useState('-1')
-  const [status , setStatus] = useState("both")
+  const [type, setType] = useState("websiteCount")
+  const [sort, setSort] = useState('-1')
+  const [status, setStatus] = useState("both")
   const [main, setMain] = useState(true);
   const [mainMeta, setMainMeta] = useState(0);
   const [loader, setLoader] = useState(true);
   const [pageNum, setPageNum] = useState(1)
+  const [buttonDisabled, setButtonDisabled] = useState(false)
   const pageSize = 20
-  const [filename, setFilename] = useState("")
-  const [buttonDisabled, setButtonDisabled] = useState(false);
-
 
   const setTableData = async () => {
     var query = ""
-    var tempFilename = ""
     var skip = (pageNum - 1) * pageSize
 
-    if (startDate !== "") {
+    if (startDate !== "")
       query += "start=" + startDate + "&"
-      tempFilename += "-start_" + startDate
-    }
-    if (endDate !== "") {
+    if (endDate !== "")
       query += "end=" + endDate + "&"
-      tempFilename += "-end_" + endDate
-    }
 
-    tempFilename += "-sort_" + sort + "-type_" + type + "-status_" + status 
-
-    console.log(query)
-    console.log(sort + ' ' + type + ' ' + status)
+    // console.log(query)
+    // console.log(sort + ' ' + type + ' ' + status)
     let data = await axios.get(
       `${getExternalLinks}?${query}limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}&showOnly=${status}`
     );
@@ -62,19 +45,10 @@ const ExternalLinks = () => {
     console.log(data)
     if (data.data.result.length === 0) {
       toast.error("No Data")
-      setButtonDisabled(true)
-    } else {
-      setButtonDisabled(false)
     }
-    let csv_data = await axios.get(
-      `${getExternalLinks}?${query}&limit=1000&sort=${sort}&type=${type}&showOnly=${status}`
-    );
 
-    generateCsv(csv_data.data.result)
     setMainMeta(data.data.meta);
 
-    console.log(data)
-    setFilename(tempFilename)
     setTable(data.data.result);
     setMain(true);
     setLoader(false)
@@ -94,7 +68,7 @@ const ExternalLinks = () => {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, pageNum , type , sort,status]);
+  }, [startDate, endDate, pageNum, type, sort, status]);
 
 
 
@@ -123,57 +97,50 @@ const ExternalLinks = () => {
     })
   }
 
-  const handleRadioChange = (e)=>{
+  const handleRadioChange = (e) => {
     var value = e.target.value
-    if(value === "wc"){
+    if (value === "wc") {
       setType("websiteCount")
-    }else if(value === "dw"){
+    } else if (value === "dw") {
       setType("dateWise")
-    }else if(value === "asc"){
+    } else if (value === "asc") {
       setSort('1')
-    }else if(value === "desc"){
+    } else if (value === "desc") {
       setSort('-1')
-    }else if(value === 'nv'){
+    } else if (value === 'nv') {
       setStatus("notVerified")
-    }else if(value === 'v'){
+    } else if (value === 'v') {
       setStatus("verified")
-    }else if(value === 'both'){
+    } else if (value === 'both') {
       setStatus("both")
     }
 
-    console.log(value)
+    // console.log(value)
   }
 
-  const csvHeader = ["Article-Link", "External-Link","Rel" , "Anchor Text" ,"Date of Post", "Count", "Status"];
-  const generateCsv = (data) => {
-    if (data !== null) {
-      setDownloadData("")
-      let dupe = []
-      dupe.push(csvHeader)
-      for (let i = 0; i < data.length; i++) {
-        var temp = []
-        temp.push(data[i].article_link)
-        temp.push(data[i].externalLink)
-        temp.push(data[i].rel)
-        temp.push(data[i].anchor_text)
-        temp.push(getFormattedDate(data[i].createdAt))
-        temp.push(data[i].externalLink_count)
-        if (data[i].status) {
-          temp.push("Verified")
-        } else {
-          temp.push("Not yet verified")
-        }
-        dupe.push(temp)
-      }
-      setDownloadData(dupe)
-    }
-    if (data === null) {
-      toast.error("No data")
-    }
-  };
+  const downloadData = async () => {
+    setButtonDisabled(true)
+    var query = ""
 
+    if (startDate !== "")
+      query += "start=" + startDate + "&"
+    if (endDate !== "")
+      query += "end=" + endDate + "&"
+    query += "-sort_" + sort + "-type_" + type + "-status_" + status
 
-  console.log(table);
+    try {
+      await axios.get(
+        `${downloadExternalLinks}?${query}&sort=${sort}&type=${type}&showOnly=${status}`
+      );
+      toast.success("File Ready!")
+      window.open(`${downloadExternalLinks}?${query}&sort=${sort}&type=${type}&showOnly=${status}`)
+    } catch (e) {
+      toast.error("Something Went Wrong !")
+      console.log(e)
+    }
+    setButtonDisabled(false)
+  }
+  // console.log(table);
 
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
@@ -211,7 +178,7 @@ const ExternalLinks = () => {
                 <div className="col-lg-2">
                   <button
                     className={`btn ${styles.prime_btn}`}
-                    style={{backgroundColor : "rgba(12, 213, 8, 0.952)" , borderColor : "rgba(12, 213, 8, 0.952)"}}
+                    style={{ backgroundColor: "rgba(12, 213, 8, 0.952)", borderColor: "rgba(12, 213, 8, 0.952)" }}
                     onClick={() => window.location.reload()}
                   >
                     Refresh
@@ -220,17 +187,16 @@ const ExternalLinks = () => {
                 <div
                   className="col text-right"
                 >
-                  <CSVLink filename={filename + '.csv'} data={downloadData}>
-                    <Button
-                      type="primary"
-                      style={{backgroundColor : "rgba(12, 213, 8, 0.952)" , borderColor : "rgba(12, 213, 8, 0.952)"}}
-                      icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px"}} />}
-                      size="default"
-                      disabled={buttonDisabled}
-                    >
-                      Export
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: "rgba(12, 213, 8, 0.952)", borderColor: "rgba(12, 213, 8, 0.952)" }}
+                    icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
+                    size="default"
+                    onClick={downloadData}
+                    disabled={buttonDisabled}
+                  >
+                    Export
                     </Button>
-                  </CSVLink>
                 </div>
               </div>
               <div className="row">
@@ -246,20 +212,20 @@ const ExternalLinks = () => {
                   </Radio.Group>
                 </div>
                 <div className="col text-center">
-                  <Radio.Group 
-                  defaultValue="both" 
-                  style={{ marginTop: 16 }}
-                  onChange={handleRadioChange}>
+                  <Radio.Group
+                    defaultValue="both"
+                    style={{ marginTop: 16 }}
+                    onChange={handleRadioChange}>
                     <Radio.Button value="v">Verified</Radio.Button>
                     <Radio.Button value="nv">Not verified</Radio.Button>
                     <Radio.Button value="both">Both</Radio.Button>
                   </Radio.Group>
                 </div>
                 <div className="col text-right">
-                  <Radio.Group 
-                  defaultValue="desc" 
-                  style={{ marginTop: 16 }}
-                  onChange={handleRadioChange}
+                  <Radio.Group
+                    defaultValue="desc"
+                    style={{ marginTop: 16 }}
+                    onChange={handleRadioChange}
                   >
                     <Radio.Button value="asc">Ascending</Radio.Button>
                     <Radio.Button value="desc">Descending</Radio.Button>
@@ -283,7 +249,7 @@ const ExternalLinks = () => {
                         <th scope="col">Index</th>
                         <th scope="col">Date</th>
                         <th scope="col">Website</th>
-                        <th scope="col">External Links</th>
+                        <th scope="col">External Link</th>
                         <th scope="col">Rel</th>
                         <th scope="col">Anchor text</th>
                         <th scope="col">Count</th>
@@ -312,11 +278,11 @@ const ExternalLinks = () => {
                               <td style={{ width: "60%" }}>{date}</td>
                               <td style={{ width: "60%" }}>
                                 <a
-                                  href={tab.article_link}
+                                  href={tab.articleLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {tab.article_link}
+                                  {tab.articleLink}
                                 </a>
                               </td>
                               <td>
@@ -325,17 +291,17 @@ const ExternalLinks = () => {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  {tab.external_url}
+                                  {tab.externalUrl}
                                 </a>
                               </td>
                               <td>
                                 {tab.rel}
                               </td>
                               <td>
-                                {tab.anchor_text}
+                                {tab.anchorText}
                               </td>
                               <td>
-                                {tab.externalLink_count}
+                                {tab.externalLinkCount}
                               </td>
                               <td>
                                 <input

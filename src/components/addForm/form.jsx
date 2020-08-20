@@ -3,7 +3,7 @@ import { Modal } from "react-responsive-modal";
 import useInputState from "../../hooks/useInputState";
 import "react-responsive-modal/styles.css";
 import axios from "axios";
-import { addSitemap, scrapData } from "./../../utils/routes";
+import { addSitemap } from "./../../utils/routes";
 import { toast } from "react-toastify";
 
 export default function Form(props) {
@@ -18,10 +18,10 @@ export default function Form(props) {
       var extracted_title = link.match(/:\/\/(.[^/]+)/)[1];
       console.log(extracted_title)
       console.log(webpage)
-      let body = { link: webpage, title: extracted_title, algo: 1 };
+      let body = { domainSitemap: webpage };
       try {
         await axios.post(addSitemap, body);
-        axios.post(scrapData, { url: webpage });
+        // axios.post(scrapData, { url: webpage });
         props.toggleModal(false);
         rL();
         toast.success("Sitemap Added");
