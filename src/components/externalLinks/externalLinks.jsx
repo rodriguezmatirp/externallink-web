@@ -247,7 +247,8 @@ const ExternalLinks = () => {
                     <thead className="thead-dark">
                       <tr>
                         <th scope="col">Index</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Found Date</th>
+                        <th scope="col">Last Modified</th>
                         <th scope="col">Website</th>
                         <th scope="col">External Link</th>
                         <th scope="col">Rel</th>
@@ -259,10 +260,14 @@ const ExternalLinks = () => {
                     <tbody>
                       {table
                         ? table.map((tab, i) => {
-                          let date = tab.createdAt.substring(
+                          let foundDate = tab.createdAt.substring(
                             0,
                             tab.createdAt.indexOf("T")
                           );
+                          let lastmodDate = tab.lastModified.substring(
+                            0,
+                            tab.lastModified.indexOf('T')
+                          )
                           return (
                             <tr
                               style={{
@@ -275,7 +280,8 @@ const ExternalLinks = () => {
                                   {((pageNum - 1) * pageSize) + i + 1}
                                 </div>
                               </td>
-                              <td style={{ width: "60%" }}>{date}</td>
+                              <td style={{ width: "60%" }}>{foundDate}</td>
+                              <td style={{ width: "60%" }}>{lastmodDate}</td>
                               <td style={{ width: "60%" }}>
                                 <a
                                   href={tab.articleLink}

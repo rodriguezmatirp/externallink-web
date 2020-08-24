@@ -72,33 +72,24 @@ const Table = () => {
     }
     console.log(query)
     let data = await axios.get(
-      `${getData}/?${query}`
+      `${getData}/?${query}skip=${(pageNum - 1) * pageSize}&limit=${pageSize}`
     );
 
-    if (data.data.result.length === 0) {
+    if (data.data.result.externalLinks.length === 0) {
       toast.error("No Data")
       setButtonDisabled(true)
       setLoader(false)
     }
 
-    let expandedResult = [];
-
-    for (let websiteData of data.data.result) {
-      for (let externalLink of websiteData.externalLinks) {
-        let cpy = JSON.parse(JSON.stringify(websiteData));
-        cpy["externalLinks"] = [externalLink];
-        expandedResult.push(cpy);
-      }
-    }
-
-    generateCsv(expandedResult)
-    setMainMeta(expandedResult.length);
-    expandedResult = expandedResult.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
+    generateCsv(data.data.result.externalLinks)
+    setMainMeta(data.data.result.totalCount);
+    data.data.result.externalLinks = data.data.result.externalLinks.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
 
     console.log(data)
+    console.log(obj)
     setFilename(tempFilename)
     setLoader(false)
-    setTable(expandedResult);
+    setTable(data.data.result.externalLinks);
     setData(obj);
     setMain(true);
   }
@@ -176,229 +167,191 @@ const Table = () => {
       let dupe = []
       dupe.push(csvHeader)
       for (let i = 0; i < data.length; i++) {
-        let arr = data[i].externalLinks;
-        for (let j = 0; j < arr.length; j++) {
-          var temp = [];
-          temp.push(data[i].articleLink);
-          temp.push(arr[j].externalLink);
-          temp.push(arr[j].anchorText)
-          if (arr[j].rel === undefined) {
-            temp.push("doFollow");
-          } else {
-            temp.push(arr[j].rel);
-          }
-          temp.push(getFormattedDate(data[i].lastModified));
-          dupe.push(temp);
-        }
+        var temp = [];
+        temp.push(data[i].articleLink);
+        temp.push(data[i].externalLink);
+        temp.push(data[i].anchorText)
+        temp.push(data[i].rel);
+        temp.push(getFormattedDate(data[i].lastModified));
+        dupe.push(temp);
       }
-      setDownloadData(dupe)
-    }
-    if (data === null) {
-      toast.error("No data")
-    }
-  };
+    setDownloadData(dupe)
+  }
+  if (data === null) {
+    toast.error("No data")
+  }
+};
 
 
-  console.log(table);
+// console.log(table);
 
-  return (
-    <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
-      {loader ? (
-        <div
-          className="text-center"
-          style={{ paddingTop: "300px", paddingBottom: "300px" }}
-        >
-          <Spin tip="Loading...">
-            <Alert
-              message="Website wise information"
-              description="Your is either loading or not found"
-              type="info"
-            />
-          </Spin>
-          {/* <img
+return (
+  <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
+    {loader ? (
+      <div
+        className="text-center"
+        style={{ paddingTop: "300px", paddingBottom: "300px" }}
+      >
+        <Spin tip="Loading...">
+          <Alert
+            message="Website wise information"
+            description="Your is either loading or not found"
+            type="info"
+          />
+        </Spin>
+        {/* <img
             className="img-fluid"
             src="./assets/images/loader.gif"
             alt="loader"
             width="80"
           /> */}
-        </div>
-      ) : (
-          <div className="container pt-5 pb-5">
-            <div className=" mb-4">
-              <p className="h3 ">
-                <strong>
-                  External Link to <span>{Data ? Data.title : null}</span>
-                </strong>
-              </p>
-              <div className="row pt-2">
-                <div className="col-lg-3">
-                  <RangePicker onChange={handleDateChange} />
-                </div>
-                <div className="col-lg-2">
-                  <button
-                    className={`btn ${styles.prime_btn}`}
-                    onClick={() => window.location.reload()}
-                  >
-                    Refresh
+      </div>
+    ) : (
+        <div className="container pt-5 pb-5">
+          <div className=" mb-4">
+            <p className="h3 ">
+              <strong>
+                External Link to <span>{Data ? Data.site.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2] : null}</span>
+              </strong>
+            </p>
+            <div className="row pt-2">
+              <div className="col-lg-3">
+                <RangePicker onChange={handleDateChange} />
+              </div>
+              <div className="col-lg-2">
+                <button
+                  className={`btn ${styles.prime_btn}`}
+                  onClick={() => window.location.reload()}
+                >
+                  Refresh
                 </button>
-                </div>
-                <div className="col-lg-4 text-center">
-                  <Checkbox.Group
-                    options={options}
-                    onChange={handleFollowChange}
-                    defaultValue={["Nofollow", "Dofollow"]}
-                  />
-                </div>
-                <div
-                  className="col-lg-3 text-right"
-                >
-                  <CSVLink filename={filename + '.csv'} data={downloadData}>
-                    <Button
-                      type="primary"
-                      icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
-                      size="default"
-                      disabled={buttonDisabled}
-                    >
-                      Export
-                    </Button>
-                  </CSVLink>
-                </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-12">
-                <div
-                  style={{
-                    overflowX: "scroll",
-                    height: "100%",
-                    display: "block",
-                    overflowY: "hidden",
-                  }}
-                >
-                  <table className="table" border="1">
-                    <thead className="thead-dark">
-                      <tr>
-                        <th scope="col">Index</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Website</th>
-                        <th scope="col">External Links</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {table
-                        ? table.map((tab, i) => {
-                          let date = tab.lastModified.substring(
-                            0,
-                            tab.lastModified.indexOf("T")
-                          );
-                          return (
-                            <tr
-                              style={{
-                                backgroundColor: "#fff",
-                              }}
-                              key={i}
-                            >
-                              <td >
-                                <div style={{ display: 'flex', justifyContent: "center" }}>
-                                  {((pageNum - 1) * pageSize) + i + 1}
-                                </div>
-                              </td>
-                              <td style={{ width: "60%" }}>{date}</td>
-                              <td style={{ width: "60%" }}>
-                                <a
-                                  href={tab.articleLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tab.articleLink}
-                                </a>
-                              </td>
-                              <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}><a
-                                        href={extLink.externalLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        {extLink.externalLink}
-                                      </a></p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No External Links</p>
-                                  )}
-                              </td>
-                              <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}>
-                                        {extLink.anchorText}
-                                      </p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No text</p>
-                                  )}
-                              </td>
-                              <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<p key={j}>
-                                      {extLink.rel
-                                        ? extLink.rel
-                                        : "dofollow"}</p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
-                              </td>
-                              <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<input key={j}
-                                      type="checkbox"
-                                      checked={extLink.status}
-                                      onChange={() => onStatusChecked(extLink._id , extLink.status)}
-                                    ></input>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
-                              </td>
-                            </tr>
-                          );
-                        })
-                        : null}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-12 mt-5">
-              <div className="col-lg-6 text-center mx-auto">
-                <Pagination
-                  defaultCurrent={1}
-                  total={
-                    (main && mainMeta)
-                  }
-                  pageSize={pageSize}
-                  onChange={handlePageChange}
+              <div className="col-lg-4 text-center">
+                <Checkbox.Group
+                  options={options}
+                  onChange={handleFollowChange}
+                  defaultValue={["Nofollow", "Dofollow"]}
                 />
+              </div>
+              <div
+                className="col-lg-3 text-right"
+              >
+                <CSVLink filename={filename + '.csv'} data={downloadData}>
+                  <Button
+                    type="primary"
+                    icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
+                    size="default"
+                    disabled={buttonDisabled}
+                  >
+                    Export
+                    </Button>
+                </CSVLink>
               </div>
             </div>
           </div>
-        )}
-    </div>
-  );
+          <div className="row">
+            <div className="col-lg-12">
+              <div
+                style={{
+                  overflowX: "scroll",
+                  height: "100%",
+                  display: "block",
+                  overflowY: "hidden",
+                }}
+              >
+                <table className="table" border="1">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">Index</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Website</th>
+                      <th scope="col">External Links</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {table
+                      ? table.map((tab, i) => {
+                        let date = tab.lastModified.substring(
+                          0,
+                          tab.lastModified.indexOf("T")
+                        );
+                        return (
+                          <tr
+                            style={{
+                              backgroundColor: "#fff",
+                            }}
+                            key={i}
+                          >
+                            <td >
+                              <div style={{ display: 'flex', justifyContent: "center" }}>
+                                {((pageNum - 1) * pageSize) + i + 1}
+                              </div>
+                            </td>
+                            <td style={{ width: "60%" }}>{date}</td>
+                            <td style={{ width: "60%" }}>
+                              <a
+                                href={tab.articleLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {tab.articleLink}
+                              </a>
+                            </td>
+                            <td>
+                              <p><a
+                                href={tab.externalLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {tab.externalLink}
+                              </a></p>
+                            </td>
+                            <td>
+                              <p>
+                                {tab.anchorText}
+                              </p>
+                            </td>
+                            <td>
+                              <p>
+                                {tab.rel}
+                              </p>
+                            </td>
+                            <td>
+                              <input
+                                type="checkbox"
+                                checked={tab.status}
+                                onChange={() => onStatusChecked(tab._id, tab.status)}
+                              ></input>
+                            </td>
+                          </tr>
+                        );
+                      })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-12 mt-5">
+            <div className="col-lg-6 text-center mx-auto">
+              <Pagination
+                defaultCurrent={1}
+                total={
+                  (main && mainMeta)
+                }
+                pageSize={pageSize}
+                onChange={handlePageChange}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+  </div>
+);
 };
 
 export default Table;

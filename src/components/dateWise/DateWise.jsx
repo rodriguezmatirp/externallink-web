@@ -74,33 +74,23 @@ const DateWise = () => {
 
     console.log(query)
     let data = await axios.get(
-      `${getData}/?${query}`
+      `${getData}/?${query}skip=${(pageNum-1)*pageSize}&limit=${pageSize}`
     );
 
-    if (data.data.result.length === 0) {
+    if (data.data.result.externalLinks.length === 0) {
       toast.error("No Data")
       setButtonDisabled(true)
     } else {
       setButtonDisabled(false)
     }
 
-    let expandedResult = [];
-
-    for (let websiteData of data.data.result) {
-      for (let externalLink of websiteData.externalLinks) {
-        let cpy = JSON.parse(JSON.stringify(websiteData));
-        cpy["externalLinks"] = [externalLink];
-        expandedResult.push(cpy);
-      }
-    }
-
-    generateCsv(expandedResult)
-    setMainMeta(expandedResult.length);
-    expandedResult = expandedResult.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
+    generateCsv(data.data.result.externalLinks)
+    setMainMeta(data.data.result.totalCount);
+    data.data.result.externalLinks = data.data.result.externalLinks.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
 
     console.log(data)
     setFilename(tempFilename)
-    setTable(expandedResult);
+    setTable(data.data.result.externalLinks);
     setMain(true);
     setLoader(false)
   }
@@ -171,27 +161,20 @@ const DateWise = () => {
       let dupe = []
       dupe.push(csvHeader)
       for (let i = 0; i < data.length; i++) {
-        let arr = data[i].externalLinks;
-        for (let j = 0; j < arr.length; j++) {
-          var temp = [];
-          temp.push(data[i].articleLink);
-          temp.push(arr[j].externalLink);
-          temp.push(arr[j].anchorText)
-          if (arr[j].rel === undefined) {
-            temp.push("doFollow");
-          } else {
-            temp.push(arr[j].rel);
-          }
-          temp.push(getFormattedDate(data[i].lastModified));
-          dupe.push(temp);
-        }
+        var temp = [];
+        temp.push(data[i].articleLink);
+        temp.push(data[i].externalLink);
+        temp.push(data[i].anchorText)
+        temp.push(data[i].rel);
+        temp.push(getFormattedDate(data[i].lastModified));
+        dupe.push(temp);
       }
-      setDownloadData(dupe)
-    }
-    if (data === null) {
-      toast.error("No data")
-    }
-  };
+    setDownloadData(dupe)
+  }
+  if (data === null) {
+    toast.error("No data")
+  }
+};
 
 
   console.log(table);
@@ -317,61 +300,30 @@ const DateWise = () => {
                                 </a>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}><a
-                                        href={extLink.externalLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        {extLink.externalLink}
-                                      </a></p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No External Links</p>
-                                  )}
+                                <p><a
+                                  href={tab.externalLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {tab.externalLink}
+                                </a></p>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (
-                                      <p key={j}>
-                                        {extLink.anchorText}
-                                      </p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>No text</p>
-                                  )}
+                                <p>
+                                  {tab.anchorText}
+                                </p>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<p key={j}>
-                                      {extLink.rel
-                                        ? extLink.rel
-                                        : "dofollow"}</p>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
+                                <p>
+                                  {tab.rel}
+                                </p>
                               </td>
                               <td>
-                                {tab.externalLinks.length > 0 ? (
-                                  tab.externalLinks.map((extLink, j) => {
-                                    return (<input key={j}
+                                  <input
                                       type="checkbox"
-                                      checked={extLink.status}
-                                      onChange={() => onStatusChecked(extLink._id, tab.status)}
+                                      checked={tab.status}
+                                      onChange={() => onStatusChecked(tab._id, tab.status)}
                                     ></input>
-                                    );
-                                  })
-                                ) : (
-                                    <p>--</p>
-                                  )}
                               </td>
                             </tr>
                           );
