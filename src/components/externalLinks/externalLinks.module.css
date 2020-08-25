@@ -1,3 +1,11 @@
+.table-row-light {
+    background-color: #ffffff;
+}
+
+.table-row-dark {
+    background-color: #818181;
+}
+
 .cardEdit {
     background-color: #17a2b8;
     border: 0;

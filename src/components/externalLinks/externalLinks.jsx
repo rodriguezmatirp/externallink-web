@@ -7,7 +7,7 @@ import {
   downloadExternalLinks,
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Pagination, DatePicker, Button, Spin, Alert, Radio } from "antd";
+import { Pagination, DatePicker, Button, Spin, Alert, Radio, Table } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 const { RangePicker } = DatePicker;
@@ -26,6 +26,80 @@ const ExternalLinks = () => {
   const [pageNum, setPageNum] = useState(1)
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const pageSize = 20
+
+  const columns = [
+    {
+      title: 'Index',
+      width: 60,
+      dataIndex: 'index',
+      fixed: 'left',
+      align: 'center'
+    },
+    {
+      title: 'Found Date',
+      width: 110,
+      dataIndex: 'fdate',
+      fixed: 'left',
+      align: 'center',
+      sorter: {},
+    },
+    {
+      title: 'Last Modified',
+      dataIndex: 'lastmod',
+      width: 110,
+      align: 'center'
+    },
+    {
+      title: 'Website',
+      dataIndex: 'website',
+      width: 180,
+      align: 'center'
+    },
+    {
+      title: 'External Link',
+      dataIndex: 'extLink',
+      width: 170,
+      align: 'center'
+    },
+    {
+      title: 'Rel',
+      dataIndex: 'rel',
+      width: 80,
+      align: 'center'
+    },
+    {
+      title: 'Anchor Text',
+      dataIndex: 'text',
+      width: 150,
+      align: 'center'
+
+    },
+    {
+      title: 'Count',
+      dataIndex: 'count',
+      width: 60,
+      align: 'center',
+      sorter: {},
+    },
+    {
+      title: 'Status',
+      dataIndex: 'statusObj',
+      fixed: 'right',
+      width: 70,
+      align: 'center',
+      render: (externalLinkObj) => <input
+      type="checkbox"
+      size="40px"
+      checked={externalLinkObj.status}
+      onChange={() => onStatusChecked(externalLinkObj.externalLink, externalLinkObj.status)}
+    />,
+    },
+  ];
+
+
+  function onChange(pagination, filters, sorter, extra) {
+    console.log('params', pagination, filters, sorter, extra);
+  }
 
   const setTableData = async () => {
     var query = ""
@@ -142,6 +216,24 @@ const ExternalLinks = () => {
   }
   // console.log(table);
 
+  const data = []
+  var i = 0;
+  for (let item of table) {
+    data.push({
+      key: item,
+      index: ((pageNum - 1) * pageSize) + i + 1,
+      website: item["articleLink"],
+      fdate: new Date(item["createdAt"]).toDateString(),
+      lastmod:new Date(item["lastModified"]).toLocaleDateString(),
+      text: item["anchorText"],
+      rel: item["rel"],
+      extLink: item["externalLink"],
+      statusObj: item,
+      count: item["externalLinkCount"]
+    })
+    i++;
+  }
+
   return (
     <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
       {loader ? (
@@ -235,96 +327,7 @@ const ExternalLinks = () => {
             </div>
             <div className="row">
               <div className="col-lg-12">
-                <div
-                  style={{
-                    overflowX: "scroll",
-                    height: "100%",
-                    display: "block",
-                    overflowY: "hidden",
-                  }}
-                >
-                  <table className="table" border="1">
-                    <thead className="thead-dark">
-                      <tr>
-                        <th scope="col">Index</th>
-                        <th scope="col">Found Date</th>
-                        <th scope="col">Last Modified</th>
-                        <th scope="col">Website</th>
-                        <th scope="col">External Link</th>
-                        <th scope="col">Rel</th>
-                        <th scope="col">Anchor text</th>
-                        <th scope="col">Count</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {table
-                        ? table.map((tab, i) => {
-                          let foundDate = tab.createdAt.substring(
-                            0,
-                            tab.createdAt.indexOf("T")
-                          );
-                          let lastmodDate = tab.lastModified.substring(
-                            0,
-                            tab.lastModified.indexOf('T')
-                          )
-                          return (
-                            <tr
-                              style={{
-                                backgroundColor: "#fff",
-                              }}
-                              key={i}
-                            >
-                              <td >
-                                <div style={{ display: 'flex', justifyContent: "center" }}>
-                                  {((pageNum - 1) * pageSize) + i + 1}
-                                </div>
-                              </td>
-                              <td style={{ width: "60%" }}>{foundDate}</td>
-                              <td style={{ width: "60%" }}>{lastmodDate}</td>
-                              <td style={{ width: "60%" }}>
-                                <a
-                                  href={tab.articleLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tab.articleLink}
-                                </a>
-                              </td>
-                              <td>
-                                <a
-                                  href={tab.externalLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tab.externalUrl}
-                                </a>
-                              </td>
-                              <td>
-                                {tab.rel}
-                              </td>
-                              <td>
-                                {tab.anchorText}
-                              </td>
-                              <td>
-                                {tab.externalLinkCount}
-                              </td>
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  size="40px"
-                                  checked={tab.status}
-                                  onChange={() => onStatusChecked(tab.externalLink, tab.status)}
-                                >
-                                </input>
-                              </td>
-                            </tr>
-                          );
-                        })
-                        : null}
-                    </tbody>
-                  </table>
-                </div>
+                  <Table columnClassName="thead-dark" columns={columns} sticky scroll={{ x: 1500 }} border="1" dataSource={data} onChange={onChange} pagination={false} />
               </div>
             </div>
 
