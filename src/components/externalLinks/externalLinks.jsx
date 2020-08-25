@@ -88,17 +88,45 @@ const ExternalLinks = () => {
       width: 70,
       align: 'center',
       render: (externalLinkObj) => <input
-      type="checkbox"
-      size="40px"
-      checked={externalLinkObj.status}
-      onChange={() => onStatusChecked(externalLinkObj.externalLink, externalLinkObj.status)}
-    />,
+        type="checkbox"
+        size="40px"
+        checked={externalLinkObj.status}
+        onChange={() => onStatusChecked(externalLinkObj.externalLink, externalLinkObj.status)}
+      />,
+      filters : [
+        {text : 'Verified' , value : 'v'},
+        {text : 'Not verified' , value : 'nv'}
+      ],
+      filterMultiple : true,
+      defaultFilteredValue : [
+        'v' , 'nv'
+      ]
     },
   ];
 
 
-  function onChange(pagination, filters, sorter, extra) {
-    console.log('params', pagination, filters, sorter, extra);
+  function onTableChange(pagination, filters, sorter, extra) {
+    console.log(filters)
+    if (sorter.field === "count") {
+      setType("websiteCount")
+    } else if (sorter.field === "fdate") {
+      setType("dateWise")
+    }
+    if (sorter.order === "ascend") {
+      setSort('1')
+    } else if (sorter.order === "descend") {
+      setSort('-1')
+    }
+    if (filters.statusObj === null) {
+      setTable("")
+    }else if(filters.statusObj[0] && filters.statusObj[1] ){
+      setStatus("both")
+    }
+    else if (filters.statusObj[0] === 'nv') {
+      setStatus("notVerified")
+    } else if (filters.statusObj[0] === 'v') {
+      setStatus("verified")
+    }
   }
 
   const setTableData = async () => {
@@ -110,8 +138,6 @@ const ExternalLinks = () => {
     if (endDate !== "")
       query += "end=" + endDate + "&"
 
-    // console.log(query)
-    // console.log(sort + ' ' + type + ' ' + status)
     let data = await axios.get(
       `${getExternalLinks}?${query}limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}&showOnly=${status}`
     );
@@ -171,27 +197,6 @@ const ExternalLinks = () => {
     })
   }
 
-  const handleRadioChange = (e) => {
-    var value = e.target.value
-    if (value === "wc") {
-      setType("websiteCount")
-    } else if (value === "dw") {
-      setType("dateWise")
-    } else if (value === "asc") {
-      setSort('1')
-    } else if (value === "desc") {
-      setSort('-1')
-    } else if (value === 'nv') {
-      setStatus("notVerified")
-    } else if (value === 'v') {
-      setStatus("verified")
-    } else if (value === 'both') {
-      setStatus("both")
-    }
-
-    // console.log(value)
-  }
-
   const downloadData = async () => {
     setButtonDisabled(true)
     var query = ""
@@ -224,7 +229,7 @@ const ExternalLinks = () => {
       index: ((pageNum - 1) * pageSize) + i + 1,
       website: item["articleLink"],
       fdate: new Date(item["createdAt"]).toDateString(),
-      lastmod:new Date(item["lastModified"]).toLocaleDateString(),
+      lastmod: new Date(item["lastModified"]).toLocaleDateString(),
       text: item["anchorText"],
       rel: item["rel"],
       extLink: item["externalLink"],
@@ -291,43 +296,10 @@ const ExternalLinks = () => {
                     </Button>
                 </div>
               </div>
-              <div className="row">
-                <div className="col" >
-                  <Radio.Group
-                    defaultValue="wc"
-                    style={{ marginTop: 16 }}
-                    onChange={handleRadioChange}
-                    className="type"
-                  >
-                    <Radio.Button value="wc">Website Count</Radio.Button>
-                    <Radio.Button value="dw">Date Wise</Radio.Button>
-                  </Radio.Group>
-                </div>
-                <div className="col text-center">
-                  <Radio.Group
-                    defaultValue="both"
-                    style={{ marginTop: 16 }}
-                    onChange={handleRadioChange}>
-                    <Radio.Button value="v">Verified</Radio.Button>
-                    <Radio.Button value="nv">Not verified</Radio.Button>
-                    <Radio.Button value="both">Both</Radio.Button>
-                  </Radio.Group>
-                </div>
-                <div className="col text-right">
-                  <Radio.Group
-                    defaultValue="desc"
-                    style={{ marginTop: 16 }}
-                    onChange={handleRadioChange}
-                  >
-                    <Radio.Button value="asc">Ascending</Radio.Button>
-                    <Radio.Button value="desc">Descending</Radio.Button>
-                  </Radio.Group>
-                </div>
-              </div>
             </div>
             <div className="row">
               <div className="col-lg-12">
-                  <Table columnClassName="thead-dark" columns={columns} sticky scroll={{ x: 1500 }} border="1" dataSource={data} onChange={onChange} pagination={false} />
+                <Table columns={columns} sticky scroll={{ x: 1500 }} border="1" dataSource={data} onChange={onTableChange} pagination={false} />
               </div>
             </div>
 
