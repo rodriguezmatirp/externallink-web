@@ -7,7 +7,7 @@ import {
   downloadExternalLinks,
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Pagination, DatePicker, Button, Spin, Alert, Radio, Table } from "antd";
+import { Pagination, DatePicker, Button, Spin, Alert, Table } from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 const { RangePicker } = DatePicker;
