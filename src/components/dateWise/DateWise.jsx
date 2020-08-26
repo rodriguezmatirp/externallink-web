@@ -86,7 +86,7 @@ const DateWise = () => {
 
     generateCsv(data.data.result.externalLinks)
     setMainMeta(data.data.result.totalCount);
-    data.data.result.externalLinks = data.data.result.externalLinks.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
+    // data.data.result.externalLinks = data.data.result.externalLinks.slice((pageNum - 1) * pageSize, (pageNum * pageSize))
 
     console.log(data)
     setFilename(tempFilename)
