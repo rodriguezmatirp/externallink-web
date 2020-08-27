@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { crawlAll, webInfo, deleteWebsite } from "../../utils/routes";
+import { crawlAll, webInfo, deleteWebsite, monitorCrawlList } from "../../utils/routes";
 import { toast } from "react-toastify";
 import { DeleteFilled } from "@ant-design/icons";
-import { Button, Pagination, Radio } from 'antd';
+import { Button, Pagination, Radio, Table } from 'antd';
 
 const WebInfo = () => {
 
@@ -16,7 +16,8 @@ const WebInfo = () => {
     const [type, setType] = useState("websiteCount")
     const [sort, setSort] = useState('-1')
     const [pageNum, setPageNum] = useState(1)
-
+    const [currentlyCrawling, setCurrentlyCrawling] = useState("")
+    const [scheduledTasks, setScheduledTasks] = useState("")
 
     useEffect(() => {
         document.title = "Crawler Stats"
@@ -28,10 +29,14 @@ const WebInfo = () => {
             var skip = (pageNum - 1) * pageSize
             try {
                 // await axios.get(`${updateData}`)
+                let crawlList = await axios.get(`${monitorCrawlList}`)
                 let data = await axios.get(`${webInfo}?limit=${pageSize}&skip=${skip}&sort=${sort}&type=${type}`)
-                console.log(data.data.result.doc)
+                // console.log(data.data.result.doc)
                 setMainMeta(data.data.result.totalCount)
                 setData(data.data.result.doc)
+                setCurrentlyCrawling(crawlList.data.monitorCrawlers.crawlWorkers)
+                setScheduledTasks(crawlList.data.monitorCrawlers.crawlTasks)
+                console.log(crawlList)
                 setMain(true)
             } catch (e) {
                 console.log(e)
@@ -92,6 +97,54 @@ const WebInfo = () => {
         }
     }
 
+    const currentCrawlColumns = [
+        {
+            title: 'Crawling Time (in secs)',
+            dataIndex: 'time',
+            width: 60,
+            align: 'center'
+        },
+        {
+            title: 'Currently Crawling',
+            dataIndex: 'sitemap',
+            width: 80,
+            align: 'center'
+        },
+    ];
+    var currentCrawl = []
+    for (let item in currentlyCrawling) {
+        // var date = new Date(0)
+        // date.setSeconds(currentlyCrawling[item]['crawlTime'])
+        currentCrawl.push({
+            key: item,
+            sitemap: currentlyCrawling[item]['domainSitemap'],
+            time: currentlyCrawling[item]['crawlTime']/1000
+        })
+    }
+
+    const toCrawlColumns = [
+        {
+            title: 'Index',
+            dataIndex: 'index',
+            width: 60,
+            align: 'center'
+        },
+        {
+            title: 'Scheduled',
+            dataIndex: 'sitemap',
+            width: 85,
+            align: 'center'
+        },
+    ];
+    var scheduled = []
+    for (let item in scheduledTasks) {
+        scheduled.push({
+            key: item,
+            sitemap: scheduledTasks[item],
+            index: item
+        })
+    }
+
     return (
         <div className="container pt-5 pb-5">
             <div className=" mb-4">
@@ -101,14 +154,28 @@ const WebInfo = () => {
                             Welcome <span>{name ? name : "Admin"}</span>
                         </strong></p>
                 </div>
-                <div className="col">
-                    <div style={{ fontSize: "24px", color: "#87f04f" }}>
-                        Crawl Websites&emsp;
+                <div className="row">
+                    <div className="col">
+                        <div style={{ fontSize: "24px", color: "#87f04f" }}>
+                            Crawl Websites&emsp;
                         <Button type="primary"
-                            onClick={() => crawlall()}
-                            size="26px"
-                            disabled={buttonDisabled}
-                        >Start</Button>
+                                onClick={() => crawlall()}
+                                size="26px"
+                                disabled={buttonDisabled}
+                            >Start</Button>&emsp;
+                            <Button type="primary" style={{ background: "lightgreen" , border : "lightgreen" }}
+                                onClick={() => window.location.reload()}
+                                size="26px"
+                            >Reload</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="row pt-5">
+                    <div className="col">
+                        <Table columns={currentCrawlColumns} sticky border="1" dataSource={currentCrawl} pagination={false} />
+                    </div>
+                    <div className="col">
+                        <Table columns={toCrawlColumns} sticky scroll={{ y: 380 }} border="1" dataSource={scheduled} pagination={false} />
                     </div>
                 </div>
                 <div className="row">

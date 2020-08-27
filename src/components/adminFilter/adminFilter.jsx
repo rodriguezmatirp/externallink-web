@@ -62,7 +62,7 @@ const Admin = () => {
                 )
                 rF();
                 console.log(data)
-                window.location = '/admin_restrict'
+                window.location = '/filter'
                 toast.success("Restriction Added")
             } catch (e) {
                 console.log(e)

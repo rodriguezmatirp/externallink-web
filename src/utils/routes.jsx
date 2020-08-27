@@ -22,6 +22,7 @@ export const updateData = `${url}/update`;
 export const getExternalLinks = `${url}/getExtLink`;
 export const changeStatusExtLink = `${url}/verify`;
 export const downloadExternalLinks = `${url}/download`;
+export const monitorCrawlList = `${url}/crawlList`
 
 export const getRegistered = `${url}/users/register`;
 export const getLogined = `${url}/users/login`;
