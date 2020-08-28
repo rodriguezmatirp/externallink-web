@@ -100,7 +100,7 @@ const WebInfo = () => {
 
     const currentCrawlColumns = [
         {
-            title: 'Crawling Time',
+            title: 'Time',
             dataIndex: 'time',
             width: 60,
             align: 'center'
@@ -108,14 +108,12 @@ const WebInfo = () => {
         {
             title: 'Currently Crawling',
             dataIndex: 'sitemap',
-            width: 80,
+            width: 90,
             align: 'center'
         },
     ];
     var currentCrawl = []
     for (let item in currentlyCrawling) {
-        // var date = new Date(0)
-        // date.setSeconds(currentlyCrawling[item]['crawlTime'])
         currentCrawl.push({
             key: item,
             sitemap: currentlyCrawling[item]['domainSitemap'],
