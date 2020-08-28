@@ -151,8 +151,14 @@ const WebInfo = () => {
         {
             title: 'Sitemap',
             dataIndex: 'sitemap',
-            width: 120,
-            align: 'center'
+            width: 100,
+            align: 'left',
+            render : (website) =>
+            <a 
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer"
+            >{website}</a>
         },
         {
             title: 'Last Crawl Date',
@@ -182,7 +188,7 @@ const WebInfo = () => {
             title: 'Options',
             dataIndex: 'options',
             fixed: 'right',
-            width: 70,
+            width: 60,
             align: 'center',
             render: (domainSitemap) => <div
             className="text-center"

@@ -7,7 +7,7 @@ import {
   getData
 } from "../../utils/routes";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Pagination, Checkbox, DatePicker, Button, Alert, Spin } from "antd";
+import { Pagination, Checkbox, DatePicker, Button, Alert, Spin,Table} from "antd";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { CSVLink } from "react-csv";
@@ -19,7 +19,7 @@ const options = [
   { label: "Nofollow", value: "Nofollow" }
 ];
 
-const Table = () => {
+const WebsiteTable = () => {
   const [table, setTable] = useState("");
   const [Data, setData] = useState("");
   const [downloadData, setDownloadData] = useState("");
@@ -183,7 +183,83 @@ const Table = () => {
       toast.error("No data")
     }
   };
-
+  const TableHeader = [
+    {
+      title: 'Index',
+      dataIndex: 'index',
+      width: 50,
+      align: 'center'
+    }
+    ,{
+     title: 'Date',
+        dataIndex: 'date',
+        width: 60,
+        align: 'center'
+    },
+    {
+        title: 'Website',
+        dataIndex: 'website',
+        width: 100,
+        align: 'center',
+        render : (website) =>
+        <a 
+        href={website}
+        target="_blank"
+        rel="noopener noreferrer"
+        >{website}</a>
+    },
+    {
+        title: 'External Links',
+        dataIndex: 'extLink',
+        width: 100,
+        align: 'left',
+        render : (website) =>
+        <a 
+        href={website}
+        target="_blank"
+        rel="noopener noreferrer"
+        >{website}</a>
+    },
+    {
+        title: 'Title',
+        dataIndex: 'title',
+        width: 60,
+        align: 'center'
+    },
+    {
+        title: 'Type',
+        dataIndex: 'rel',
+        width: 60,
+        align: 'center'
+    },
+    {
+        title: 'Status',
+        dataIndex: 'status',
+        fixed: 'right',
+        width: 50,
+        align: 'center',
+        render: (tab) => <input
+        type="checkbox"
+        checked={tab.status}
+        onChange={() => onStatusChecked(tab._id, tab.status)}
+      ></input>,   
+    }
+];
+var websiteWiseTable = []
+var i = ((pageNum - 1) * pageSize) ;  
+for (let item in table) {
+  i += 1 
+  websiteWiseTable.push({
+        key: item,
+        index : i , 
+        date :new Date(table[item]["lastModified"]).toLocaleDateString(),
+        website : table[item]["articleLink"],
+        extLink :  table[item]["externalLink"],
+        title : table[item]["anchorText"],
+        rel : table[item]["rel"],
+        status : table[item]
+    })
+  }
 
   // console.log(table);
 
@@ -269,88 +345,7 @@ const Table = () => {
             </div>
             <div className="row">
               <div className="col-lg-12">
-                <div
-                  style={{
-                    overflowX: "scroll",
-                    height: "100%",
-                    display: "block",
-                    overflowY: "hidden",
-                  }}
-                >
-                  <table className="table" border="1">
-                    <thead className="thead-dark">
-                      <tr>
-                        <th scope="col">Index</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Website</th>
-                        <th scope="col">External Links</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {table
-                        ? table.map((tab, i) => {
-                          let date = tab.lastModified.substring(
-                            0,
-                            tab.lastModified.indexOf("T")
-                          );
-                          return (
-                            <tr
-                              style={{
-                                backgroundColor: "#fff",
-                              }}
-                              key={i}
-                            >
-                              <td >
-                                <div style={{ display: 'flex', justifyContent: "center" }}>
-                                  {((pageNum - 1) * pageSize) + i + 1}
-                                </div>
-                              </td>
-                              <td style={{ width: "60%" }}>{date}</td>
-                              <td style={{ width: "60%" }}>
-                                <a
-                                  href={tab.articleLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tab.articleLink}
-                                </a>
-                              </td>
-                              <td>
-                                <p><a
-                                  href={tab.externalLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tab.externalLink}
-                                </a></p>
-                              </td>
-                              <td>
-                                <p>
-                                  {tab.anchorText}
-                                </p>
-                              </td>
-                              <td>
-                                <p>
-                                  {tab.rel}
-                                </p>
-                              </td>
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  checked={tab.status}
-                                  onChange={() => onStatusChecked(tab._id, tab.status)}
-                                ></input>
-                              </td>
-                            </tr>
-                          );
-                        })
-                        : null}
-                    </tbody>
-                  </table>
-                </div>
+              <Table columns={TableHeader} scroll={{x : 1000}} sticky border="3" dataSource={websiteWiseTable} pagination={false} />
               </div>
             </div>
 
@@ -372,4 +367,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default WebsiteTable;
