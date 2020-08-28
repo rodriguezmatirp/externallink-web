@@ -29,8 +29,9 @@ export default function Homepage() {
     fetchData();
   }, []);
 
-  const savedata = ( site) => {
+  const savedata = ( site , blockedReason) => {
     localStorage.setItem("link", JSON.stringify({ site}));
+    localStorage.setItem("blockedReason" , blockedReason)
   };
   const searchData = () => {
     let filtered = list;
@@ -118,7 +119,7 @@ export default function Homepage() {
                         <NavLink
                           to="/table"
                           onClick={() =>
-                            savedata(item.domainSitemap)
+                            savedata(item.domainSitemap , item.blockedReason)
                           }
                         >
                           <div className="row align-items-center no-gutters">

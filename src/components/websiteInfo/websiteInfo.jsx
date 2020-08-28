@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { DeleteFilled } from "@ant-design/icons";
 import { Button, Pagination, Radio, Table } from 'antd';
 
+
 const WebInfo = () => {
 
     const [name, setName] = useState("")
@@ -99,7 +100,7 @@ const WebInfo = () => {
 
     const currentCrawlColumns = [
         {
-            title: 'Crawling Time (in secs)',
+            title: 'Crawling Time',
             dataIndex: 'time',
             width: 60,
             align: 'center'
@@ -118,7 +119,7 @@ const WebInfo = () => {
         currentCrawl.push({
             key: item,
             sitemap: currentlyCrawling[item]['domainSitemap'],
-            time: currentlyCrawling[item]['crawlTime']/1000
+            time: currentlyCrawling[item]['crawlTime']/1000 + ' s'
         })
     }
 
@@ -132,19 +133,78 @@ const WebInfo = () => {
         {
             title: 'Scheduled',
             dataIndex: 'sitemap',
-            width: 85,
+            width: 90,
             align: 'center'
         },
     ];
     var scheduled = []
+    var i = 1
     for (let item in scheduledTasks) {
         scheduled.push({
             key: item,
             sitemap: scheduledTasks[item],
-            index: item
+            index: i
+        })
+        i += 1
+    }
+    const statsTableHeader = [
+        {
+            title: 'Sitemap',
+            dataIndex: 'sitemap',
+            width: 120,
+            align: 'center'
+        },
+        {
+            title: 'Last Crawl Date',
+            dataIndex: 'crawlDate',
+            width: 90,
+            align: 'center'
+        },
+        {
+            title: 'Time',
+            dataIndex: 'crawlTime',
+            width: 90,
+            align: 'center'
+        },
+        {
+            title: 'Sitemap Count',
+            dataIndex: 'sitemapCount',
+            width: 60,
+            align: 'center'
+        },
+        {
+            title: 'Articles Count',
+            dataIndex: 'websiteCount',
+            width: 60,
+            align: 'center'
+        },
+        {
+            title: 'Options',
+            dataIndex: 'options',
+            fixed: 'right',
+            width: 70,
+            align: 'center',
+            render: (domainSitemap) => <div
+            className="text-center"
+            onClick={() => deleteWebsite_(domainSitemap)}
+            style={{ cursor: "pointer", fontSize: "20px", color: "#EB4141" }}>
+            <DeleteFilled />
+            </div>,   
+        }
+    ];
+    var statsTable = []
+    for (let item in data) {
+        statsTable.push({
+            key: item,
+            sitemap: data[item]["domainSitemap"],
+            crawlDate :new Date(data[item]["updatedAt"]).toLocaleDateString(),
+            crawlTime :new Date(data[item]["updatedAt"]).toLocaleTimeString(),
+            sitemapCount :  data[item]["subSitemapCount"],
+            websiteCount : data[item]["websiteCount"],
+            options : data[item]["domainSitemap"]
         })
     }
-
+    // console.log(statsTable)
     return (
         <div className="container pt-5 pb-5">
             <div className=" mb-4">
@@ -172,10 +232,10 @@ const WebInfo = () => {
                 </div>
                 <div className="row pt-5">
                     <div className="col">
-                        <Table columns={currentCrawlColumns} sticky border="1" dataSource={currentCrawl} pagination={false} />
+                        <Table columns={currentCrawlColumns} sticky border="3" dataSource={currentCrawl} pagination={false} />
                     </div>
                     <div className="col">
-                        <Table columns={toCrawlColumns} sticky scroll={{ y: 380 }} border="1" dataSource={scheduled} pagination={false} />
+                        <Table columns={toCrawlColumns} sticky scroll={{ y: 260 }} border="3" dataSource={scheduled} pagination={false} />
                     </div>
                 </div>
                 <div className="row">
@@ -203,84 +263,8 @@ const WebInfo = () => {
                 </div>
             </div >
             <div className="row">
-                <div className="col-lg-12">
-                    {data.length !== 0 ? (
-                        <div
-                            style={{
-                                overflowX: "scroll",
-                                height: "100%",
-                                display: "block",
-                                overflowY: "hidden"
-                            }}
-                        >
-                            <table className="table " border="1">
-                                <thead className="thead-dark">
-                                    <tr>
-                                        {/* <th scope="col">URL</th> */}
-                                        <th scope="col">Sitemap</th>
-                                        <th scope="col">Last Crawl Date</th>
-                                        <th scope="col">Time</th>
-                                        <th scope="col">Sitemap Count</th>
-                                        <th scope="col">website Count</th>
-                                        <th scope="col">Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data
-                                        ? data.map((data_, i) => {
-                                            var date = undefined
-                                            var time = undefined
-                                            if (data_.updatedAt !== undefined) {
-                                                date = data_.updatedAt.substring(
-                                                    0,
-                                                    data_.updatedAt.indexOf("T")
-                                                );
-                                                time = new Date(data_.updatedAt).toLocaleTimeString()
-                                            }
-                                            return (
-                                                <tr
-                                                    style={{ backgroundColor: "#fff" }}
-                                                    key={i}
-                                                >
-                                                    {/* <td>{data_.title}</td> */}
-                                                    <td>
-                                                        <a
-                                                            href={data_.domainSitemap}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            {data_.domainSitemap}
-                                                        </a>
-                                                    </td>
-                                                    <td>{date ? (<p>{date}</p>) : (<p>Null</p>)}</td>
-                                                    <td>{date ? (<p>{time}</p>) : (<p>Null</p>)}</td>
-                                                    <td>
-                                                        {data_.subSitemapCount}
-                                                    </td>
-                                                    <td>
-                                                        {data_.websiteCount}
-                                                    </td>
-                                                    <td>
-                                                        <div
-                                                            className="text-center"
-                                                            onClick={() => deleteWebsite_(data_.domainSitemap)}
-                                                            style={{ cursor: "pointer", fontSize: "20px", color: "#EB4141" }}
-                                                        >
-                                                            <DeleteFilled />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
-                                        : null}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                            <div style={{ textAlign: "center" }}>
-                                Loading....Please Wait
-                </div>
-                        )}
+                <div className="col">
+                <Table columns={statsTableHeader} sticky border="3" dataSource={statsTable} pagination={false} />
                 </div>
                 <div className="col-lg-12 mt-5">
                     <div className="col-lg-6 text-center mx-auto">

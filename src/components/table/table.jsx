@@ -34,10 +34,12 @@ const Table = () => {
   const pageSize = 20;
   const [filename, setFilename] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-
+  const [blockedReason, setBlockedReason] = useState("")
 
   const setTableData = async () => {
     let obj = JSON.parse(localStorage.getItem("link"));
+    setBlockedReason(localStorage.getItem('blockedReason'));
+    console.log('-----------' +blockedReason)
     let url = obj.site;
     document.title = obj.site
     var query = ""
@@ -175,183 +177,199 @@ const Table = () => {
         temp.push(getFormattedDate(data[i].lastModified));
         dupe.push(temp);
       }
-    setDownloadData(dupe)
-  }
-  if (data === null) {
-    toast.error("No data")
-  }
-};
+      setDownloadData(dupe)
+    }
+    if (data === null) {
+      toast.error("No data")
+    }
+  };
 
 
-// console.log(table);
+  // console.log(table);
 
-return (
-  <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
-    {loader ? (
-      <div
-        className="text-center"
-        style={{ paddingTop: "300px", paddingBottom: "300px" }}
-      >
-        <Spin tip="Loading...">
-          <Alert
-            message="Website wise information"
-            description="Your is either loading or not found"
-            type="info"
-          />
-        </Spin>
-        {/* <img
-            className="img-fluid"
-            src="./assets/images/loader.gif"
-            alt="loader"
-            width="80"
-          /> */}
-      </div>
-    ) : (
-        <div className="container pt-5 pb-5">
-          <div className=" mb-4">
-            <p className="h3 ">
-              <strong>
-                External Link to <span>{Data ? Data.site.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2] : null}</span>
-              </strong>
-            </p>
-            <div className="row pt-2">
-              <div className="col-lg-3">
-                <RangePicker onChange={handleDateChange} />
-              </div>
-              <div className="col-lg-2">
-                <button
-                  className={`btn ${styles.prime_btn}`}
-                  onClick={() => window.location.reload()}
-                >
-                  Refresh
+  return (
+    <div className="fluid-container" style={{ backgroundColor: "#f5f5f0" }}>
+      {loader ? (
+        <div
+          className="text-center"
+          style={{ paddingTop: "300px", paddingBottom: "300px" }}
+        >
+          {blockedReason ? (
+            <div>
+              <Spin tip="Blocked">
+                <Alert
+                  message="Blocked Reason"
+                  description={blockedReason}
+                  type="error"
+                />
+              </Spin>
+            </div>
+          ) : <div>
+              <Spin tip="Loading...">
+                <Alert
+                  message="Website wise information"
+                  description="Your is either loading or not found"
+                  type="info"
+                />
+              </Spin>
+            </div>}
+        </div>
+      ) : (
+          <div className="container pt-5 pb-5">
+            <div className=" mb-4">
+              <p className="h3 ">
+                <strong>
+                  External Link to <span>{Data ? Data.site.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2] : null}</span>
+                </strong>
+              </p>
+              {blockedReason  ? (
+                <div className="col text-center">
+                  <Alert
+                    message="Blocked"
+                    description={`Blocked Reason : ${blockedReason}`}
+                    type="error"
+                    showIcon
+                  />
+                </div>
+              ) : null}
+              <div className="row pt-2">
+                <div className="col-lg-3">
+                  <RangePicker onChange={handleDateChange} />
+                </div>
+                <div className="col-lg-2">
+                  <button
+                    className={`btn ${styles.prime_btn}`}
+                    onClick={() => window.location.reload()}
+                  >
+                    Refresh
                 </button>
+                </div>
+                <div className="col-lg-4 text-center">
+                  <Checkbox.Group
+                    options={options}
+                    onChange={handleFollowChange}
+                    defaultValue={["Nofollow", "Dofollow"]}
+                  />
+                </div>
+                <div
+                  className="col-lg-3 text-right"
+                >
+                  <CSVLink filename={filename + '.csv'} data={downloadData}>
+                    <Button
+                      type="primary"
+                      icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
+                      size="default"
+                      disabled={buttonDisabled}
+                    >
+                      Export
+                    </Button>
+                  </CSVLink>
+                </div>
               </div>
-              <div className="col-lg-4 text-center">
-                <Checkbox.Group
-                  options={options}
-                  onChange={handleFollowChange}
-                  defaultValue={["Nofollow", "Dofollow"]}
+            </div>
+            <div className="row">
+              <div className="col-lg-12">
+                <div
+                  style={{
+                    overflowX: "scroll",
+                    height: "100%",
+                    display: "block",
+                    overflowY: "hidden",
+                  }}
+                >
+                  <table className="table" border="1">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th scope="col">Index</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Website</th>
+                        <th scope="col">External Links</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {table
+                        ? table.map((tab, i) => {
+                          let date = tab.lastModified.substring(
+                            0,
+                            tab.lastModified.indexOf("T")
+                          );
+                          return (
+                            <tr
+                              style={{
+                                backgroundColor: "#fff",
+                              }}
+                              key={i}
+                            >
+                              <td >
+                                <div style={{ display: 'flex', justifyContent: "center" }}>
+                                  {((pageNum - 1) * pageSize) + i + 1}
+                                </div>
+                              </td>
+                              <td style={{ width: "60%" }}>{date}</td>
+                              <td style={{ width: "60%" }}>
+                                <a
+                                  href={tab.articleLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {tab.articleLink}
+                                </a>
+                              </td>
+                              <td>
+                                <p><a
+                                  href={tab.externalLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {tab.externalLink}
+                                </a></p>
+                              </td>
+                              <td>
+                                <p>
+                                  {tab.anchorText}
+                                </p>
+                              </td>
+                              <td>
+                                <p>
+                                  {tab.rel}
+                                </p>
+                              </td>
+                              <td>
+                                <input
+                                  type="checkbox"
+                                  checked={tab.status}
+                                  onChange={() => onStatusChecked(tab._id, tab.status)}
+                                ></input>
+                              </td>
+                            </tr>
+                          );
+                        })
+                        : null}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-lg-12 mt-5">
+              <div className="col-lg-6 text-center mx-auto">
+                <Pagination
+                  defaultCurrent={1}
+                  total={
+                    (main && mainMeta)
+                  }
+                  pageSize={pageSize}
+                  onChange={handlePageChange}
                 />
               </div>
-              <div
-                className="col-lg-3 text-right"
-              >
-                <CSVLink filename={filename + '.csv'} data={downloadData}>
-                  <Button
-                    type="primary"
-                    icon={<FaCloudDownloadAlt style={{ fontSize: "26px", paddingRight: "10px" }} />}
-                    size="default"
-                    disabled={buttonDisabled}
-                  >
-                    Export
-                    </Button>
-                </CSVLink>
-              </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-lg-12">
-              <div
-                style={{
-                  overflowX: "scroll",
-                  height: "100%",
-                  display: "block",
-                  overflowY: "hidden",
-                }}
-              >
-                <table className="table" border="1">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th scope="col">Index</th>
-                      <th scope="col">Date</th>
-                      <th scope="col">Website</th>
-                      <th scope="col">External Links</th>
-                      <th scope="col">Title</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {table
-                      ? table.map((tab, i) => {
-                        let date = tab.lastModified.substring(
-                          0,
-                          tab.lastModified.indexOf("T")
-                        );
-                        return (
-                          <tr
-                            style={{
-                              backgroundColor: "#fff",
-                            }}
-                            key={i}
-                          >
-                            <td >
-                              <div style={{ display: 'flex', justifyContent: "center" }}>
-                                {((pageNum - 1) * pageSize) + i + 1}
-                              </div>
-                            </td>
-                            <td style={{ width: "60%" }}>{date}</td>
-                            <td style={{ width: "60%" }}>
-                              <a
-                                href={tab.articleLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {tab.articleLink}
-                              </a>
-                            </td>
-                            <td>
-                              <p><a
-                                href={tab.externalLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {tab.externalLink}
-                              </a></p>
-                            </td>
-                            <td>
-                              <p>
-                                {tab.anchorText}
-                              </p>
-                            </td>
-                            <td>
-                              <p>
-                                {tab.rel}
-                              </p>
-                            </td>
-                            <td>
-                              <input
-                                type="checkbox"
-                                checked={tab.status}
-                                onChange={() => onStatusChecked(tab._id, tab.status)}
-                              ></input>
-                            </td>
-                          </tr>
-                        );
-                      })
-                      : null}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-12 mt-5">
-            <div className="col-lg-6 text-center mx-auto">
-              <Pagination
-                defaultCurrent={1}
-                total={
-                  (main && mainMeta)
-                }
-                pageSize={pageSize}
-                onChange={handlePageChange}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-  </div>
-);
+        )}
+    </div>
+  );
 };
 
 export default Table;
