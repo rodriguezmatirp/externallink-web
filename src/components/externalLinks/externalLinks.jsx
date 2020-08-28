@@ -53,13 +53,25 @@ const ExternalLinks = () => {
       title: 'Website',
       dataIndex: 'website',
       width: 180,
-      align: 'center'
+      align: 'center',
+      render : (website) =>
+      <a 
+      href={website}
+      target="_blank"
+      rel="noopener noreferrer"
+      >{website}</a>
     },
     {
       title: 'External Link',
       dataIndex: 'extLink',
       width: 170,
-      align: 'center'
+      align: 'center',
+      render : (website) =>
+      <a 
+      href={website}
+      target="_blank"
+      rel="noopener noreferrer"
+      >{website}</a>
     },
     {
       title: 'Rel',
