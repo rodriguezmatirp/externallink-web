@@ -14,13 +14,19 @@ import { Alert, Spin } from "antd";
 export default function Homepage() {
   const [list, setList] = useState("");
   const [query, handleQuery] = useInputState("");
+  // const [search , setSearch] =useState("");
 
   useEffect(() => {
     document.title = "Home"
     const fetchData = async () => {
       try {
         const response = await axios.get(getSitemaps);
-        console.log(response)
+        // console.log(response)
+        // let searchList = []
+        // for(let item of response.data.result){
+        //   searchList.push(item.domainSitemap.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2])
+        // }
+        // setSearch(searchList)
         setList(response.data.result);
       } catch (error) {
         toast.error("Something went wrong");

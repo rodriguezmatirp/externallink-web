@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/navbar/navbar";
-import Table from "./components/table/table";
+import WebsiteTable from "./components/table/table";
 import Homepage from "./components/homepage/homepage";
 import Index from "./components/index";
 import { ToastContainer } from "react-toastify";
@@ -12,10 +12,10 @@ import Register from "./components/register/register";
 import { AuthContext } from "./contexts/userContext";
 import NotFound from "./components/notFound/notFound";
 import DateWise from "./components/dateWise/DateWise";
-import AdminFilter from "./components/adminFilter/adminFilter";
-import AdminST from "./components/emailFilter/emailFilter";
-import WebsiteInfo from "./components/websiteInfo/websiteInfo";
-import ExternalLinks from './components/externalLinks/externalLinks';
+import filter from "./components/filter/filter";
+import users from "./components/users/users";
+import stats from "./components/stats/stats";
+import ExternalLinks from "./components/externalLinks/externalLinks";
 
 function App() {
     return ( <
@@ -29,38 +29,38 @@ function App() {
         <
         Route exact path = "/datewise"
         component = { DateWise }
-        /><
-        Route exact path = "/stats"
-        component = { WebsiteInfo }
         /> <
+        Route exact path = "/stats"
+        component = { stats }
+        />{" "} <
         Route exact path = "/externalLink"
         component = { ExternalLinks }
-        /><
+        /> <
         Route exact path = "/"
         component = { Index }
-        /> <
+        />{" "} <
         Route exact path = "/users"
-        component = { AdminST }
-        /><
+        component = { users }
+        /> <
         PrivateRoute exact path = "/home"
         component = { Homepage }
-        /> <
+        />{" "} <
         PrivateRoute exact path = "/table"
-        component = { Table }
-        /> <
+        component = { WebsiteTable }
+        />{" "} <
         Route exact path = "/login"
         component = { Login }
-        /> <
+        />{" "} <
         Route exact path = "/register"
         component = { Register }
-        /> <
+        />{" "} <
         Route exact path = "/filter"
-        component = { AdminFilter }
-        /> <
+        component = { filter }
+        />{" "} <
         Route path = "*"
         component = { NotFound }
-        /> < /
-        Switch > <
+        />{" "} < /
+        Switch > { " " } <
         />
     );
 }
@@ -71,9 +71,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         Route {...rest }
         render = {
             (props) =>
-            Data.token !== "" ? < Component {...props }
-            /> : <Redirect to="/
-            " />
+            Data.token !== "" ? ( <
+                Component {...props }
+                />
+            ) : ( <
+                Redirect to = "/
+                " / >
+            )
         }
         />
     );

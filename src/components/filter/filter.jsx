@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./adminFilter.module.css";
+import styles from "./Filter.module.css";
 import axios from "axios";
 import { restrictFilter, deleteRestricted } from "../../utils/routes";
 import { toast } from "react-toastify";
