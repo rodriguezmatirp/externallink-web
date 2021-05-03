@@ -1,42 +1,40 @@
 .top {
-  background-image: url(../../assets/images/Group.svg);
-  /* background-attachment: fixed; */
-  background-position: right;
-  background-repeat: no-repeat;
-  background-size: 650px;
-  /* height: 690px; */
+    /* background-image: url(../../assets/images/Group.svg); */
+    /* background-attachment: fixed; */
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: 650px;
+    /* height: 690px; */
 }
 
 .grad {
-  height: 690px;
-  background: linear-gradient(
-    0deg,
-    rgba(39, 90, 122, 0.8) 16.55%,
-    rgba(196, 196, 196, 0.2) 99.9%
-  );
+    height: 690px;
+    /* background: linear-gradient( 0deg, rgba(39, 90, 122, 0.8) 16.55%, rgba(196, 196, 196, 0.2) 99.9%); */
+    background-color: rgb(255, 106, 106);
 }
 
 .head {
-  background: rgb(242, 244, 245);
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  height: 60px;
+    background: rgb(242, 244, 245);
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    height: 60px;
 }
 
 .nav-link {
-  font-weight: 700;
+    font-weight: 700;
 }
 
 .btnedt {
-  background: rgb(43, 142, 179);
-  border: none;
-  height: 50px;
-  margin-top: 10px;
+    background: rgb(43, 142, 179);
+    border: none;
+    height: 50px;
+    margin-top: 10px;
 }
 
 .btnedt:hover {
-  background: rgb(38, 127, 151);
+    background: rgb(38, 127, 151);
 }
+
 
 /* input[type] {
   border: 1px light;
@@ -46,24 +44,24 @@
 input:focus,
 input[type]:focus,
 .uneditable-input:focus {
-  border-color: white;
-  box-shadow: 0 1px 1px white;
-  outline: 0 none;
+    border-color: white;
+    box-shadow: 0 1px 1px white;
+    outline: 0 none;
 }
 
 input:hover,
 input[type]:focus {
-  border-color: rgb(66, 63, 63);
+    border-color: rgb(66, 63, 63);
 }
 
 .heading {
-  color: white;
-  font-weight: 700;
-  font-size: 35px;
-  margin-top: 140px;
+    color: white;
+    font-weight: 700;
+    font-size: 35px;
+    margin-top: 140px;
 }
 
 .tag {
-  color: white;
-  font-size: 35px;
+    color: white;
+    font-size: 35px;
 }

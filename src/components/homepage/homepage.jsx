@@ -21,12 +21,6 @@ export default function Homepage() {
     const fetchData = async () => {
       try {
         const response = await axios.get(getSitemaps);
-        // console.log(response)
-        // let searchList = []
-        // for(let item of response.data.result){
-        //   searchList.push(item.domainSitemap.match(/(http|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))/)[2])
-        // }
-        // setSearch(searchList)
         setList(response.data.result);
       } catch (error) {
         toast.error("Something went wrong");

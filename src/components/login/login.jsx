@@ -46,27 +46,27 @@ export default function Login(props) {
   };
 
   return (
-    <div className="fluid-container" style={{ backgroundColor: "#e7f6fd" }}>
+    <div className="fluid-container" style={{ backgroundColor: "#f77272" }}>
       <div className="container" style={{ paddingTop: "50px" }}>
         <div
           className="row"
           style={{ marginRight: "-16px", marginLeft: "-16px" }}
         >
           <div className="col-lg-8 col-md-7 col-12" style={{ padding: "50px" }}>
-            <img
+            {/* <img
               src="./assets/images/GroupLog.svg"
               width="100%"
               className="contact__image"
               height="100%"
               alt=""
-            />
+            /> */}
           </div>
           <div className="col-lg-4 col-md-5 col-12 pb-4">
             <div className="col-lg-12">
               <h4 className="title mt-4 mb-4">
                 {" "}
                 <strong>
-                  Hi, <br /> Welcome Back
+                  Hey , <br /> Welcome Back
                 </strong>
               </h4>
             </div>
